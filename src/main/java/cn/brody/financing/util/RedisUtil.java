@@ -27,19 +27,14 @@ public class RedisUtil {
     @Resource
     RedisTemplate<String, Object> redisTemplate;
 
-    @Autowired
-    public void setHikRedisTemplate() {
-        hikRedisTemplate = redisTemplate;
-    }
-
-    // ==========缓存相关方法===========
-
     /**
      * 指定缓存失效时间 单位：秒
      */
     public static void expire(String key, Integer time) {
         hikRedisTemplate.expire(key, time, TimeUnit.SECONDS);
     }
+
+    // ==========缓存相关方法===========
 
     /**
      * 根据key获取过期时间，返回0表示永久有效，单位秒
@@ -72,15 +67,6 @@ public class RedisUtil {
     }
 
     /**
-     * 批量删除缓存
-     *
-     * @param keys key
-     */
-    public void delete(List<String> keys) {
-        hikRedisTemplate.delete(keys);
-    }
-
-    /**
      * 删除缓存
      *
      * @param key
@@ -88,9 +74,6 @@ public class RedisUtil {
     public static void delete(String key) {
         hikRedisTemplate.delete(key);
     }
-
-
-    // ===============数据类型为String的相关方法===============
 
     /**
      * 根据key值获取缓存值
@@ -119,43 +102,41 @@ public class RedisUtil {
     }
 
 
+    // ===============数据类型为String的相关方法===============
+
     /**
      * 根据key值存入数据类型为String的缓存值
      *
-     * @param key   key
-     * @param v value
+     * @param key key
+     * @param v   value
      */
     public static <V> void setString(String key, V v) {
         String value = JSONObject.toJSONString(v);
         hikRedisTemplate.opsForValue().set(key, value);
     }
 
-
     /**
      * 根据key值存入数据类型为String的缓存值并设置时间,单位为秒
      *
-     * @param key   key
-     * @param v value
-     * @param time  秒
+     * @param key  key
+     * @param v    value
+     * @param time 秒
      */
     public static <V> void setStringWithTime(String key, V v, Integer time) {
         setStringWithTime(key, v, time, TimeUnit.SECONDS);
     }
 
-
     /**
      * 根据key值存入数据类型为String的缓存值并设置时间
      *
-     * @param key   key
-     * @param v value
-     * @param time  秒
+     * @param key  key
+     * @param v    value
+     * @param time 秒
      */
     public static <V> void setStringWithTime(String key, V v, Integer time, TimeUnit timeUnit) {
         String value = JSONObject.toJSONString(v);
         hikRedisTemplate.opsForValue().set(key, value, time, timeUnit);
     }
-
-    // ===============数据类型为List的相关方法===============
 
     /**
      * 根据key值存入数据类型为List的缓存值
@@ -168,7 +149,6 @@ public class RedisUtil {
         hikRedisTemplate.opsForList().rightPush(key, value);
     }
 
-
     /**
      * 获取List缓存的内容，从start到end，若从0到-1代表所有值，默认为String
      *
@@ -180,6 +160,8 @@ public class RedisUtil {
     public static List<String> getList(String key, Long start, Long end) {
         return getList(key, start, end, String.class);
     }
+
+    // ===============数据类型为List的相关方法===============
 
     /**
      * 获取List缓存的内容，从start到end，若从0到-1代表所有值
@@ -197,9 +179,6 @@ public class RedisUtil {
         }
         return list.stream().map(object -> JSONObject.parseObject(object.toString(), clazz)).collect(Collectors.toList());
     }
-
-
-    // ==================== hash ===========================
 
     /**
      * 获取value为列表的hash
@@ -235,6 +214,9 @@ public class RedisUtil {
         return null;
     }
 
+
+    // ==================== hash ===========================
+
     /**
      * 添加value为list的hash
      *
@@ -247,7 +229,6 @@ public class RedisUtil {
         String value = JSONObject.toJSONString(values);
         hikRedisTemplate.opsForHash().put(key, field, value);
     }
-
 
     /**
      * 添加value为指定对象的hash
@@ -269,6 +250,20 @@ public class RedisUtil {
      */
     public static void deleteHash(String key, Object... fields) {
         hikRedisTemplate.opsForHash().delete(key, fields);
+    }
+
+    @Autowired
+    public void setHikRedisTemplate() {
+        hikRedisTemplate = redisTemplate;
+    }
+
+    /**
+     * 批量删除缓存
+     *
+     * @param keys key
+     */
+    public void delete(List<String> keys) {
+        hikRedisTemplate.delete(keys);
     }
 
 }
