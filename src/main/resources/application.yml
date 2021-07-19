@@ -1,0 +1,17 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /financing
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://106.15.199.105:3306/financing?serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+
+logging:
+  level:
+    root: debug
+    org.brody: debug
+
