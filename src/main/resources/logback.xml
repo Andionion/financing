@@ -17,7 +17,7 @@
        ***特别注意***, 组件封装时, 段的log.path也要配成'./logs/段标识', 否则采集不到日志
        如果服务注册时的工作目录不是组件根目录，${user.dir}部分要调整。
        -->
-    <property name="LOG_HOME" value="D:/Projects/financing/logs/${SEGMENT_ID}"/>
+    <property name="LOG_HOME" value="../../logs/${SEGMENT_ID}"/>
 
     <!-- 控制台Appender,默认不打印,防止日志打印到linux的var\log\messages中 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

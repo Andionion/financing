@@ -9,6 +9,12 @@ spring:
     url: jdbc:mysql://106.15.199.105:3306/financing?serverTimezone=GMT%2B8
     username: root
     password: 123456
+  redis:
+    host: 106.15.199.105
+    port: 6379
+    password: 123456
+  rabbitmq:
+    host:
 
 logging:
   level:
