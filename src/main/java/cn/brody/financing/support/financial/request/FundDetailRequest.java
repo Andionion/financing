@@ -1,4 +1,4 @@
-package cn.brody.financing.pojo.request;
+package cn.brody.financing.support.financial.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,4 +29,8 @@ public class FundDetailRequest implements Serializable {
      * 截至时间，标准时间格式 yyyy-MM-dd
      */
     private LocalDate endDate;
+
+    public FundDetailRequest(String code) {
+        this.code = code;
+    }
 }

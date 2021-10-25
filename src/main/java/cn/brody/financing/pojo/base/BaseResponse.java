@@ -17,4 +17,9 @@ public class BaseResponse<T> implements Serializable {
     private String message;
 
     private T data;
+
+    public BaseResponse() {
+        code = 200;
+        message = "成功";
+    }
 }

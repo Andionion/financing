@@ -1,4 +1,4 @@
-package cn.brody.financing.pojo.response;
+package cn.brody.financing.support.financial.response;
 
 import lombok.Data;
 
