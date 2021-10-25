@@ -1,5 +1,5 @@
--- 基金持仓表
-create table IF NOT EXISTS 'fund_position'
+-- 基金基本表
+create table IF NOT EXISTS 'fund_basic'
 (
     'id'             int         not null primary key comment '主键',
     'name'           varchar(20) not null comment '基金名称',
@@ -32,5 +32,11 @@ create table if not exists 'fund_total_worth'
     'date'        date   not null comment '日期',
     'total_worth' double not null comment '累计净值'
 ) comment ='累计净值表';
+
+-- 交易记录表
+create table if not exists 'fund_transaction_record'
+(
+    'id' int not null primary key comment '主键',
+)
 
 
