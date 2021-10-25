@@ -1,4 +1,4 @@
-package cn.brody;
+package cn.brody.financing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author brody
  */
-@SpringBootApplication(scanBasePackages = {"cn.brody.financing.*"})
+@SpringBootApplication
 public class FinancingApplication {
 
     public static void main(String[] args) {

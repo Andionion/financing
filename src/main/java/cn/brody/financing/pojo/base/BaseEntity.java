@@ -25,7 +25,7 @@ public class BaseEntity implements Serializable {
      * 主键
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Integer id;
+    private Long id;
 
     /**
      * 基金代码
