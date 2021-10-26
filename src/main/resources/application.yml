@@ -3,6 +3,7 @@ server:
   servlet:
     context-path: /financing
 
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,8 +17,21 @@ spring:
   rabbitmq:
     host:
 
+mybatis-plus:
+  mapper-locations: classpath*:mappers/*:xml
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    # 逻辑删除配置
+    db-config:
+      # 删除前
+      logic-not-delete-value: 0
+      # 删除后
+      logic-delete-value: 1
+
 logging:
   level:
     root: debug
     org.brody: debug
+
 
