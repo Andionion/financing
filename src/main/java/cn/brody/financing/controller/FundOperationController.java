@@ -5,6 +5,7 @@ import cn.brody.financing.pojo.bo.AddFundBO;
 import cn.brody.financing.service.FundOperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ public class FundOperationController {
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<?> addFund(AddFundBO addFundBO) {
+    public BaseResponse<?> addFund(@RequestBody AddFundBO addFundBO) {
         fundOperationService.addFund(addFundBO);
         return new BaseResponse<>();
     }
