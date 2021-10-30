@@ -2,6 +2,7 @@ package cn.brody.financing.service.impl;
 
 import cn.brody.financing.mapper.FundBasicDao;
 import cn.brody.financing.pojo.bo.AddFundBO;
+import cn.brody.financing.pojo.bo.DelFundBO;
 import cn.brody.financing.pojo.entity.FundBasicEntity;
 import cn.brody.financing.service.FundOperationService;
 import cn.brody.financing.support.financial.request.FundDetailRequest;
@@ -41,6 +42,19 @@ public class FundOperationServiceImpl implements FundOperationService {
         fundBasicEntity.setFundScale(fundDetail.getFundScale());
         if (fundBasicDao.saveOrUpdate(fundBasicEntity)) {
             log.debug("添加基金成功：{}", fundBasicEntity);
+        }
+    }
+
+    @Override
+    public void delFund(DelFundBO delFundBO) {
+        log.debug("开始删除基金：{}", delFundBO.getCode());
+        FundBasicEntity fundBasicEntity = fundBasicDao.getByCode(delFundBO.getCode());
+        if (ObjectUtil.isNull(fundBasicEntity)) {
+            log.error("基金不存在，删除失败，{}", delFundBO.getCode());
+            throw new NullPointerException("基金不存在，删除失败");
+        }
+        if (fundBasicDao.removeById(fundBasicEntity)) {
+            log.info("删除基金成功");
         }
     }
 }

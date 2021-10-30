@@ -1,6 +1,7 @@
 package cn.brody.financing.service;
 
 import cn.brody.financing.pojo.bo.AddFundBO;
+import cn.brody.financing.pojo.bo.DelFundBO;
 
 /**
  * 基金添加，删除等操作的service
@@ -16,4 +17,11 @@ public interface FundOperationService {
      * @param addFundBO 添加基金的请求类
      */
     void addFund(AddFundBO addFundBO);
+
+    /**
+     * 删除基金
+     *
+     * @param delFundBO
+     */
+    void delFund(DelFundBO delFundBO);
 }

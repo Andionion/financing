@@ -15,8 +15,8 @@ spring:
     password: 123456
   rabbitmq:
     host:
-#  profiles:
-#    active: dev
+  profiles:
+    active: dev
 
 mybatis-plus:
   mapper-locations: classpath*:mappers/*:xml

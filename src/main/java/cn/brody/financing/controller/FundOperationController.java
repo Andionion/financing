@@ -2,6 +2,7 @@ package cn.brody.financing.controller;
 
 import cn.brody.financing.pojo.base.BaseResponse;
 import cn.brody.financing.pojo.bo.AddFundBO;
+import cn.brody.financing.pojo.bo.DelFundBO;
 import cn.brody.financing.service.FundOperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,4 +35,15 @@ public class FundOperationController {
         return new BaseResponse<>();
     }
 
+    /**
+     * 删除基金
+     *
+     * @param delFundBO
+     * @return
+     */
+    @PostMapping("/del")
+    public BaseResponse<?> delFund(@RequestBody DelFundBO delFundBO) {
+        fundOperationService.delFund(delFundBO);
+        return new BaseResponse<>();
+    }
 }
