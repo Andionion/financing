@@ -36,4 +36,8 @@ public class BaseEntity implements Serializable {
     public static final String COL_ID = "id";
 
     public static final String COL_CODE = "code";
+
+    public BaseEntity(String code) {
+        this.code = code;
+    }
 }
