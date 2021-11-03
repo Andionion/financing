@@ -92,6 +92,7 @@ public class FundOperationServiceImpl implements FundOperationService {
             });
             if (ArrayUtil.isNotEmpty(fundNetWorthEntityList)) {
                 // todo 重写批量存储或修改，当日期已经存在时，不做操作（count），当没有这个日期时，进行插入操作
+                
             }
         }
     }
