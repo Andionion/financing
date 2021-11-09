@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Brody
@@ -23,7 +24,17 @@ public class FundNetWorthDaoImpl extends ServiceImpl<FundNetWorthMapper, FundNet
     }
 
     @Override
+    public List<FundNetWorthEntity> listNetWorthList(String code) {
+        return lambdaQuery().eq(FundNetWorthEntity::getCode, code).list();
+    }
+
+    @Override
     public Boolean isExist(LocalDate date) {
         return lambdaQuery().eq(FundNetWorthEntity::getDate, date).count() > 0;
+    }
+
+    @Override
+    public Boolean removeNetWorth(String code) {
+        return remove(lambdaQuery().eq(FundNetWorthEntity::getCode, code));
     }
 }

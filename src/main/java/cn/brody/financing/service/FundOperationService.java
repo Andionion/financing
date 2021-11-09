@@ -1,10 +1,9 @@
 package cn.brody.financing.service;
 
 import cn.brody.financing.pojo.bo.AddFundBO;
+import cn.brody.financing.pojo.bo.AddFundNetWorthBO;
 import cn.brody.financing.pojo.bo.DelFundBO;
 import cn.brody.financing.support.financial.response.FundDetailResponse;
-
-import java.time.LocalDate;
 
 /**
  * 基金添加，删除等操作的service
@@ -28,13 +27,12 @@ public interface FundOperationService {
      */
     void delFund(DelFundBO delFundBO);
 
-
     /**
-     * 添加指定日期基金净值记录
+     * 添加基金净值记录
      *
-     * @param date
+     * @param addFundNetWorthBO
      */
-    void addFundNetWorth(LocalDate date);
+    void addFundNetWorth(AddFundNetWorthBO addFundNetWorthBO);
 
     /**
      * 添加基金净值记录
@@ -42,5 +40,12 @@ public interface FundOperationService {
      * @param fundDetailResponse
      */
     void addFundNetWorth(FundDetailResponse fundDetailResponse);
+
+    /**
+     * 删除基金净值记录
+     *
+     * @param code 基金代码
+     */
+    void delFundNetWorth(String code);
 
 }

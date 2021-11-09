@@ -1,7 +1,7 @@
 package cn.brody.financing.mapper;
 
 import cn.brody.financing.cache.MybatisRedisCache;
-import cn.brody.financing.pojo.entity.FundTransactionRecordEntity;
+import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Mapper;
@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.Mapper;
  **/
 @Mapper
 @CacheNamespace(implementation = MybatisRedisCache.class, eviction = MybatisRedisCache.class)
-public interface FundTransactionRecordMapper extends BaseMapper<FundTransactionRecordEntity> {
+public interface FundTradeRecordMapper extends BaseMapper<FundTradeRecordEntity> {
 }

@@ -1,6 +1,7 @@
 package cn.brody.financing.pojo.entity;
 
 import cn.brody.financing.pojo.base.BaseEntity;
+import cn.brody.financing.pojo.bo.AddTradeBO;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -20,15 +21,20 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "fund_transaction_record")
+@TableName(value = "fund_trade_record")
 @EqualsAndHashCode(callSuper = true)
-public class FundTransactionRecordEntity extends BaseEntity implements Serializable {
+public class FundTradeRecordEntity extends BaseEntity implements Serializable {
 
     /**
      * 申购金额
      */
-    @TableField(value = "subscription_amount")
-    private Double subscriptionAmount;
+    @TableField(value = "amount")
+    private Double amount;
+
+    /**
+     * 交易类型，1 - 申购，2 - 赎回，3 - 分红
+     */
+    private Integer type;
 
     /**
      * 确认份额
@@ -39,20 +45,15 @@ public class FundTransactionRecordEntity extends BaseEntity implements Serializa
     /**
      * 确认日期
      */
-    @TableField(value = "'confirm_date'")
+    @TableField(value = "confirm_date")
     private LocalDate confirmDate;
-
-    /**
-     * 申购日期
-     */
-    @TableField(value = "`subscription_date`")
-    private LocalDate subscriptionDate;
 
     private static final long serialVersionUID = 1L;
 
-    public static final String COL_SUBSCRIPTION_AMOUNT = "subscription_amount";
-
-    public static final String COL_CONFIRM_SHARE = "confirm_share";
-
-    public static final String COL_DATE = "date";
+    public FundTradeRecordEntity(AddTradeBO addTradeBO) {
+        super(addTradeBO.getCode());
+        amount = addTradeBO.getAmount();
+        type = addTradeBO.getType();
+        confirmDate = addTradeBO.getConfirmDate();
+    }
 }

@@ -23,15 +23,15 @@ create table if not exists fund_net_worth
 ) comment ='基金当前净值表';
 
 -- 交易记录表
-drop table if exists fund_transaction_record;
-create table if not exists fund_transaction_record
+drop table if exists fund_trade_record;
+create table if not exists fund_trade_record
 (
-    id                  int        not null primary key comment '主键',
-    code                varchar(6) not null comment '基金代码',
-    subscription_amount double     not null comment '申购金额',
-    confirm_share       double comment '确认份额',
-    subscription_date   date       not null comment '申购日期',
-    confirm_date        date       not null comment '确认日期'
+    id            int        not null primary key comment '主键',
+    code          varchar(6) not null comment '基金代码',
+    amount        double     not null comment '金额',
+    type          int        not null comment '交易类型，1 - 申购，2 - 赎回，3 - 分红',
+    confirm_date  date       not null comment '确认日期',
+    confirm_share double comment '确认份额'
 ) comment ='交易记录表';
 
 -- 持仓表
