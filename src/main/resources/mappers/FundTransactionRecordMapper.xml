@@ -8,10 +8,11 @@
         <result column="code" jdbcType="VARCHAR" property="code"/>
         <result column="subscription_amount" jdbcType="DOUBLE" property="subscriptionAmount"/>
         <result column="confirm_share" jdbcType="DOUBLE" property="confirmShare"/>
-        <result column="date" jdbcType="DATE" property="date"/>
+        <result column="subscription_date" jdbcType="DATE" property="subscriptionDate"/>
+        <result column="confirm_date" jdbcType="DATE" property="confirmDate"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, code, subscription_amount, confirm_share, `date`
+        id, code, subscription_amount, confirm_share, confirm_date, subscription_date
     </sql>
 </mapper>

@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +24,21 @@ import java.util.Optional;
 public class FinancialDataServiceImpl implements FinancialDataService {
 
     @Override
-    public FundDetailResponse getFundDetail(FundDetailRequest fundDetailRequest) {
+    public FundDetailResponse getFundDetail(String code) {
+        return getFundDetail(new FundDetailRequest(code));
+    }
+
+    @Override
+    public FundDetailResponse getFundDetail(String code, LocalDate date) {
+        return getFundDetail(new FundDetailRequest(code, date, date));
+    }
+
+    @Override
+    public FundDetailResponse getFundDetail(String code, LocalDate startDate, LocalDate endDate) {
+        return getFundDetail(new FundDetailRequest(code, startDate, endDate));
+    }
+
+    private FundDetailResponse getFundDetail(FundDetailRequest fundDetailRequest) {
         Map<String, Object> hashMap = new HashMap<>(3);
         hashMap.put("code", fundDetailRequest.getCode());
         Optional.ofNullable(fundDetailRequest.getStartDate()).ifPresent(startDate -> hashMap.put("startDate", startDate));

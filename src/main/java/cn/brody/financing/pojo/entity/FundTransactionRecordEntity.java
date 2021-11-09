@@ -37,10 +37,16 @@ public class FundTransactionRecordEntity extends BaseEntity implements Serializa
     private Double confirmShare;
 
     /**
-     * 日期
+     * 确认日期
      */
-    @TableField(value = "`date`")
-    private LocalDate date;
+    @TableField(value = "'confirm_date'")
+    private LocalDate confirmDate;
+
+    /**
+     * 申购日期
+     */
+    @TableField(value = "`subscription_date`")
+    private LocalDate subscriptionDate;
 
     private static final long serialVersionUID = 1L;
 

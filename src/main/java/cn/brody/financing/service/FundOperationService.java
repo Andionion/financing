@@ -4,6 +4,8 @@ import cn.brody.financing.pojo.bo.AddFundBO;
 import cn.brody.financing.pojo.bo.DelFundBO;
 import cn.brody.financing.support.financial.response.FundDetailResponse;
 
+import java.time.LocalDate;
+
 /**
  * 基金添加，删除等操作的service
  *
@@ -26,10 +28,19 @@ public interface FundOperationService {
      */
     void delFund(DelFundBO delFundBO);
 
+
+    /**
+     * 添加指定日期基金净值记录
+     *
+     * @param date
+     */
+    void addFundNetWorth(LocalDate date);
+
     /**
      * 添加基金净值记录
      *
      * @param fundDetailResponse
      */
     void addFundNetWorth(FundDetailResponse fundDetailResponse);
+
 }

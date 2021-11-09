@@ -21,4 +21,9 @@ public class FundNetWorthDaoImpl extends ServiceImpl<FundNetWorthMapper, FundNet
         return lambdaQuery().eq(FundNetWorthEntity::getCode, code)
                 .eq(FundNetWorthEntity::getDate, confirmDate).one();
     }
+
+    @Override
+    public Boolean isExist(LocalDate date) {
+        return lambdaQuery().eq(FundNetWorthEntity::getDate, date).count() > 0;
+    }
 }
