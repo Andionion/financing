@@ -3,11 +3,11 @@ package cn.brody.financing.service.impl;
 import cn.brody.financing.mapper.FundBasicDao;
 import cn.brody.financing.mapper.FundNetWorthDao;
 import cn.brody.financing.pojo.bo.AddFundBO;
+import cn.brody.financing.pojo.bo.AddFundNetWorthBO;
 import cn.brody.financing.pojo.bo.DelFundBO;
 import cn.brody.financing.pojo.entity.FundBasicEntity;
 import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import cn.brody.financing.service.FundOperationService;
-import cn.brody.financing.support.financial.request.FundDetailRequest;
 import cn.brody.financing.support.financial.response.FundDetailResponse;
 import cn.brody.financing.support.financial.service.FinancialDataService;
 import cn.hutool.core.date.LocalDateTimeUtil;
@@ -16,6 +16,7 @@ import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,28 +38,31 @@ public class FundOperationServiceImpl implements FundOperationService {
     private FundNetWorthDao fundNetWorthDao;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addFund(AddFundBO addFundBO) {
-        log.debug("开始添加基金：{}", addFundBO.getCode());
-        FundDetailResponse fundDetail = financialDataService.getFundDetail(new FundDetailRequest(addFundBO.getCode()));
+        log.debug("开始添加基金，基金代码={}", addFundBO.getCode());
+        FundDetailResponse fundDetailResponse = financialDataService.getFundDetail(addFundBO.getCode());
         FundBasicEntity fundBasicEntity = fundBasicDao.getByCode(addFundBO.getCode());
         if (ObjectUtil.isNull(fundBasicEntity)) {
             fundBasicEntity = new FundBasicEntity();
-            fundBasicEntity.setName(fundDetail.getName());
-            fundBasicEntity.setType(fundDetail.getType());
-            fundBasicEntity.setCode(fundDetail.getCode());
+            fundBasicEntity.setName(fundDetailResponse.getName());
+            fundBasicEntity.setType(fundDetailResponse.getType());
+            fundBasicEntity.setCode(fundDetailResponse.getCode());
         }
-        fundBasicEntity.setBuyRate(fundDetail.getBuyRate());
+        fundBasicEntity.setBuyRate(fundDetailResponse.getBuyRate());
         fundBasicEntity.setOperatingRate(addFundBO.getOperatingRate());
-        fundBasicEntity.setManager(fundDetail.getManager());
-        fundBasicEntity.setFundScale(fundDetail.getFundScale());
+        fundBasicEntity.setManager(fundDetailResponse.getManager());
+        fundBasicEntity.setFundScale(fundDetailResponse.getFundScale());
         if (fundBasicDao.saveOrUpdate(fundBasicEntity)) {
-            log.debug("添加基金成功：{}", fundBasicEntity);
+            addFundNetWorth(fundDetailResponse);
+            log.debug("添加基金成功，基金代码={}", fundBasicEntity);
         }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void delFund(DelFundBO delFundBO) {
-        log.debug("开始删除基金：{}", delFundBO.getCode());
+        log.debug("开始删除基金，基金代码={}", delFundBO.getCode());
         FundBasicEntity fundBasicEntity = fundBasicDao.getByCode(delFundBO.getCode());
         if (ObjectUtil.isNull(fundBasicEntity)) {
             log.error("基金不存在，删除失败，{}", delFundBO.getCode());
@@ -67,6 +71,16 @@ public class FundOperationServiceImpl implements FundOperationService {
         if (fundBasicDao.removeById(fundBasicEntity)) {
             log.info("删除基金成功");
         }
+        delFundNetWorth(delFundBO.getCode());
+        log.debug("结束删除基金，基金代码={}", delFundBO.getCode());
+    }
+
+    @Override
+    public void addFundNetWorth(AddFundNetWorthBO addFundNetWorthBO) {
+        log.debug("开始添加基金净值记录，addFundNetWorthBO={}", addFundNetWorthBO);
+        FundDetailResponse fundDetailResponse = financialDataService.getFundDetail(addFundNetWorthBO.getCode(), addFundNetWorthBO.getStartDate(), addFundNetWorthBO.getEndDate());
+        addFundNetWorth(fundDetailResponse);
+        log.debug("结束添加基金净值记录，addFundNetWorthBO={}", addFundNetWorthBO);
     }
 
     @Override
@@ -91,8 +105,17 @@ public class FundOperationServiceImpl implements FundOperationService {
                 }
             });
             if (ArrayUtil.isNotEmpty(fundNetWorthEntityList)) {
-                // todo 重写批量存储或修改，当日期已经存在时，不做操作（count），当没有这个日期时，进行插入操作
+                // 当没有这个日期时，进行插入操作
+                fundNetWorthDao.saveOrUpdateBatch(fundNetWorthEntityList.stream()
+                        .filter(fundNetWorthEntity -> !fundNetWorthDao.isExist(fundNetWorthEntity.getDate()))
+                        .collect(Collectors.toList()));
             }
         }
+        log.debug("结束添加基金净值记录");
+    }
+
+    @Override
+    public void delFundNetWorth(String code) {
+        fundNetWorthDao.removeNetWorth(code);
     }
 }

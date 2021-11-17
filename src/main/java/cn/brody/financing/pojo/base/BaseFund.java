@@ -1,6 +1,8 @@
 package cn.brody.financing.pojo.base;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -9,6 +11,8 @@ import java.io.Serializable;
  * @date 2021/10/26
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BaseFund implements Serializable {
     private static final long serialVersionUID = -5964142438705394161L;
 
