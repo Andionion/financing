@@ -7,12 +7,22 @@ import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
 import cn.brody.financing.service.FundTradeService;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import static cn.brody.financing.constant.TradeOperationConstant.REDEMPTION;
+import static cn.brody.financing.constant.TradeOperationConstant.REQUISITION;
 
 /**
  * @author brody
@@ -31,12 +41,64 @@ public class FundTradeServiceImpl implements FundTradeService {
     public void addTradeRecord(AddTradeBO addTradeBO) {
         FundTradeRecordEntity fundTradeRecordEntity = new FundTradeRecordEntity(addTradeBO);
         // 尝试存储买入份额
-        FundNetWorthEntity netWorthEntity = fundNetWorthDao.getNetWorth(addTradeBO.getCode(), addTradeBO.getConfirmDate());
+        FundNetWorthEntity netWorthEntity = fundNetWorthDao.
+                getNetWorth(addTradeBO.getCode(), addTradeBO.getConfirmDate());
         if (ObjectUtil.isNotNull(netWorthEntity)) {
-            fundTradeRecordEntity.setConfirmShare(BigDecimal.valueOf(addTradeBO.getAmount() / netWorthEntity.getNetWorth()).setScale(2, RoundingMode.HALF_DOWN).doubleValue());
+            double confirmShare = BigDecimal.valueOf(addTradeBO.getAmount() / netWorthEntity.getNetWorth())
+                    .setScale(2, RoundingMode.HALF_DOWN)
+                    .doubleValue();
+            fundTradeRecordEntity.setConfirmShare(confirmShare);
             // todo 还需要考虑一个问题，就是当前日期有分红怎么算
             // todo 基金详情中，总份额增加
         }
         fundTradeRecordDao.save(fundTradeRecordEntity);
     }
+
+
+    @Override
+    public void importTradeRecord(MultipartFile file) {
+        log.info("开始导入 excel");
+        ExcelReader reader = ExcelUtil.getReader(Objects.requireNonNull(getClass().getResource("/")).getPath() + "fundTrade.xlsx");
+        List<Map<String, Object>> maps = reader.readAll();
+        maps.forEach(map -> {
+            String code = map.get("code").toString();
+            map.remove("code");
+            Map<LocalDate, Double> tempMap = new LinkedHashMap<>();
+            map.forEach((key, value) -> {
+                if (StrUtil.isNotBlank(value.toString())) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    LocalDate parse = LocalDate.parse(key, formatter);
+                    tempMap.put(parse, Double.parseDouble(value.toString()));
+                }
+            });
+            log.info("开始添加交易记录，基金代码：{},map:{}", code, tempMap);
+            addTradeRecord(code, tempMap);
+        });
+    }
+
+    /**
+     * 添加交易记录
+     *
+     * @param code
+     * @param tradeMap
+     */
+    private void addTradeRecord(String code, Map<LocalDate, Double> tradeMap) {
+        Set<LocalDate> localDates = tradeMap.keySet();
+        List<FundNetWorthEntity> fundNetWorthEntities = fundNetWorthDao.listNetWorth(code, localDates);
+        List<LocalDate> alreadyExistRecordList = fundTradeRecordDao.listAlreadyExistRecord(code, localDates);
+        List<FundTradeRecordEntity> fundTradeRecordEntityList = new ArrayList<>();
+        fundNetWorthEntities.forEach(fundNetWorthEntity -> {
+            Double amount = tradeMap.get(fundNetWorthEntity.getDate());
+            if (ObjectUtil.isNotNull(amount) && BigDecimal.valueOf(amount).compareTo(BigDecimal.ZERO) != 0 && !alreadyExistRecordList.contains(fundNetWorthEntity.getDate())) {
+                Integer type = amount < 0 ? REQUISITION : REDEMPTION;
+                double confirmShare = -1.0 * BigDecimal.valueOf(amount / fundNetWorthEntity.getNetWorth())
+                        .setScale(2, RoundingMode.HALF_DOWN)
+                        .doubleValue();
+                fundTradeRecordEntityList.add(new FundTradeRecordEntity(code, amount, type, confirmShare, fundNetWorthEntity.getDate()));
+            }
+        });
+        log.info("开始存储交易记录列表，列表：{}", fundTradeRecordEntityList);
+        fundTradeRecordDao.saveBatch(fundTradeRecordEntityList);
+    }
+
 }

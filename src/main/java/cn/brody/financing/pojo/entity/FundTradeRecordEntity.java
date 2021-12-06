@@ -50,10 +50,19 @@ public class FundTradeRecordEntity extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
     public FundTradeRecordEntity(AddTradeBO addTradeBO) {
         super(addTradeBO.getCode());
         amount = addTradeBO.getAmount();
         type = addTradeBO.getType();
         confirmDate = addTradeBO.getConfirmDate();
+    }
+
+    public FundTradeRecordEntity(String code, Double amount, Integer type, Double confirmShare, LocalDate confirmDate) {
+        super(code);
+        this.amount = amount;
+        this.type = type;
+        this.confirmShare = confirmShare;
+        this.confirmDate = confirmDate;
     }
 }

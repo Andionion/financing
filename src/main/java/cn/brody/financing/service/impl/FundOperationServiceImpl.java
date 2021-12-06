@@ -13,6 +13,8 @@ import cn.brody.financing.support.financial.service.FinancialDataService;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,7 +80,8 @@ public class FundOperationServiceImpl implements FundOperationService {
     @Override
     public void addFundNetWorth(AddFundNetWorthBO addFundNetWorthBO) {
         log.debug("开始添加基金净值记录，addFundNetWorthBO={}", addFundNetWorthBO);
-        FundDetailResponse fundDetailResponse = financialDataService.getFundDetail(addFundNetWorthBO.getCode(), addFundNetWorthBO.getStartDate(), addFundNetWorthBO.getEndDate());
+        FundDetailResponse fundDetailResponse = financialDataService
+                .getFundDetail(addFundNetWorthBO.getCode(), addFundNetWorthBO.getStartDate(), addFundNetWorthBO.getEndDate());
         addFundNetWorth(fundDetailResponse);
         log.debug("结束添加基金净值记录，addFundNetWorthBO={}", addFundNetWorthBO);
     }
@@ -90,28 +93,38 @@ public class FundOperationServiceImpl implements FundOperationService {
         List<List<String>> totalNetWorthDataList = fundDetailResponse.getTotalNetWorthData();
         if (ArrayUtil.isNotEmpty(netWorthDataList) && ArrayUtil.isNotEmpty(totalNetWorthDataList)) {
             List<FundNetWorthEntity> fundNetWorthEntityList = new ArrayList<>();
-            Map<String, List<String>> totalWorthMap = totalNetWorthDataList.stream().collect(Collectors.toMap(list -> list.get(0), list -> list));
+            Map<String, List<String>> totalWorthMap = totalNetWorthDataList.stream()
+                    .collect(Collectors.toMap(list -> list.get(0), list -> list));
             netWorthDataList.forEach(list -> {
                 if (ArrayUtil.isNotEmpty(list)) {
                     // 历史单位净值信息 ["2001-12-18" , 1 , 0 , ""] 依次表示：日期；单位净值；净值涨幅；每份分红
                     String date = list.get(0);
-                    String netWorth = list.get(1);
-                    String dividends = list.get(3);
+                    double netWorth = Double.parseDouble(list.get(1));
+                    String dividendString = list.get(3);
+                    String group0 = ReUtil.getGroup0("\\d\\.\\d+", dividendString);
+                    double dividends = StrUtil.isBlank(group0) ? 0 : Double.parseDouble(group0);
                     // 历史累计净值信息 ["2001-12-18" , 1 ] 依次表示：日期；累计净值
                     List<String> totalWorthData = totalWorthMap.get(date);
-                    String totalWorth = totalWorthData.get(1);
-                    fundNetWorthEntityList.add(new FundNetWorthEntity(LocalDateTimeUtil.parseDate(date), Double.parseDouble(netWorth),
-                            Double.parseDouble(totalWorth), Double.parseDouble(dividends)));
+                    double totalWorth = Double.parseDouble(totalWorthData.get(1));
+                    fundNetWorthEntityList.add(new FundNetWorthEntity(fundDetailResponse.getCode(), LocalDateTimeUtil.parseDate(date), netWorth, totalWorth, dividends));
                 }
             });
             if (ArrayUtil.isNotEmpty(fundNetWorthEntityList)) {
                 // 当没有这个日期时，进行插入操作
-                fundNetWorthDao.saveOrUpdateBatch(fundNetWorthEntityList.stream()
-                        .filter(fundNetWorthEntity -> !fundNetWorthDao.isExist(fundNetWorthEntity.getDate()))
-                        .collect(Collectors.toList()));
+                List<FundNetWorthEntity> list = fundNetWorthDao.list();
+                List<FundNetWorthEntity> collect = fundNetWorthEntityList.stream()
+                        .filter(fundNetWorthEntity -> !list.contains(fundNetWorthEntity))
+                        .collect(Collectors.toList());
+                fundNetWorthDao.saveOrUpdateBatch(collect);
             }
         }
         log.debug("结束添加基金净值记录");
+    }
+
+    public static void main(String[] args) {
+        String dividendString = "每份分红0.04元";
+        String group0 = ReUtil.getGroup0("\\d\\.\\d+", dividendString);
+        System.out.println(group0);
     }
 
     @Override

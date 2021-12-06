@@ -4,6 +4,7 @@ import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -20,6 +21,15 @@ public interface FundNetWorthDao extends IService<FundNetWorthEntity> {
      * @return 净值 entity
      */
     FundNetWorthEntity getNetWorth(String code, LocalDate confirmDate);
+
+    /**
+     * 获取在确认日期范围内的基金净值
+     *
+     * @param code            基金代码
+     * @param confirmDateList 确认日期 list
+     * @return
+     */
+    List<FundNetWorthEntity> listNetWorth(String code, Collection<LocalDate> confirmDateList);
 
     /**
      * 通过基金代码获取净值记录

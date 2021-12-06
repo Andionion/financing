@@ -1,6 +1,7 @@
 package cn.brody.financing.service;
 
 import cn.brody.financing.pojo.bo.AddTradeBO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 交易记录 service
@@ -18,4 +19,11 @@ public interface FundTradeService {
      * @param addTradeBO 添加交易记录 BO
      */
     void addTradeRecord(AddTradeBO addTradeBO);
+
+    /**
+     * 导入交易记录
+     *
+     * @param file excel 文件
+     */
+    void importTradeRecord(MultipartFile file);
 }

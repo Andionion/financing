@@ -1,0 +1,36 @@
+{
+    "code": "161005",
+    "name": "富国天惠成长混合A/B(LOF)",
+    "type": "混合型",
+    "netWorth": 3.4887,
+    "expectWorth": 3.4830,
+    "totalWorth": 6.5367,
+    "expectGrowth": "-0.30",
+    "dayGrowth": "-0.14",
+    "lastWeekGrowth": "1.9462",
+    "lastMonthGrowth": "2.11",
+    "lastThreeMonthsGrowth": "0.02",
+    "lastSixMonthsGrowth": "-5.35",
+    "lastYearGrowth": "8.86",
+    "buyMin": "10",
+    "buySourceRate": "1.50",
+    "buyRate": "0.15",
+    "manager": "朱少醒",
+    "fundScale": "367.85亿",
+    "netWorthDate": "2021-11-25",
+    "expectWorthDate": "2021-11-25 15:00:00",
+    "netWorthData": [
+        [
+            "2021-11-25",
+            "3.4887",
+            "-0.14",
+            ""
+        ]
+    ],
+    "totalNetWorthData": [
+        [
+            "2021-11-25",
+            "6.5367"
+        ]
+    ]
+}

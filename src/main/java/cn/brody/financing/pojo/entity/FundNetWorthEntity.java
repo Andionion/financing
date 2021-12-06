@@ -49,6 +49,14 @@ public class FundNetWorthEntity extends BaseEntity implements Serializable {
     @TableField(value = "dividends")
     private Double dividends;
 
+    public FundNetWorthEntity(String code, LocalDate date, Double netWorth, Double totalWorth, Double dividends) {
+        super(code);
+        this.date = date;
+        this.netWorth = netWorth;
+        this.totalWorth = totalWorth;
+        this.dividends = dividends;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public static final String COL_DATE = "date";
