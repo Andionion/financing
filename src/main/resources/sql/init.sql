@@ -1,14 +1,13 @@
 -- 基金基本表
 create table IF NOT EXISTS financing.fund_basic
 (
-    id             bigint      not null primary key comment '主键',
-    name           varchar(20) not null comment '基金名称',
-    code           varchar(6)  not null comment '基金代码',
-    buy_rate       double      not null comment '购买费率',
-    operating_rate double      not null comment '运作费率',
-    manager        varchar(20) not null comment '基金经理',
-    type           varchar(20) comment '基金类型',
-    fund_scale     varchar(20) comment '基金规模'
+    id         bigint      not null primary key comment '主键',
+    name       varchar(20) not null comment '基金名称',
+    code       varchar(6)  not null comment '基金代码',
+    buy_rate   double      not null comment '购买费率',
+    manager    varchar(20) not null comment '基金经理',
+    type       varchar(20) comment '基金类型',
+    fund_scale varchar(20) comment '基金规模'
 ) comment ='基金基本表';
 
 -- 基金单位净值表

@@ -15,4 +15,12 @@ public interface FundBasicDao extends IService<FundBasicEntity> {
      * @return
      */
     FundBasicEntity getByCode(String code);
+
+    /**
+     * 判断基金是否存在
+     *
+     * @param code 基金代码
+     * @return 存在则返回 true，否则返回 false
+     */
+    boolean isFundExist(String code);
 }

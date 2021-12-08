@@ -1,7 +1,6 @@
 package cn.brody.financing.pojo.bo;
 
 import cn.brody.financing.pojo.base.BaseFund;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,13 +11,11 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class AddFundBO extends BaseFund {
-    private static final long serialVersionUID = 8926823947869559164L;
+    private static final long serialVersionUID = 5179055650706814481L;
 
-    /**
-     * 运作费率
-     */
-    private Double operatingRate;
+    public AddFundBO(String code) {
+        super(code);
+    }
 }

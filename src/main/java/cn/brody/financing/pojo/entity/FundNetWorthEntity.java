@@ -25,6 +25,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 public class FundNetWorthEntity extends BaseEntity implements Serializable {
 
+    private static final long serialVersionUID = 2327766672559090459L;
     /**
      * 日期
      */
@@ -56,8 +57,6 @@ public class FundNetWorthEntity extends BaseEntity implements Serializable {
         this.totalWorth = totalWorth;
         this.dividends = dividends;
     }
-
-    private static final long serialVersionUID = 1L;
 
     public static final String COL_DATE = "date";
 

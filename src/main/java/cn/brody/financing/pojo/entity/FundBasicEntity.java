@@ -22,7 +22,7 @@ import java.io.Serializable;
 @TableName(value = "fund_basic")
 @EqualsAndHashCode(callSuper = true)
 public class FundBasicEntity extends BaseEntity implements Serializable {
-    
+
     /**
      * 基金名称
      */
@@ -34,12 +34,6 @@ public class FundBasicEntity extends BaseEntity implements Serializable {
      */
     @TableField(value = "buy_rate")
     private Double buyRate;
-
-    /**
-     * 运作费率
-     */
-    @TableField(value = "operating_rate")
-    private Double operatingRate;
 
     /**
      * 基金经理

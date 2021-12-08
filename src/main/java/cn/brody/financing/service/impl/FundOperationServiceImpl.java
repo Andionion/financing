@@ -10,8 +10,8 @@ import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import cn.brody.financing.service.FundOperationService;
 import cn.brody.financing.support.financial.response.FundDetailResponse;
 import cn.brody.financing.support.financial.service.FinancialDataService;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,6 @@ public class FundOperationServiceImpl implements FundOperationService {
             fundBasicEntity.setCode(fundDetailResponse.getCode());
         }
         fundBasicEntity.setBuyRate(fundDetailResponse.getBuyRate());
-        fundBasicEntity.setOperatingRate(addFundBO.getOperatingRate());
         fundBasicEntity.setManager(fundDetailResponse.getManager());
         fundBasicEntity.setFundScale(fundDetailResponse.getFundScale());
         if (fundBasicDao.saveOrUpdate(fundBasicEntity)) {
@@ -91,12 +91,12 @@ public class FundOperationServiceImpl implements FundOperationService {
         log.debug("开始添加基金净值记录");
         List<List<String>> netWorthDataList = fundDetailResponse.getNetWorthData();
         List<List<String>> totalNetWorthDataList = fundDetailResponse.getTotalNetWorthData();
-        if (ArrayUtil.isNotEmpty(netWorthDataList) && ArrayUtil.isNotEmpty(totalNetWorthDataList)) {
+        if (CollectionUtil.isNotEmpty(netWorthDataList) && CollectionUtil.isNotEmpty(totalNetWorthDataList)) {
             List<FundNetWorthEntity> fundNetWorthEntityList = new ArrayList<>();
             Map<String, List<String>> totalWorthMap = totalNetWorthDataList.stream()
                     .collect(Collectors.toMap(list -> list.get(0), list -> list));
             netWorthDataList.forEach(list -> {
-                if (ArrayUtil.isNotEmpty(list)) {
+                if (CollectionUtil.isNotEmpty(list)) {
                     // 历史单位净值信息 ["2001-12-18" , 1 , 0 , ""] 依次表示：日期；单位净值；净值涨幅；每份分红
                     String date = list.get(0);
                     double netWorth = Double.parseDouble(list.get(1));
@@ -105,26 +105,25 @@ public class FundOperationServiceImpl implements FundOperationService {
                     double dividends = StrUtil.isBlank(group0) ? 0 : Double.parseDouble(group0);
                     // 历史累计净值信息 ["2001-12-18" , 1 ] 依次表示：日期；累计净值
                     List<String> totalWorthData = totalWorthMap.get(date);
-                    double totalWorth = Double.parseDouble(totalWorthData.get(1));
+                    double totalWorth = Double.parseDouble(totalWorthData.get(1) == null ? "0" : totalWorthData.get(1));
                     fundNetWorthEntityList.add(new FundNetWorthEntity(fundDetailResponse.getCode(), LocalDateTimeUtil.parseDate(date), netWorth, totalWorth, dividends));
                 }
             });
-            if (ArrayUtil.isNotEmpty(fundNetWorthEntityList)) {
+            if (CollectionUtil.isNotEmpty(fundNetWorthEntityList)) {
                 // 当没有这个日期时，进行插入操作
-                List<FundNetWorthEntity> list = fundNetWorthDao.list();
-                List<FundNetWorthEntity> collect = fundNetWorthEntityList.stream()
-                        .filter(fundNetWorthEntity -> !list.contains(fundNetWorthEntity))
-                        .collect(Collectors.toList());
-                fundNetWorthDao.saveOrUpdateBatch(collect);
+                List<FundNetWorthEntity> netWorthEntityList;
+                List<FundNetWorthEntity> list = fundNetWorthDao.listNetWorthList(fundDetailResponse.getCode());
+                if (CollectionUtil.isNotEmpty(list)) {
+                    List<LocalDate> existNetWorthList = list.stream().map(FundNetWorthEntity::getDate).collect(Collectors.toList());
+                    netWorthEntityList = fundNetWorthEntityList.stream().filter(netWorth -> !existNetWorthList.contains(netWorth.getDate()))
+                            .collect(Collectors.toList());
+                } else {
+                    netWorthEntityList = fundNetWorthEntityList;
+                }
+                fundNetWorthDao.saveOrUpdateBatch(netWorthEntityList);
             }
         }
         log.debug("结束添加基金净值记录");
-    }
-
-    public static void main(String[] args) {
-        String dividendString = "每份分红0.04元";
-        String group0 = ReUtil.getGroup0("\\d\\.\\d+", dividendString);
-        System.out.println(group0);
     }
 
     @Override

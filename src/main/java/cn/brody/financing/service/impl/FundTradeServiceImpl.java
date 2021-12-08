@@ -1,10 +1,13 @@
 package cn.brody.financing.service.impl;
 
+import cn.brody.financing.mapper.FundBasicDao;
 import cn.brody.financing.mapper.FundNetWorthDao;
 import cn.brody.financing.mapper.FundTradeRecordDao;
+import cn.brody.financing.pojo.bo.AddFundBO;
 import cn.brody.financing.pojo.bo.AddTradeBO;
 import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
+import cn.brody.financing.service.FundOperationService;
 import cn.brody.financing.service.FundTradeService;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -36,6 +39,10 @@ public class FundTradeServiceImpl implements FundTradeService {
     private FundTradeRecordDao fundTradeRecordDao;
     @Autowired
     private FundNetWorthDao fundNetWorthDao;
+    @Autowired
+    private FundBasicDao fundBasicDao;
+    @Autowired
+    private FundOperationService fundOperationService;
 
     @Override
     public void addTradeRecord(AddTradeBO addTradeBO) {
@@ -65,12 +72,17 @@ public class FundTradeServiceImpl implements FundTradeService {
             map.remove("code");
             Map<LocalDate, Double> tempMap = new LinkedHashMap<>();
             map.forEach((key, value) -> {
-                if (StrUtil.isNotBlank(value.toString())) {
+                if (ObjectUtil.isNotNull(value) && StrUtil.isNotBlank(value.toString())) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     LocalDate parse = LocalDate.parse(key, formatter);
                     tempMap.put(parse, Double.parseDouble(value.toString()));
                 }
             });
+            // 添加基金记录
+            if (!fundBasicDao.isFundExist(code)) {
+                log.info("基金不存在，开始添加基金，基金代码：{}", code);
+                fundOperationService.addFund(new AddFundBO(code));
+            }
             log.info("开始添加交易记录，基金代码：{},map:{}", code, tempMap);
             addTradeRecord(code, tempMap);
         });

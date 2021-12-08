@@ -46,7 +46,6 @@ class FundOperationServiceImplTest {
         when(fundNetWorthDao.saveOrUpdateBatch(any())).thenReturn(true);
         AddFundBO addFundBO = new AddFundBO();
         addFundBO.setCode("161005");
-        addFundBO.setOperatingRate(1.75);
         fundOperationService.addFund(addFundBO);
         verify(fundBasicDao, times(1)).saveOrUpdate(any());
         verify(financialDataService, times(1)).getFundDetail(any());
