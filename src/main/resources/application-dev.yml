@@ -7,7 +7,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://rm-bp1jj7739i2y6c3c3vo.mysql.rds.aliyuncs.com:3306/financing
+    url: jdbc:mysql://rm-bp1jj7739i2y6c3c3vo.mysql.rds.aliyuncs.com:3306/financing?rewriteBatchedStatements=true
     username: cyf
     password: Admin12345
   redis:

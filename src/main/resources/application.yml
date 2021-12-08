@@ -6,9 +6,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/financing?serverTimezone=GMT%2B8
-    username: root
-    password: 123456
+    url: jdbc:mysql://rm-bp1jj7739i2y6c3c3vo.mysql.rds.aliyuncs.com:3306/financing&rewriteBatchedStatements=true
+    username: cyf
+    password: Admin12345
   redis:
     host: 127.0.0.1
     port: 6379
@@ -32,7 +32,7 @@ mybatis-plus:
 
 logging:
   level:
-    root: debug
-    org.brody: debug
+    root: info
+    org.brody: info
 
 
