@@ -5,6 +5,7 @@ import cn.brody.financing.mapper.FundNetWorthDao;
 import cn.brody.financing.mapper.FundTradeRecordDao;
 import cn.brody.financing.pojo.bo.AddFundBO;
 import cn.brody.financing.pojo.bo.AddTradeBO;
+import cn.brody.financing.pojo.entity.FundBasicEntity;
 import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
 import cn.brody.financing.service.FundOperationService;
@@ -65,7 +66,7 @@ public class FundTradeServiceImpl implements FundTradeService {
     @Override
     public void importTradeRecord(MultipartFile file) {
         log.info("开始导入 excel");
-        ExcelReader reader = ExcelUtil.getReader(Objects.requireNonNull(getClass().getResource("/")).getPath() + "fundTrade.xlsx");
+        ExcelReader reader = ExcelUtil.getReader(Objects.requireNonNull(getClass().getResource("/")).getPath() + "fundTrade1.xlsx");
         List<Map<String, Object>> maps = reader.readAll();
         maps.forEach(map -> {
             String code = map.get("code").toString();
@@ -78,11 +79,6 @@ public class FundTradeServiceImpl implements FundTradeService {
                     tempMap.put(parse, Double.parseDouble(value.toString()));
                 }
             });
-            // 添加基金记录
-            if (!fundBasicDao.isFundExist(code)) {
-                log.info("基金不存在，开始添加基金，基金代码：{}", code);
-                fundOperationService.addFund(new AddFundBO(code));
-            }
             log.info("开始添加交易记录，基金代码：{},map:{}", code, tempMap);
             addTradeRecord(code, tempMap);
         });
@@ -96,14 +92,22 @@ public class FundTradeServiceImpl implements FundTradeService {
      */
     private void addTradeRecord(String code, Map<LocalDate, Double> tradeMap) {
         Set<LocalDate> localDates = tradeMap.keySet();
+        // 添加基金记录
+        if (!fundBasicDao.isFundExist(code)) {
+            log.info("基金不存在，开始添加基金，基金代码：{}", code);
+            fundOperationService.addFund(new AddFundBO(code));
+        }
+        FundBasicEntity fundBasicEntity = fundBasicDao.getByCode(code);
         List<FundNetWorthEntity> fundNetWorthEntities = fundNetWorthDao.listNetWorth(code, localDates);
         List<LocalDate> alreadyExistRecordList = fundTradeRecordDao.listAlreadyExistRecord(code, localDates);
         List<FundTradeRecordEntity> fundTradeRecordEntityList = new ArrayList<>();
         fundNetWorthEntities.forEach(fundNetWorthEntity -> {
             Double amount = tradeMap.get(fundNetWorthEntity.getDate());
-            if (ObjectUtil.isNotNull(amount) && BigDecimal.valueOf(amount).compareTo(BigDecimal.ZERO) != 0 && !alreadyExistRecordList.contains(fundNetWorthEntity.getDate())) {
+            boolean amountNotNull = ObjectUtil.isNotNull(amount) && BigDecimal.valueOf(amount).compareTo(BigDecimal.ZERO) != 0;
+            if (amountNotNull && !alreadyExistRecordList.contains(fundNetWorthEntity.getDate())) {
                 Integer type = amount < 0 ? REQUISITION : REDEMPTION;
-                double confirmShare = -1.0 * BigDecimal.valueOf(amount / fundNetWorthEntity.getNetWorth())
+                double confirmAmount = amount * (100 - fundBasicEntity.getBuyRate()) / 100;
+                double confirmShare = -1.0 * BigDecimal.valueOf(confirmAmount / fundNetWorthEntity.getNetWorth())
                         .setScale(2, RoundingMode.HALF_DOWN)
                         .doubleValue();
                 fundTradeRecordEntityList.add(new FundTradeRecordEntity(code, amount, type, confirmShare, fundNetWorthEntity.getDate()));

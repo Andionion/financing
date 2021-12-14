@@ -44,7 +44,7 @@ public class FundOperationServiceImpl implements FundOperationService {
     @Transactional(rollbackFor = Exception.class)
     public void addFund(AddFundBO addFundBO) {
         log.debug("开始添加基金，基金代码={}", addFundBO.getCode());
-        FundDetailResponse fundDetailResponse = financialDataService.getFundDetail(addFundBO.getCode());
+        FundDetailResponse fundDetailResponse = financialDataService.getFundDetail(addFundBO.getCode(), LocalDate.of(2020, 8, 31), null);
         FundBasicEntity fundBasicEntity = fundBasicDao.getByCode(addFundBO.getCode());
         if (ObjectUtil.isNull(fundBasicEntity)) {
             fundBasicEntity = new FundBasicEntity();
