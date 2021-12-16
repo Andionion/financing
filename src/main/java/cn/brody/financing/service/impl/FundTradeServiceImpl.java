@@ -105,11 +105,17 @@ public class FundTradeServiceImpl implements FundTradeService {
             Double amount = tradeMap.get(fundNetWorthEntity.getDate());
             boolean amountNotNull = ObjectUtil.isNotNull(amount) && BigDecimal.valueOf(amount).compareTo(BigDecimal.ZERO) != 0;
             if (amountNotNull && !alreadyExistRecordList.contains(fundNetWorthEntity.getDate())) {
+                // 申购的时候按照金额计算份额，赎回的时候直接就是份额
                 Integer type = amount < 0 ? REQUISITION : REDEMPTION;
-                double confirmAmount = amount * (100 - fundBasicEntity.getBuyRate()) / 100;
-                double confirmShare = -1.0 * BigDecimal.valueOf(confirmAmount / fundNetWorthEntity.getNetWorth())
-                        .setScale(2, RoundingMode.HALF_DOWN)
-                        .doubleValue();
+                double confirmShare;
+                if (REQUISITION.equals(type)) {
+                    double confirmAmount = amount * (100 - fundBasicEntity.getBuyRate()) / 100;
+                    confirmShare = -1.0 * BigDecimal.valueOf(confirmAmount / fundNetWorthEntity.getNetWorth())
+                            .setScale(2, RoundingMode.HALF_DOWN)
+                            .doubleValue();
+                } else {
+                    confirmShare = -amount;
+                }
                 fundTradeRecordEntityList.add(new FundTradeRecordEntity(code, amount, type, confirmShare, fundNetWorthEntity.getDate()));
             }
         });
