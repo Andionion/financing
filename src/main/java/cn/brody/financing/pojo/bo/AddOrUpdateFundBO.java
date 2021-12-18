@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class AddFundBO extends BaseFund {
+public class AddOrUpdateFundBO extends BaseFund {
     private static final long serialVersionUID = 5179055650706814481L;
 
-    public AddFundBO(String code) {
+    public AddOrUpdateFundBO(String code) {
         super(code);
     }
 }

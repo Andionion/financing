@@ -16,7 +16,7 @@ public class ExcelUtilTest {
 
     @Test
     public void testRead() {
-//        String resourceAsString = ResourceHelper.getResourceAsString(getClass(), "/fundTrade.xlsx");
+//        String resourceAsString = ResourceHelper.getResourceAsString(getClass(), "/fundTradeTest.xlsx");
         String path = Objects.requireNonNull(getClass().getResource("/")).getPath();
         ExcelReader reader = ExcelUtil.getReader(Objects.requireNonNull(getClass().getResource("/")).getPath() + "fundTrade.xlsx");
         List<List<Object>> read = reader.read();

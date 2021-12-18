@@ -37,10 +37,11 @@ create table if not exists financing.fund_position
 (
     id                        bigint     not null primary key comment '主键',
     code                      varchar(6) not null comment '基金代码',
-    present_value             double     not null comment '现值',
-    redeemed                  double     not null comment '已赎回',
-    investment                double     not null comment '总投入',
-    revenue                   double     not null comment '总收益',
-    holding_income            double     not null comment '持有收益',
-    annualized_rate_of_return double     not null comment '年化收益率'
+    present_value             double comment '现值',
+    redeemed                  double comment '已赎回',
+    investment                double comment '总投入',
+    revenue                   double comment '总收益',
+    holding_income            double comment '持有收益',
+    share                     double comment '持有份额',
+    annualized_rate_of_return double comment '年化收益率'
 ) comment = '持仓表';

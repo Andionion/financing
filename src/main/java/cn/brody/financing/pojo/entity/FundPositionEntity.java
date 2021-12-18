@@ -49,6 +49,11 @@ public class FundPositionEntity extends BaseEntity implements Serializable {
     private Double revenue;
 
     /**
+     * 持有份额
+     */
+    private Double share;
+
+    /**
      * 持有收益
      */
     @TableField(value = "holding_income")

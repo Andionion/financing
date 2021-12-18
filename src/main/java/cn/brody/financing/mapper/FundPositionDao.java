@@ -8,4 +8,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @date 2021/10/25
  **/
 public interface FundPositionDao extends IService<FundPositionEntity> {
+    /**
+     * 从基金代码中获取持仓
+     *
+     * @param code
+     * @return
+     */
+    FundPositionEntity getByFundCode(String code);
 }

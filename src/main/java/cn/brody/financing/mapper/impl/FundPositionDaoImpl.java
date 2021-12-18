@@ -12,4 +12,9 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class FundPositionDaoImpl extends ServiceImpl<FundPositionMapper, FundPositionEntity> implements FundPositionDao {
+
+    @Override
+    public FundPositionEntity getByFundCode(String code) {
+        return lambdaQuery().eq(FundPositionEntity::getCode, code).one();
+    }
 }

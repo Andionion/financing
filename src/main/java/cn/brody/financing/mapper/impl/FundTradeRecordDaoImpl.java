@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -24,10 +24,15 @@ public class FundTradeRecordDaoImpl extends ServiceImpl<FundTradeRecordMapper, F
     }
 
     @Override
-    public List<LocalDate> listAlreadyExistRecord(String code, Set<LocalDate> localDates) {
+    public List<LocalDate> listAlreadyExistRecord(String code, Collection<LocalDate> localDates) {
         List<FundTradeRecordEntity> list = lambdaQuery()
                 .eq(FundTradeRecordEntity::getCode, code)
                 .in(FundTradeRecordEntity::getConfirmDate, localDates).list();
         return list.stream().map(FundTradeRecordEntity::getConfirmDate).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FundTradeRecordEntity> listByFundCode(String code) {
+        return lambdaQuery().eq(FundTradeRecordEntity::getCode, code).list();
     }
 }

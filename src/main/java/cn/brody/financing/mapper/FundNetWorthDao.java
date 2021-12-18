@@ -54,4 +54,12 @@ public interface FundNetWorthDao extends IService<FundNetWorthEntity> {
      * @return
      */
     Boolean removeNetWorth(String code);
+
+    /**
+     * 获取最新净值
+     *
+     * @param code
+     * @return
+     */
+    Double getLatestNetWorth(String code);
 }

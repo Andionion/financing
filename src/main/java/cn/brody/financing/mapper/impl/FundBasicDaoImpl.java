@@ -27,4 +27,5 @@ public class FundBasicDaoImpl extends ServiceImpl<FundBasicMapper, FundBasicEnti
     public boolean isFundExist(String code) {
         return lambdaQuery().eq(FundBasicEntity::getCode, code).count() > 0;
     }
+
 }

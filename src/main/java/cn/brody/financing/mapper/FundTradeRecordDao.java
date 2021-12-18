@@ -4,8 +4,8 @@ import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Brody
@@ -28,5 +28,13 @@ public interface FundTradeRecordDao extends IService<FundTradeRecordEntity> {
      * @param localDates
      * @return
      */
-    List<LocalDate> listAlreadyExistRecord(String code, Set<LocalDate> localDates);
+    List<LocalDate> listAlreadyExistRecord(String code, Collection<LocalDate> localDates);
+
+    /**
+     * 通过基金代码获取该基金所有的记录
+     *
+     * @param code
+     * @return
+     */
+    List<FundTradeRecordEntity> listByFundCode(String code);
 }

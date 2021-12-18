@@ -3,12 +3,13 @@ package cn.brody.financing.service.impl;
 import cn.brody.financing.mapper.FundBasicDao;
 import cn.brody.financing.mapper.FundNetWorthDao;
 import cn.brody.financing.mapper.FundTradeRecordDao;
-import cn.brody.financing.pojo.bo.AddFundBO;
+import cn.brody.financing.pojo.bo.AddOrUpdateFundBO;
 import cn.brody.financing.pojo.bo.AddTradeBO;
+import cn.brody.financing.pojo.dto.ImportTradeDTO;
 import cn.brody.financing.pojo.entity.FundBasicEntity;
 import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
-import cn.brody.financing.service.FundOperationService;
+import cn.brody.financing.service.FundBasicService;
 import cn.brody.financing.service.FundTradeService;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -24,9 +25,9 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static cn.brody.financing.constant.TradeOperationConstant.REDEMPTION;
-import static cn.brody.financing.constant.TradeOperationConstant.REQUISITION;
+import static cn.brody.financing.constant.TradeOperationConstant.*;
 
 /**
  * @author brody
@@ -43,7 +44,7 @@ public class FundTradeServiceImpl implements FundTradeService {
     @Autowired
     private FundBasicDao fundBasicDao;
     @Autowired
-    private FundOperationService fundOperationService;
+    private FundBasicService fundBasicService;
 
     @Override
     public void addTradeRecord(AddTradeBO addTradeBO) {
@@ -66,59 +67,78 @@ public class FundTradeServiceImpl implements FundTradeService {
     @Override
     public void importTradeRecord(MultipartFile file) {
         log.info("开始导入 excel");
-        ExcelReader reader = ExcelUtil.getReader(Objects.requireNonNull(getClass().getResource("/")).getPath() + "fundTrade1.xlsx");
-        List<Map<String, Object>> maps = reader.readAll();
-        maps.forEach(map -> {
-            String code = map.get("code").toString();
-            map.remove("code");
-            Map<LocalDate, Double> tempMap = new LinkedHashMap<>();
+        ExcelReader reader = ExcelUtil.getReader(Objects.requireNonNull(getClass().getResource("/")).getPath() + "fundTrade.xlsx", 1);
+        List<Map<String, Object>> readerMaps = reader.readAll();
+        Map<String, List<ImportTradeDTO>> maps = initTradeMap(reader, readerMaps);
+        readerMaps.forEach(map -> {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDate date = LocalDate.parse(map.get("date").toString(), formatter);
+            map.remove("date");
             map.forEach((key, value) -> {
                 if (ObjectUtil.isNotNull(value) && StrUtil.isNotBlank(value.toString())) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    LocalDate parse = LocalDate.parse(key, formatter);
-                    tempMap.put(parse, Double.parseDouble(value.toString()));
+                    List<ImportTradeDTO> localDateDoubleList = maps.get(key);
+                    localDateDoubleList.add(new ImportTradeDTO(date, Double.parseDouble(value.toString())));
                 }
             });
-            log.info("开始添加交易记录，基金代码：{},map:{}", code, tempMap);
-            addTradeRecord(code, tempMap);
         });
+        maps.forEach((key, value) -> log.info("code：{}，trade：{}", key, value.stream().sorted()));
+        maps.forEach(this::addTradeRecord);
+    }
+
+    /**
+     * 获取交易记录的初始 map
+     *
+     * @param reader
+     * @param readerMaps
+     * @return
+     */
+    private Map<String, List<ImportTradeDTO>> initTradeMap(ExcelReader reader, List<Map<String, Object>> readerMaps) {
+        Map<String, List<ImportTradeDTO>> maps = new HashMap<>(10);
+        List<List<Object>> read = reader.read();
+        List<Object> header = read.get(0);
+        header.remove(0);
+        header.forEach(code -> maps.put(code.toString(), new ArrayList<>()));
+        return maps;
     }
 
     /**
      * 添加交易记录
      *
      * @param code
-     * @param tradeMap
+     * @param importTradeDTOList
      */
-    private void addTradeRecord(String code, Map<LocalDate, Double> tradeMap) {
-        Set<LocalDate> localDates = tradeMap.keySet();
+    private void addTradeRecord(String code, List<ImportTradeDTO> importTradeDTOList) {
+        List<LocalDate> localDates = importTradeDTOList.stream().map(ImportTradeDTO::getLocalDate).collect(Collectors.toList());
         // 添加基金记录
-        if (!fundBasicDao.isFundExist(code)) {
-            log.info("基金不存在，开始添加基金，基金代码：{}", code);
-            fundOperationService.addFund(new AddFundBO(code));
-        }
+        fundBasicService.addOrUpdateFund(new AddOrUpdateFundBO(code));
         FundBasicEntity fundBasicEntity = fundBasicDao.getByCode(code);
+        // 获取基金的所有净值
         List<FundNetWorthEntity> fundNetWorthEntities = fundNetWorthDao.listNetWorth(code, localDates);
-        List<LocalDate> alreadyExistRecordList = fundTradeRecordDao.listAlreadyExistRecord(code, localDates);
+        Map<LocalDate, Double> fundNetWorthMap = fundNetWorthEntities.stream().collect(Collectors.toMap(FundNetWorthEntity::getDate, FundNetWorthEntity::getNetWorth));
+        // 开始获取
         List<FundTradeRecordEntity> fundTradeRecordEntityList = new ArrayList<>();
-        fundNetWorthEntities.forEach(fundNetWorthEntity -> {
-            Double amount = tradeMap.get(fundNetWorthEntity.getDate());
+        importTradeDTOList.forEach(importTradeDTO -> {
+            Double amount = importTradeDTO.getAmount();
             boolean amountNotNull = ObjectUtil.isNotNull(amount) && BigDecimal.valueOf(amount).compareTo(BigDecimal.ZERO) != 0;
-            if (amountNotNull && !alreadyExistRecordList.contains(fundNetWorthEntity.getDate())) {
+            if (amountNotNull) {
                 // 申购的时候按照金额计算份额，赎回的时候直接就是份额
                 Integer type = amount < 0 ? REQUISITION : REDEMPTION;
                 double confirmShare;
                 if (REQUISITION.equals(type)) {
-                    double confirmAmount = amount * (100 - fundBasicEntity.getBuyRate()) / 100;
-                    confirmShare = -1.0 * BigDecimal.valueOf(confirmAmount / fundNetWorthEntity.getNetWorth())
-                            .setScale(2, RoundingMode.HALF_DOWN)
-                            .doubleValue();
+                    Double netWorth = fundNetWorthMap.get(importTradeDTO.getLocalDate());
+                    confirmShare = -1.0 * BigDecimal.valueOf(amount * (100 - fundBasicEntity.getBuyRate()) / 100 / netWorth)
+                            .setScale(4, RoundingMode.HALF_UP).doubleValue();
                 } else {
                     confirmShare = -amount;
                 }
-                fundTradeRecordEntityList.add(new FundTradeRecordEntity(code, amount, type, confirmShare, fundNetWorthEntity.getDate()));
+                fundTradeRecordEntityList.add(new FundTradeRecordEntity(code, amount, type, confirmShare, importTradeDTO.getLocalDate()));
+
             }
         });
+        // todo 此处先行加上富国天惠的分红，后续想办法解决分红计算问题
+        if ("161005".equals(code)) {
+            fundTradeRecordEntityList.add(new FundTradeRecordEntity("161005", 0.0, DIVIDEND, 33.66, LocalDate.of(2021, 3, 29)));
+        }
         log.info("开始存储交易记录列表，列表：{}", fundTradeRecordEntityList);
         fundTradeRecordDao.saveBatch(fundTradeRecordEntityList);
     }

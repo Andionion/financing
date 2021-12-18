@@ -44,4 +44,10 @@ public class FundNetWorthDaoImpl extends ServiceImpl<FundNetWorthMapper, FundNet
     public Boolean removeNetWorth(String code) {
         return remove(lambdaQuery().eq(FundNetWorthEntity::getCode, code));
     }
+
+    @Override
+    public Double getLatestNetWorth(String code) {
+        return lambdaQuery().eq(FundNetWorthEntity::getCode, code).orderByDesc(FundNetWorthEntity::getDate)
+                .last("limit 1").one().getNetWorth();
+    }
 }
