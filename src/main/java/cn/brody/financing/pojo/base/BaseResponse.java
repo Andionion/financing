@@ -24,4 +24,10 @@ public class BaseResponse<T> implements Serializable {
         code = SUCCESS;
         message = "成功";
     }
+
+    public BaseResponse(T t) {
+        code = SUCCESS;
+        message = "成功";
+        data = t;
+    }
 }

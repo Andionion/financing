@@ -2,6 +2,9 @@ package cn.brody.financing.service;
 
 import cn.brody.financing.pojo.bo.AddOrUpdateFundBO;
 import cn.brody.financing.pojo.bo.DelFundBO;
+import cn.brody.financing.pojo.vo.AnnualizedRateVO;
+
+import java.util.List;
 
 /**
  * 基金添加，删除等操作的service
@@ -25,4 +28,10 @@ public interface FundBasicService {
      */
     void delFund(DelFundBO delFundBO);
 
+    /**
+     * 计算所有持有基金的年化收益率
+     *
+     * @return
+     */
+    List<AnnualizedRateVO> calculateAnnualizedRate();
 }

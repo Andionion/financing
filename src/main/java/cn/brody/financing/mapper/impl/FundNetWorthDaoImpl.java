@@ -46,8 +46,8 @@ public class FundNetWorthDaoImpl extends ServiceImpl<FundNetWorthMapper, FundNet
     }
 
     @Override
-    public Double getLatestNetWorth(String code) {
+    public FundNetWorthEntity getLatestNetWorth(String code) {
         return lambdaQuery().eq(FundNetWorthEntity::getCode, code).orderByDesc(FundNetWorthEntity::getDate)
-                .last("limit 1").one().getNetWorth();
+                .last("limit 1").one();
     }
 }

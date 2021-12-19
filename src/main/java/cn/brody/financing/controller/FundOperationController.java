@@ -3,12 +3,15 @@ package cn.brody.financing.controller;
 import cn.brody.financing.pojo.base.BaseResponse;
 import cn.brody.financing.pojo.bo.AddOrUpdateFundBO;
 import cn.brody.financing.pojo.bo.DelFundBO;
+import cn.brody.financing.pojo.vo.AnnualizedRateVO;
 import cn.brody.financing.service.FundBasicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 基金添加，删除controller
@@ -45,5 +48,10 @@ public class FundOperationController {
     public BaseResponse<?> delFund(@RequestBody DelFundBO delFundBO) {
         fundBasicService.delFund(delFundBO);
         return new BaseResponse<>();
+    }
+
+    @PostMapping("/rate/calculate")
+    public BaseResponse<List<AnnualizedRateVO>> calculateRate() {
+        return new BaseResponse<>(fundBasicService.calculateAnnualizedRate());
     }
 }

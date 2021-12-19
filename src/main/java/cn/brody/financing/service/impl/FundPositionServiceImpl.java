@@ -5,6 +5,7 @@ import cn.brody.financing.mapper.FundNetWorthDao;
 import cn.brody.financing.mapper.FundPositionDao;
 import cn.brody.financing.mapper.FundTradeRecordDao;
 import cn.brody.financing.pojo.entity.FundBasicEntity;
+import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import cn.brody.financing.pojo.entity.FundPositionEntity;
 import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
 import cn.brody.financing.service.FundPositionService;
@@ -62,8 +63,10 @@ public class FundPositionServiceImpl implements FundPositionService {
                     fundPositionEntity.setShare(0.0);
                 }
                 // 获取最新净值
-                Double latestNetWorth = fundNetWorthDao.getLatestNetWorth(code);
-                fundPositionEntity.setPresentValue(BigDecimal.valueOf(fundPositionEntity.getShare() * latestNetWorth).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                FundNetWorthEntity latestNetWorth = fundNetWorthDao.getLatestNetWorth(code);
+                fundPositionEntity.setPresentValue(BigDecimal.valueOf(fundPositionEntity.getShare() * latestNetWorth.getNetWorth())
+                        .setScale(2, RoundingMode.HALF_UP).doubleValue());
+                fundPositionEntity.setLastDate(latestNetWorth.getDate());
                 positionEntityList.add(fundPositionEntity);
             });
             log.info("准备更新或存储份额：{}", positionEntityList);

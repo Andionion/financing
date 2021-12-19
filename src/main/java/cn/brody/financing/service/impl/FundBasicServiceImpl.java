@@ -1,21 +1,34 @@
 package cn.brody.financing.service.impl;
 
 import cn.brody.financing.mapper.FundBasicDao;
-import cn.brody.financing.mapper.FundNetWorthDao;
+import cn.brody.financing.mapper.FundPositionDao;
+import cn.brody.financing.mapper.FundTradeRecordDao;
 import cn.brody.financing.pojo.bo.AddOrUpdateFundBO;
 import cn.brody.financing.pojo.bo.DelFundBO;
 import cn.brody.financing.pojo.entity.FundBasicEntity;
+import cn.brody.financing.pojo.entity.FundPositionEntity;
+import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
+import cn.brody.financing.pojo.vo.AnnualizedRateVO;
 import cn.brody.financing.service.FundBasicService;
 import cn.brody.financing.service.FundNetWorthService;
 import cn.brody.financing.support.financial.response.FundDetailResponse;
 import cn.brody.financing.support.financial.service.FinancialDataService;
+import cn.brody.financing.util.IrrUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.decampo.xirr.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author chenyifu6
@@ -29,7 +42,9 @@ public class FundBasicServiceImpl implements FundBasicService {
     @Autowired
     private FundBasicDao fundBasicDao;
     @Autowired
-    private FundNetWorthDao fundNetWorthDao;
+    private FundTradeRecordDao fundTradeRecordDao;
+    @Autowired
+    private FundPositionDao fundPositionDao;
     @Autowired
     private FundNetWorthService fundNetWorthService;
 
@@ -69,5 +84,30 @@ public class FundBasicServiceImpl implements FundBasicService {
         }
         fundNetWorthService.delFundNetWorth(delFundBO.getCode());
         log.debug("结束删除基金，基金代码={}", delFundBO.getCode());
+    }
+
+    @Override
+    public List<AnnualizedRateVO> calculateAnnualizedRate() {
+        List<FundBasicEntity> fundBasicEntityList = fundBasicDao.list();
+        if (CollectionUtil.isEmpty(fundBasicEntityList)) {
+            return new ArrayList<>();
+        }
+        List<AnnualizedRateVO> result = new ArrayList<>();
+        fundBasicEntityList.forEach(fundBasicEntity -> {
+            // 查询所有的交易记录
+            List<FundTradeRecordEntity> fundTradeRecordEntityList = fundTradeRecordDao.listByFundCode(fundBasicEntity.getCode());
+            if (CollectionUtil.isEmpty(fundTradeRecordEntityList)) {
+                return;
+            }
+            FundPositionEntity fundPositionEntity = fundPositionDao.getByFundCode(fundBasicEntity.getCode());
+            List<Transaction> transactionList = fundTradeRecordEntityList.stream().map(trade -> new Transaction(trade.getAmount(), trade.getConfirmDate())).collect(Collectors.toList());
+            if (BigDecimal.valueOf(fundPositionEntity.getPresentValue()).compareTo(BigDecimal.ZERO) != 0) {
+                transactionList.add(new Transaction(fundPositionEntity.getPresentValue(), fundPositionEntity.getLastDate()));
+            }
+            log.info("开始计算收益率，{}", JSONObject.toJSONString(transactionList));
+            BigDecimal annualizedRate = BigDecimal.valueOf(IrrUtil.xirr(transactionList) * 100).setScale(2, RoundingMode.HALF_UP);
+            result.add(new AnnualizedRateVO(fundBasicEntity.getCode(), annualizedRate + "%", fundBasicEntity.getName()));
+        });
+        return result;
     }
 }

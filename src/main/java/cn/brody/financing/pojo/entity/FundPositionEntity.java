@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 
 /**
@@ -62,8 +63,12 @@ public class FundPositionEntity extends BaseEntity implements Serializable {
     /**
      * 年化收益率
      */
-    @TableField(value = "annualized_rate_of_return")
-    private Double annualizedRateOfReturn;
+    private Double annualizedRate;
+
+    /**
+     * 最后更新时间
+     */
+    private LocalDate lastDate;
 
     private static final long serialVersionUID = 1L;
 
@@ -77,5 +82,5 @@ public class FundPositionEntity extends BaseEntity implements Serializable {
 
     public static final String COL_HOLDING_INCOME = "holding_income";
 
-    public static final String COL_ANNUALIZED_RATE_OF_RETURN = "annualized_rate_of_return";
+    public static final String COL_ANNUALIZED_RATE = "annualized_rate";
 }

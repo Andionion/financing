@@ -11,7 +11,7 @@
         <result column="investment" jdbcType="DOUBLE" property="investment"/>
         <result column="revenue" jdbcType="DOUBLE" property="revenue"/>
         <result column="holding_income" jdbcType="DOUBLE" property="holdingIncome"/>
-        <result column="annualized_rate_of_return" jdbcType="DOUBLE" property="annualizedRateOfReturn"/>
+        <result column="annualized_rate_of_return" jdbcType="DOUBLE" property="annualizedRate"/>
     </resultMap>
     <sql id="Base_Column_List">
         <!--@mbg.generated-->

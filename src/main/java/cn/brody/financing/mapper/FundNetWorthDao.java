@@ -61,5 +61,5 @@ public interface FundNetWorthDao extends IService<FundNetWorthEntity> {
      * @param code
      * @return
      */
-    Double getLatestNetWorth(String code);
+    FundNetWorthEntity getLatestNetWorth(String code);
 }
