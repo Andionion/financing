@@ -17,27 +17,6 @@ public class SortExcel {
     public static void main(String[] args) {
         ExcelReader reader = ExcelUtil.getReader(Objects.requireNonNull(SortExcel.class.getResource("/")).getPath() + "beam_result.xlsx");
         List<Map<String, Object>> maps = reader.readAll();
-        List<String> beamTypeList = Arrays.asList("PCKL", "PCL");
-        List<String> levelList = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            levelList.add(i + 2 + "");
-        }
-        List<String> ln1List = Arrays.asList("0", "1");
-        List<String> r1bList = Arrays.asList("0", "1");
-        List<String> r4TypeList = Arrays.asList("N", "G");
-        List<String> anchorList = Arrays.asList("1", "2");
-        List<String> avoidList = Arrays.asList("1", "3");
-        // 组装所有可能性
-        List<String> collect = beamTypeList.stream()
-                .flatMap(obj -> levelList.stream().map(obj::concat))
-                .flatMap(obj -> ln1List.stream().map(obj::concat))
-                .flatMap(obj -> r1bList.stream().map(obj::concat))
-                .flatMap(obj -> r4TypeList.stream().map(obj::concat))
-                .flatMap(obj -> anchorList.stream().map(obj::concat))
-                .flatMap(obj -> avoidList.stream().map(obj::concat))
-                .collect(Collectors.toList());
-        System.out.println(collect);
-
         Map<String, List<Map<String, Object>>> result = new HashMap<>();
         Map<String, String> map = new HashMap<>();
         maps.forEach(data -> {
