@@ -93,6 +93,7 @@ public class FundBasicServiceImpl implements FundBasicService {
             return new ArrayList<>();
         }
         List<AnnualizedRateVO> result = new ArrayList<>();
+        List<FundPositionEntity> positionEntityList = new ArrayList<>();
         fundBasicEntityList.forEach(fundBasicEntity -> {
             // 查询所有的交易记录
             List<FundTradeRecordEntity> fundTradeRecordEntityList = fundTradeRecordDao.listByFundCode(fundBasicEntity.getCode());
@@ -106,8 +107,11 @@ public class FundBasicServiceImpl implements FundBasicService {
             }
             log.info("开始计算收益率，{}", JSONObject.toJSONString(transactionList));
             BigDecimal annualizedRate = BigDecimal.valueOf(IrrUtil.xirr(transactionList) * 100).setScale(2, RoundingMode.HALF_UP);
+            fundPositionEntity.setAnnualizedRate(annualizedRate.doubleValue());
+            positionEntityList.add(fundPositionEntity);
             result.add(new AnnualizedRateVO(fundBasicEntity.getCode(), annualizedRate + "%", fundBasicEntity.getName()));
         });
+        fundPositionDao.saveOrUpdateBatch(positionEntityList);
         return result;
     }
 }
