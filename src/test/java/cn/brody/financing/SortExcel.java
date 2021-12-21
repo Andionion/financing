@@ -63,11 +63,15 @@ public class SortExcel {
             tempList.add(data);
         });
         System.out.println(result.size());
+        Map<String, String> namePathMap = result.keySet().stream().map(map::get)
+                .collect(Collectors.toMap(realName -> realName, realName -> realName.replaceFirst("[0-9]", "(2-9)")));
         // 写入文件
         result.forEach((key, value) -> {
             String realName = map.get(key);
             System.out.println(realName);
-            ExcelWriter writer = ExcelUtil.getWriter(Objects.requireNonNull(SortExcel.class.getResource("/")).getPath() + "/result/" + realName + ".xlsx");
+            String path = Objects.requireNonNull(SortExcel.class.getResource("/")).getPath() + "/result/" + namePathMap.get(realName) + "/" + realName + ".xlsx";
+            System.out.println(path);
+            ExcelWriter writer = ExcelUtil.getWriter(path);
             writer.write(value);
             writer.close();
         });
