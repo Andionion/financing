@@ -37,4 +37,22 @@ public interface FundTradeRecordDao extends IService<FundTradeRecordEntity> {
      * @return
      */
     List<FundTradeRecordEntity> listByFundCode(String code);
+
+    /**
+     * 查找某个基金在某个日期前的所有交易记录
+     *
+     * @param code
+     * @param date
+     * @return
+     */
+    List<FundTradeRecordEntity> listBeforeDate(String code, LocalDate date);
+
+    /**
+     * 判断基金在特定日期下分红记录是否存在
+     *
+     * @param code
+     * @param date
+     * @return
+     */
+    boolean countDividendExist(String code, LocalDate date);
 }

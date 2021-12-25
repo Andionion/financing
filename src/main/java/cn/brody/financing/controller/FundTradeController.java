@@ -24,4 +24,10 @@ public class FundTradeController {
         fundTradeService.importTradeRecord(file);
         return new BaseResponse<>();
     }
+
+    @PostMapping("/dividend/calculate")
+    public BaseResponse<?> calculateDividend() {
+        fundTradeService.calculateDividend();
+        return new BaseResponse<>();
+    }
 }

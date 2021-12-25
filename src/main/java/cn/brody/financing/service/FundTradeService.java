@@ -26,4 +26,9 @@ public interface FundTradeService {
      * @param file excel 文件
      */
     void importTradeRecord(MultipartFile file);
+
+    /**
+     * 计算分红并添加到交易记录
+     */
+    void calculateDividend();
 }

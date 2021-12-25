@@ -11,6 +11,7 @@ import cn.brody.financing.pojo.entity.FundNetWorthEntity;
 import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
 import cn.brody.financing.service.FundBasicService;
 import cn.brody.financing.service.FundTradeService;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelReader;
@@ -135,12 +136,48 @@ public class FundTradeServiceImpl implements FundTradeService {
 
             }
         });
-        // todo 此处先行加上富国天惠的分红，后续想办法解决分红计算问题
-        if ("161005".equals(code)) {
-            fundTradeRecordEntityList.add(new FundTradeRecordEntity("161005", 0.0, DIVIDEND, 33.66, LocalDate.of(2021, 3, 29)));
-        }
         log.info("开始存储交易记录列表，列表：{}", fundTradeRecordEntityList);
         fundTradeRecordDao.saveBatch(fundTradeRecordEntityList);
     }
 
+    @Override
+    public void calculateDividend() {
+        List<FundBasicEntity> fundBasicEntityList = fundBasicDao.list();
+        List<String> fundCodeList = fundBasicEntityList.stream().map(FundBasicEntity::getCode).collect(Collectors.toList());
+        fundCodeList.forEach(code -> {
+            // 查找所有的分红日
+            List<FundNetWorthEntity> fundNetWorthEntities = fundNetWorthDao.listNetWorthList(code);
+            Map<LocalDate, Double> dividendsMap = fundNetWorthEntities.stream()
+                    .filter(netWorth -> BigDecimal.valueOf(netWorth.getDividends()).compareTo(BigDecimal.ZERO) > 0)
+                    .collect(Collectors.toMap(FundNetWorthEntity::getDate, FundNetWorthEntity::getDividends));
+            if (dividendsMap.isEmpty()) {
+                return;
+            }
+            TreeMap<LocalDate, Double> sortedDividendMap = MapUtil.sort(dividendsMap);
+            log.info("查找到所有的分红：{}", sortedDividendMap);
+            sortedDividendMap.forEach((date, dividends) -> {
+                // 如果此分红已经被记录，那么跳过
+                if (fundTradeRecordDao.countDividendExist(code, date)) {
+                    log.info("分红已存在，跳过，code:{},date:{}", code, date);
+                    return;
+                }
+                // 查找此日期之前的所有份额
+                List<FundTradeRecordEntity> fundTradeRecordEntityList = fundTradeRecordDao.listBeforeDate(code, date);
+                if (fundTradeRecordEntityList.isEmpty()) {
+                    return;
+                }
+                Optional<Double> share = fundTradeRecordEntityList.stream().map(FundTradeRecordEntity::getConfirmShare).reduce(Double::sum);
+                // 分红可得金额
+                double amount = share.get() * dividends;
+                // 查找分红日净值
+                FundNetWorthEntity netWorth = fundNetWorthDao.getNetWorth(code, date);
+                // 分红份额
+                double dividendShare = BigDecimal.valueOf(amount / netWorth.getNetWorth()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                log.info("计算出分红份额，基金：{},份额：{},日期：{}", code, dividendShare, date);
+                // 存储份额
+                fundTradeRecordDao.save(new FundTradeRecordEntity(code, BigDecimal.valueOf(amount).setScale(2, RoundingMode.HALF_UP).doubleValue(), DIVIDEND, dividendShare, date));
+            });
+
+        });
+    }
 }

@@ -1,5 +1,6 @@
 package cn.brody.financing.mapper.impl;
 
+import cn.brody.financing.constant.TradeOperationConstant;
 import cn.brody.financing.mapper.FundTradeRecordDao;
 import cn.brody.financing.mapper.FundTradeRecordMapper;
 import cn.brody.financing.pojo.entity.FundTradeRecordEntity;
@@ -34,5 +35,16 @@ public class FundTradeRecordDaoImpl extends ServiceImpl<FundTradeRecordMapper, F
     @Override
     public List<FundTradeRecordEntity> listByFundCode(String code) {
         return lambdaQuery().eq(FundTradeRecordEntity::getCode, code).list();
+    }
+
+    @Override
+    public List<FundTradeRecordEntity> listBeforeDate(String code, LocalDate date) {
+        return lambdaQuery().eq(FundTradeRecordEntity::getCode, code).lt(FundTradeRecordEntity::getConfirmDate, date).list();
+    }
+
+    @Override
+    public boolean countDividendExist(String code, LocalDate date) {
+        return lambdaQuery().eq(FundTradeRecordEntity::getCode, code).eq(FundTradeRecordEntity::getType, TradeOperationConstant.DIVIDEND)
+                .eq(FundTradeRecordEntity::getConfirmDate, date).count() > 0;
     }
 }
