@@ -19,9 +19,9 @@ public class AddTradeBO extends BaseFund implements Serializable {
     private static final long serialVersionUID = -1795618645361998657L;
 
     /**
-     * 确认日期
+     * 日期
      */
-    private LocalDate confirmDate;
+    private LocalDate date;
     /**
      * 交易类型，1 - 申购，2 - 赎回，3 - 分红
      */

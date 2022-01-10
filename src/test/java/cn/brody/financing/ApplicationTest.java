@@ -6,8 +6,10 @@ import cn.brody.financing.pojo.base.BaseResponse;
 import cn.brody.financing.pojo.entity.FundBasicEntity;
 import cn.brody.financing.support.financial.request.FundDetailRequest;
 import cn.brody.financing.support.financial.response.FundDetailResponse;
+import cn.brody.log.BrodyLog;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,9 +23,14 @@ import java.util.Map;
  * @date 2021/10/26
  **/
 @SpringBootTest
+@Slf4j
 public class ApplicationTest {
     @Autowired
     private FundBasicDao fundBasicDao;
+
+    public static void main(String[] args) {
+        log.info(BrodyLog.toLog(BrodyLog.message("测试一下", "test1", "test2")), 1, 2);
+    }
 
     @Test
     public void testSave() {

@@ -55,7 +55,7 @@ public class FundTradeRecordEntity extends BaseEntity implements Serializable {
         super(addTradeBO.getCode());
         amount = addTradeBO.getAmount();
         type = addTradeBO.getType();
-        confirmDate = addTradeBO.getConfirmDate();
+        confirmDate = addTradeBO.getDate();
     }
 
     public FundTradeRecordEntity(String code, Double amount, Integer type, Double confirmShare, LocalDate confirmDate) {

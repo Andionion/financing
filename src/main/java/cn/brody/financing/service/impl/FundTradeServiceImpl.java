@@ -5,6 +5,7 @@ import cn.brody.financing.mapper.FundNetWorthDao;
 import cn.brody.financing.mapper.FundTradeRecordDao;
 import cn.brody.financing.pojo.bo.AddOrUpdateFundBO;
 import cn.brody.financing.pojo.bo.AddTradeBO;
+import cn.brody.financing.pojo.bo.AddTradeListBO;
 import cn.brody.financing.pojo.dto.ImportTradeDTO;
 import cn.brody.financing.pojo.entity.FundBasicEntity;
 import cn.brody.financing.pojo.entity.FundNetWorthEntity;
@@ -49,19 +50,9 @@ public class FundTradeServiceImpl implements FundTradeService {
 
     @Override
     public void addTradeRecord(AddTradeBO addTradeBO) {
-        FundTradeRecordEntity fundTradeRecordEntity = new FundTradeRecordEntity(addTradeBO);
-        // 尝试存储买入份额
-        FundNetWorthEntity netWorthEntity = fundNetWorthDao.
-                getNetWorth(addTradeBO.getCode(), addTradeBO.getConfirmDate());
-        if (ObjectUtil.isNotNull(netWorthEntity)) {
-            double confirmShare = BigDecimal.valueOf(addTradeBO.getAmount() / netWorthEntity.getNetWorth())
-                    .setScale(2, RoundingMode.HALF_DOWN)
-                    .doubleValue();
-            fundTradeRecordEntity.setConfirmShare(confirmShare);
-            // todo 还需要考虑一个问题，就是当前日期有分红怎么算
-            // todo 基金详情中，总份额增加
-        }
-        fundTradeRecordDao.save(fundTradeRecordEntity);
+        AddTradeListBO addTradeListBO = new AddTradeListBO(List.of(addTradeBO));
+        addTradeListBO.setCode(addTradeBO.getCode());
+        addTradeRecord(addTradeListBO);
     }
 
 
@@ -109,35 +100,55 @@ public class FundTradeServiceImpl implements FundTradeService {
      * @param importTradeDTOList
      */
     private void addTradeRecord(String code, List<ImportTradeDTO> importTradeDTOList) {
-        List<LocalDate> localDates = importTradeDTOList.stream().map(ImportTradeDTO::getLocalDate).collect(Collectors.toList());
+        AddTradeListBO addTradeListBO = new AddTradeListBO();
+        addTradeListBO.setCode(code);
+        importTradeDTOList.forEach(importTradeDTO -> {
+            AddTradeBO addTradeBO = new AddTradeBO();
+            addTradeBO.setAmount(importTradeDTO.getAmount());
+            addTradeBO.setDate(importTradeDTO.getLocalDate());
+            addTradeBO.setType(importTradeDTO.getAmount() < 0 ? REQUISITION : REDEMPTION);
+            addTradeListBO.getAddTradeBOList().add(addTradeBO);
+        });
+        addTradeRecord(addTradeListBO);
+    }
+
+    /**
+     * 添加基金交易记录
+     *
+     * @param addTradeListBO
+     */
+    private void addTradeRecord(AddTradeListBO addTradeListBO) {
+        String code = addTradeListBO.getCode();
+        List<AddTradeBO> addTradeList = addTradeListBO.getAddTradeBOList();
+        List<LocalDate> localDates = addTradeList.stream().map(AddTradeBO::getDate).collect(Collectors.toList());
         // 添加基金记录
         fundBasicService.addOrUpdateFund(new AddOrUpdateFundBO(code));
         FundBasicEntity fundBasicEntity = fundBasicDao.getByCode(code);
         // 获取基金的所有净值
         List<FundNetWorthEntity> fundNetWorthEntities = fundNetWorthDao.listNetWorth(code, localDates);
-        Map<LocalDate, Double> fundNetWorthMap = fundNetWorthEntities.stream().collect(Collectors.toMap(FundNetWorthEntity::getDate, FundNetWorthEntity::getNetWorth));
-        // 开始获取
+        Map<LocalDate, Double> fundNetWorthMap = fundNetWorthEntities.stream()
+                .collect(Collectors.toMap(FundNetWorthEntity::getDate, FundNetWorthEntity::getNetWorth));
+        // 开始计算
         List<FundTradeRecordEntity> fundTradeRecordEntityList = new ArrayList<>();
-        importTradeDTOList.forEach(importTradeDTO -> {
-            Double amount = importTradeDTO.getAmount();
+        addTradeList.forEach(addTradeBO -> {
+            Double amount = addTradeBO.getAmount();
             boolean amountNotNull = ObjectUtil.isNotNull(amount) && BigDecimal.valueOf(amount).compareTo(BigDecimal.ZERO) != 0;
             if (amountNotNull) {
-                // 申购的时候按照金额计算份额，赎回的时候直接就是份额
-                Integer type = amount < 0 ? REQUISITION : REDEMPTION;
+                Integer type = addTradeBO.getType();
                 double confirmShare;
                 if (REQUISITION.equals(type)) {
-                    Double netWorth = fundNetWorthMap.get(importTradeDTO.getLocalDate());
+                    Double netWorth = fundNetWorthMap.get(addTradeBO.getDate());
                     confirmShare = -1.0 * BigDecimal.valueOf(amount * (100 - fundBasicEntity.getBuyRate()) / 100 / netWorth)
                             .setScale(4, RoundingMode.HALF_UP).doubleValue();
                 } else {
                     confirmShare = -amount;
                 }
-                fundTradeRecordEntityList.add(new FundTradeRecordEntity(code, amount, type, confirmShare, importTradeDTO.getLocalDate()));
-
+                fundTradeRecordEntityList.add(new FundTradeRecordEntity(code, amount, type, confirmShare, addTradeBO.getDate()));
             }
         });
         log.info("开始存储交易记录列表，列表：{}", fundTradeRecordEntityList);
         fundTradeRecordDao.saveBatch(fundTradeRecordEntityList);
+        // todo 基金详情中，总份额增加
     }
 
     @Override
@@ -179,5 +190,10 @@ public class FundTradeServiceImpl implements FundTradeService {
             });
 
         });
+    }
+
+    @Override
+    public void timingInvestment() {
+        // 买入日期，
     }
 }

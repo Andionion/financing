@@ -31,4 +31,9 @@ public interface FundTradeService {
      * 计算分红并添加到交易记录
      */
     void calculateDividend();
+
+    /**
+     * 基金定投
+     */
+    void timingInvestment();
 }
