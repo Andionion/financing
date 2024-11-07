@@ -3,6 +3,7 @@ package cn.brody.financing.service.impl;
 import cn.brody.financing.constant.AkToolConstant;
 import cn.brody.financing.database.dao.FundNetValueDao;
 import cn.brody.financing.database.entity.FundNetValueEntity;
+import cn.brody.financing.pojo.bo.LatestFundNetValueBO;
 import cn.brody.financing.pojo.vo.FundNetValueVO;
 import cn.brody.financing.service.IFundNetValueService;
 import cn.brody.financing.utils.HttpUtils;
@@ -31,7 +32,7 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
     private FundNetValueDao fundNetValueDao;
 
     @Override
-    public void saveFundNetValue(String fundCode) {
+    public void saveAllFundNetValue(String fundCode) {
         String eftFundNetValueUrl = UrlBuilderUtils
                 .fromBaseUrl(String.format(AkToolConstant.SERVER_ADDRESS + AkToolConstant.URI_ETF_FUND_NET_VALUE, fundCode))
                 .build();
@@ -50,5 +51,15 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
             return fundNetValueEntity;
         }).collect(Collectors.toList());
         fundNetValueDao.saveBatch(fundNetValueEntities);
+    }
+
+    @Override
+    public void updateTimedFundNetValue(String fundCode) {
+        
+    }
+
+    @Override
+    public List<FundNetValueVO> latestFundNetValue(LatestFundNetValueBO bo) {
+        return List.of();
     }
 }

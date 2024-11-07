@@ -3,13 +3,13 @@ package cn.brody.financing.pojo.bo;
 import lombok.Data;
 
 /**
- * FundNetValueBO
+ * FundCodeBO
  *
  * @author chenyifu6
  * @since 2024/11/05 14:41
  */
 @Data
-public class FundNetValueBO {
+public class FundCodeBO {
     /**
      * 基金代码
      */

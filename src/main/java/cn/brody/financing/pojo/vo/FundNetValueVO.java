@@ -22,16 +22,38 @@ import lombok.Data;
  */
 @Data
 public class FundNetValueVO {
+    /**
+     * 基金代码
+     */
+    private String fundCode;
+    /**
+     * 净值日期
+     */
     @JSONField(name = "净值日期")
     private String netValueDate;
+    /**
+     * 单位净值
+     */
     @JSONField(name = "单位净值")
     private Double unitNetValue;
+    /**
+     * 累计净值
+     */
     @JSONField(name = "累计净值")
     private Double accumulatedNetValue;
+    /**
+     * 日增长率
+     */
     @JSONField(name = "日增长率")
     private Double dailyGrowthRate;
+    /**
+     * 申购状态
+     */
     @JSONField(name = "申购状态")
     private String subscriptionStatus;
+    /**
+     * 赎回状态
+     */
     @JSONField(name = "赎回状态")
     private String redemptionStatus;
 }
