@@ -1,4 +1,4 @@
-CREATE TABLE fund_net_value
+CREATE TABLE IF NOT EXISTS fund_net_value
 (
     id                    INT AUTO_INCREMENT PRIMARY KEY, -- 主键，自增
     fund_code             VARCHAR(6),                     -- 基金代码

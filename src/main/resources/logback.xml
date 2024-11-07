@@ -8,109 +8,57 @@
 -->
 <!-- scan="true", 不要修改。设为true支持动态调整打印级别（不需重启程序）,已提供工具统一改级别，若设false则无效 -->
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
-    <!--
-        ***myservice换成自己服务的段标识***
-    -->
-    <property name="SEGMENT_ID" value="financing"/>
-    <!--
-       ***myservice换成自己的段标识***
-       ***特别注意***, 组件封装时, 段的log.path也要配成'./logs/段标识', 否则采集不到日志
-       如果服务注册时的工作目录不是组件根目录，${user.dir}部分要调整。
-       -->
-    <property name="LOG_HOME" value="../../logs/${SEGMENT_ID}"/>
+    
+    <!-- 应用名称 -->
+    <property name="APPLICATION_NAME" value="financing"/>
+
+    <!-- 日志文件存放路径 -->
+    <property name="LOG_HOME" value="./logs"/>
+
+    <!-- 日志打印格式-->
+    <property name="pattern"
+              value="%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %level ${APPLICATION_NAME} [%thread] [%logger{50}:%line] %msg%n"/>
 
     <!-- 控制台Appender,默认不打印,防止日志打印到linux的var\log\messages中 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss} %level ${SEGMENT_ID} [%thread] [%logger{50}:%line] %msg%n
-            </pattern>
+        <encoder>
+            <pattern>${pattern}</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
-    <!-- 控制台Appender，结束-->
 
-    <!-- 系统日志文件打印配置     开始 -->
-    <!--
-    如要增加自定义模块日志打印配置：
-        appender名称格式为：FILE-debug-模块名
-        文件名格式：${SEGMENT_ID}.模块名.debug.log
-        日志打印文件越多, 越影响磁盘I/O效率, 造成程度卡顿, 尽量按标准配置打印
-    -->
+
     <!-- 所有级别(TRACE及以上)的日志输出配置, 所有级别打印在*.debug.log中, 文件名用debug表示调试用, 便于理解 -->
     <appender name="FILE-debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>TRACE</level>
+            <level>DEBUG</level>
         </filter>
-        <File>${LOG_HOME}/${SEGMENT_ID}.debug.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <FileNamePattern>${LOG_HOME}/${SEGMENT_ID}.debug.log.%i.zip</FileNamePattern>
-            <MinIndex>1</MinIndex>
-            <MaxIndex>10</MaxIndex>
-        </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <!-- debug文件大小设置为100M, 再压缩 -->
-            <MaxFileSize>100MB</MaxFileSize>
-        </triggeringPolicy>
+        <File>${LOG_HOME}/${APPLICATION_NAME}.debug.log</File>
         <encoder>
-            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %level ${SEGMENT_ID} [%thread] [%logger{50}:%line] %msg%n
-            </pattern>
+            <pattern>${pattern}</pattern>
             <charset>UTF-8</charset>
         </encoder>
-    </appender>
-
-    <!-- 错误日志输出配置, error及以上日志单独再打印一个*.error.log, 防止重要信息被覆盖-->
-    <appender name="FILE-error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
-        <File>${LOG_HOME}/${SEGMENT_ID}.error.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <FileNamePattern>${LOG_HOME}/${SEGMENT_ID}.error.log.%i.zip
-            </FileNamePattern>
-            <MinIndex>1</MinIndex>
-            <MaxIndex>10</MaxIndex>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件名模式 -->
+            <FileNamePattern>${LOG_HOME}/${APPLICATION_NAME}.%d{yyyy-MM-dd}.%i.debug.log</FileNamePattern>
+            <!-- 保留历史日志文件的最大天数 -->
+            <MaxHistory>30</MaxHistory>
+            <!-- 单个日志文件最大大小 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>25MB</MaxFileSize>
+            <maxFileSize>100MB</maxFileSize>
         </triggeringPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %level ${SEGMENT_ID} [%thread] [%logger{50}:%line] %msg%n
-            </pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-    <!-- SPRING等框架类代码日志打印, 输出到OTHER文件中, 出厂默认WARN以上 -->
-    <appender name="FILE-other" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
-        </filter>
-        <File>${LOG_HOME}/${SEGMENT_ID}.other.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <FileNamePattern>${LOG_HOME}/${SEGMENT_ID}.other.log.%i.zip</FileNamePattern>
-            <MinIndex>1</MinIndex>
-            <!--最多十个文件 -->
-            <MaxIndex>10</MaxIndex>
-        </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>25MB</MaxFileSize>
-        </triggeringPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %level ${SEGMENT_ID} [%thread] [%logger{50}:%line] - %msg%n
-            </pattern>
-            <charset>UTF-8</charset>
-        </encoder>
     </appender>
 
     <logger name="cn.brody" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE-debug"/>
-        <appender-ref ref="FILE-error"/>
     </logger>
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE-other"/>
     </root>
-    <!-- 系统日志文件打印配置  结束 -->
 </configuration>
