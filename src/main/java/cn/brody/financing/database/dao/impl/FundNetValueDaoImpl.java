@@ -6,6 +6,8 @@ import cn.brody.financing.database.mapper.FundNetValueMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * FundNetValueDaoImpl
  *
@@ -14,4 +16,32 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FundNetValueDaoImpl extends ServiceImpl<FundNetValueMapper, FundNetValueEntity> implements FundNetValueDao {
+
+    @Override
+    public Boolean fundNetValueExists(String fundCode) {
+        return lambdaQuery()
+                .eq(FundNetValueEntity::getFundCode, fundCode)
+                .exists();
+    }
+
+    @Override
+    public Boolean fundNetValueExists(String fundCode, String tradeDate) {
+        return lambdaQuery()
+                .eq(FundNetValueEntity::getFundCode, fundCode)
+                .eq(FundNetValueEntity::getNetValueDate, tradeDate)
+                .exists();
+    }
+
+    @Override
+    public List<FundNetValueEntity> listFundNetValue(List<String> fundCodes, String tradeDate) {
+        return lambdaQuery()
+                .in(FundNetValueEntity::getFundCode, fundCodes)
+                .eq(FundNetValueEntity::getNetValueDate, tradeDate)
+                .list();
+    }
+
+    @Override
+    public List<String> findAllSavedFundCode() {
+        return baseMapper.selectDistinctFundCodes();
+    }
 }

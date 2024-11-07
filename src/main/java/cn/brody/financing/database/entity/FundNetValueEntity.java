@@ -1,5 +1,8 @@
 package cn.brody.financing.database.entity;
 
+import cn.brody.financing.pojo.vo.FundNetValueVO;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -24,7 +27,7 @@ public class FundNetValueEntity {
      * 主键，自增
      */
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
     /**
      * 基金代码
      */
@@ -60,4 +63,15 @@ public class FundNetValueEntity {
      */
     @TableField("redemption_status")
     private String redemptionStatus;
+
+    public FundNetValueEntity(FundNetValueVO fundNetValueVO, String fundCode) {
+        this.fundCode = fundCode;
+        this.netValueDate = DatePattern.PURE_DATE_FORMAT
+                .format(DateUtil.parse(fundNetValueVO.getNetValueDate(), DatePattern.UTC_SIMPLE_MS_PATTERN));
+        this.unitNetValue = fundNetValueVO.getUnitNetValue();
+        this.accumulatedNetValue = fundNetValueVO.getAccumulatedNetValue();
+        this.dailyGrowthRate = fundNetValueVO.getDailyGrowthRate();
+        this.subscriptionStatus = fundNetValueVO.getSubscriptionStatus();
+        this.redemptionStatus = fundNetValueVO.getRedemptionStatus();
+    }
 }

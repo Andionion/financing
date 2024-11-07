@@ -11,7 +11,7 @@ import java.util.List;
  * @since 2024/11/07 13:55
  */
 @Data
-public class LatestFundNetValueBO {
+public class FundCodeListBO {
 
     /**
      * 基金代码列表
