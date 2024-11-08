@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2024/11/05 17:05
  */
 @RestController
-@RequestMapping("/financing")
+@RequestMapping("/financing/fund/net-value")
 public class FundNetValueController {
 
     @Qualifier("fundNetValueServiceImpl")
@@ -33,7 +33,7 @@ public class FundNetValueController {
      * @param request HTTP请求对象。
      * @return 如果成功，返回一个空的BaseResponse对象；否则抛出异常。
      */
-    @PostMapping("/fund/net-value/save-all")
+    @PostMapping("/save-all")
     public BaseResponse<?> saveAllFundNetValue(@RequestBody FundCodeListBO bo, HttpServletRequest request) {
         fundNetValueService.saveAllFundNetValue(bo.getFundCodes());
         return new BaseResponse<>();
@@ -46,7 +46,7 @@ public class FundNetValueController {
      * @param request HTTP请求对象。
      * @return 如果更新成功，返回一个空的BaseResponse对象；否则抛出异常。
      */
-    @PostMapping("/fund/net-value/update-timed")
+    @PostMapping("/update-timed")
     public BaseResponse<?> updateTimedFundNetValue(@RequestBody FundCodeListBO bo, HttpServletRequest request) {
         fundNetValueService.updateTimedFundNetValue(bo.getFundCodes());
         return new BaseResponse<>();
@@ -59,7 +59,7 @@ public class FundNetValueController {
      * @param request HttpServletRequest对象，用于获取请求信息。
      * @return 返回一个BaseResponse对象，其中包含了处理结果的信息。
      */
-    @PostMapping("/fund/net-value/latest")
+    @PostMapping("/latest")
     public BaseResponse<?> latestFundNetValue(@RequestBody FundCodeListBO bo, HttpServletRequest request) {
         return new BaseResponse<>(fundNetValueService.latestFundNetValue(bo.getFundCodes()));
     }

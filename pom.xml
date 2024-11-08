@@ -23,6 +23,7 @@
         <redisson.version>3.18.0</redisson.version>
         <mybatis-plus.version>3.5.9</mybatis-plus.version>
         <mysql.version>8.0.33</mysql.version>
+        <commons-math3.version>3.6.1</commons-math3.version>
     </properties>
 
     <dependencies>
@@ -69,6 +70,13 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
+        </dependency>
+
+        <!--开源项目，用于计算xirr，具体使用方法见 https://github.com/RayDeCampo/java-xirr -->
+        <dependency>
+            <groupId>org.decampo</groupId>
+            <artifactId>xirr</artifactId>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 
