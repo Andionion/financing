@@ -27,6 +27,10 @@ public class FundNetValueVO {
      */
     private String fundCode;
     /**
+     * 基金名称
+     */
+    private String fundName;
+    /**
      * 净值日期
      */
     @JSONField(name = "净值日期")

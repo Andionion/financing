@@ -27,6 +27,10 @@ public class FundInvestmentEntity {
      */
     private String fundCode;
     /**
+     * 基金名称
+     */
+    private String fundName;
+    /**
      * 投资日期
      */
     private String purchaseDate;
@@ -39,7 +43,7 @@ public class FundInvestmentEntity {
      */
     private Double share;
 
-    public FundInvestmentEntity(String fundCode, FundPurchaseInfoBO fundPurchaseInfoBO) {
+    public FundInvestmentEntity(String fundCode, String fundName, FundPurchaseInfoBO fundPurchaseInfoBO) {
         this.fundCode = fundCode;
         this.purchaseDate = fundPurchaseInfoBO.getPurchaseDate();
         this.amount = fundPurchaseInfoBO.getAmount();

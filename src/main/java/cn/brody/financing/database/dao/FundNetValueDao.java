@@ -42,6 +42,8 @@ public interface FundNetValueDao extends IService<FundNetValueEntity> {
      */
     List<FundNetValueEntity> listFundNetValue(List<String> fundCodes, String tradeDate);
 
+    FundNetValueEntity getFundLatestNetValue(String fundCode);
+
     /**
      * 查找所有已存储净值的基金代码。
      *

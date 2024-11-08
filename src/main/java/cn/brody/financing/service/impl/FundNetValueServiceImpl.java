@@ -1,6 +1,7 @@
 package cn.brody.financing.service.impl;
 
 import cn.brody.financing.constant.AkToolConstant;
+import cn.brody.financing.constant.MaiRuiConstant;
 import cn.brody.financing.database.dao.FundNetValueDao;
 import cn.brody.financing.database.dao.TradeDateHistDao;
 import cn.brody.financing.database.entity.FundNetValueEntity;
@@ -84,9 +85,13 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
             log.warn("基金净值数据为空");
             return;
         }
+        // 请求基金信息
+        String fundOverview = HttpUtils.get(MaiRuiConstant.getFundOverviewUrl(fundCode));
+        log.info("请求获取[{}]基金信息接口，响应：{}", fundCode, fundOverview);
+        String fundName = JSON.parseObject(fundOverview).get("jc").toString();
         // 保存数据
         List<FundNetValueEntity> fundNetValueEntities = fundNetValueList.stream()
-                .map(fundNetValueVO -> new FundNetValueEntity(fundNetValueVO, fundCode))
+                .map(fundNetValueVO -> new FundNetValueEntity(fundNetValueVO, fundCode, fundName))
                 .collect(Collectors.toList());
         fundNetValueDao.saveBatch(fundNetValueEntities);
     }

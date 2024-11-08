@@ -41,6 +41,15 @@ public class FundNetValueDaoImpl extends ServiceImpl<FundNetValueMapper, FundNet
     }
 
     @Override
+    public FundNetValueEntity getFundLatestNetValue(String fundCode) {
+        return lambdaQuery()
+                .eq(FundNetValueEntity::getFundCode, fundCode)
+                .orderByDesc(FundNetValueEntity::getNetValueDate)
+                .last("limit 1")
+                .one();
+    }
+
+    @Override
     public List<String> findAllSavedFundCode() {
         return baseMapper.selectDistinctFundCodes();
     }

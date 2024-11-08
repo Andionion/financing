@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS fund_net_value
     id                    BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键，自增',
     -- 基金代码，长度为6个字符的字符串类型，用于唯一标识一只基金
     fund_code             VARCHAR(6) COMMENT '基金代码',
+    -- 基金名称
+    fund_name             VARCHAR(50) COMMENT '基金名称',
     -- 净值日期，长度为50个字符的字符串类型，记录该基金净值数据对应的日期
     net_value_date        VARCHAR(50) COMMENT '净值日期',
     -- 单位净值，双精度浮点数类型，反映每份基金的实际价值
@@ -35,6 +37,8 @@ CREATE TABLE IF NOT EXISTS fund_investment
     id            BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键，自增',
     -- 基金代码，长度为6个字符的字符串类型
     fund_code     VARCHAR(6) COMMENT '基金代码',
+    -- 基金名称
+    fund_name     VARCHAR(50) COMMENT '基金名称',
     -- 投资日期，长度为50个字符的字符串类型，用于记录购买基金的具体日期
     purchase_date VARCHAR(50) COMMENT '投资日期',
     -- 购买金额，双精度浮点数类型，用于记录购买基金所花费的金额

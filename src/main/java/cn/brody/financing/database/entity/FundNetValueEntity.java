@@ -4,7 +4,6 @@ import cn.brody.financing.pojo.vo.FundNetValueVO;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -31,41 +30,39 @@ public class FundNetValueEntity {
     /**
      * 基金代码
      */
-    @TableField("fund_code")
     private String fundCode;
+    /**
+     * 基金名称
+     */
+    private String fundName;
     /**
      * 净值日期
      */
-    @TableField("net_value_date")
     private String netValueDate;
     /**
      * 单位净值
      */
-    @TableField("unit_net_value")
     private Double unitNetValue;
     /**
      * 累计净值
      */
-    @TableField("accumulated_net_value")
     private Double accumulatedNetValue;
     /**
      * 日增长率
      */
-    @TableField("daily_growth_rate")
     private Double dailyGrowthRate;
     /**
      * 申购状态
      */
-    @TableField("subscription_status")
     private String subscriptionStatus;
     /**
      * 赎回状态
      */
-    @TableField("redemption_status")
     private String redemptionStatus;
 
-    public FundNetValueEntity(FundNetValueVO fundNetValueVO, String fundCode) {
+    public FundNetValueEntity(FundNetValueVO fundNetValueVO, String fundCode, String fundName) {
         this.fundCode = fundCode;
+        this.fundName = fundName;
         this.netValueDate = DatePattern.PURE_DATE_FORMAT
                 .format(DateUtil.parse(fundNetValueVO.getNetValueDate(), DatePattern.UTC_SIMPLE_MS_PATTERN));
         this.unitNetValue = fundNetValueVO.getUnitNetValue();
