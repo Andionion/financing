@@ -21,6 +21,10 @@ public class FundCalculateVO {
      */
     private String fundName;
     /**
+     * 单位净值
+     */
+    private Double unitNetValue;
+    /**
      * 总投入
      */
     private Double totalAmount;

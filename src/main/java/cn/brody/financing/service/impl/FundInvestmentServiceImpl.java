@@ -73,6 +73,9 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
             FundCalculateVO fundCalculateVO = new FundCalculateVO();
             fundCalculateVO.setFundCode(fundCode);
             fundCalculateVO.setFundName(fundInvestmentList.get(0).getFundName());
+            // 当前净值
+            FundNetValueEntity fundNetValueEntity = fundNetValueMap.get(fundCode);
+            fundCalculateVO.setUnitNetValue(fundNetValueEntity.getUnitNetValue());
             // 总投入
             double totalAmount = fundInvestmentList.stream().mapToDouble(FundInvestmentEntity::getAmount).sum();
             fundCalculateVO.setTotalAmount(new BigDecimal(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue());
@@ -80,7 +83,6 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
             double totalShare = fundInvestmentList.stream().mapToDouble(FundInvestmentEntity::getShare).sum();
             fundCalculateVO.setTotalShare(new BigDecimal(totalShare).setScale(2, RoundingMode.HALF_UP).doubleValue());
             // 当前净值
-            FundNetValueEntity fundNetValueEntity = fundNetValueMap.get(fundCode);
             double presentValue = fundNetValueEntity.getUnitNetValue() * totalShare;
             fundCalculateVO.setPresentValue(new BigDecimal(presentValue).setScale(2, RoundingMode.HALF_UP).doubleValue());
             // 收益
