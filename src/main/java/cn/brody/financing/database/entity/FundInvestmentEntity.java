@@ -45,6 +45,7 @@ public class FundInvestmentEntity {
 
     public FundInvestmentEntity(String fundCode, String fundName, FundPurchaseInfoBO fundPurchaseInfoBO) {
         this.fundCode = fundCode;
+        this.fundName = fundName;
         this.purchaseDate = fundPurchaseInfoBO.getPurchaseDate();
         this.amount = fundPurchaseInfoBO.getAmount();
         this.share = fundPurchaseInfoBO.getShare();
