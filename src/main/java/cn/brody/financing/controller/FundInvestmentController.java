@@ -38,4 +38,10 @@ public class FundInvestmentController {
         return new BaseResponse<>();
     }
 
+
+    @PostMapping("/bond/calculate")
+    public BaseResponse<?> calculateBondFund(HttpServletRequest request) {
+        return new BaseResponse<>(fundInvestmentService.calculateBondFund());
+    }
+
 }

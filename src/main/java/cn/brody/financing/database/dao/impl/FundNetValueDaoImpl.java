@@ -6,6 +6,7 @@ import cn.brody.financing.database.mapper.FundNetValueMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class FundNetValueDaoImpl extends ServiceImpl<FundNetValueMapper, FundNet
     }
 
     @Override
-    public List<FundNetValueEntity> listFundNetValue(List<String> fundCodes, String tradeDate) {
+    public List<FundNetValueEntity> listFundNetValue(Collection<String> fundCodes, String tradeDate) {
         return lambdaQuery()
                 .in(FundNetValueEntity::getFundCode, fundCodes)
                 .eq(FundNetValueEntity::getNetValueDate, tradeDate)
