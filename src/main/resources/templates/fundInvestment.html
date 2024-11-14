@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>统计</title>
+</head>
+<body>
+<div class="container">
+    <div class="row mt-3">
+        <div class="col col-12">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col" style="width: 10%">基金代码</th>
+                    <th scope="col" style="width: 15%">基金名称</th>
+                    <th scope="col" style="width: 10%">总投入</th>
+                    <th scope="col" style="width: 10%">总份额</th>
+                    <th scope="col" style="width: 10%">单位净值</th>
+                    <th scope="col" style="width: 10%">现值</th>
+                    <th scope="col" style="width: 10%">收益</th>
+                    <th scope="col" style="width: 10%">年化利率</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-th-each="investment : ${investmentList}">
+                    <td th:text="${investment.fundCode}" style="word-break: break-all;"></td>
+                    <td th:text="${investment.fundName}" style="word-break: break-all;"></td>
+                    <td th:text="${investment.totalAmount}" style="word-break: break-all;"></td>
+                    <td th:text="${investment.totalShare}" style="word-break: break-all;"></td>
+                    <td th:text="${investment.unitNetValue}" style="word-break: break-all;"></td>
+                    <td th:text="${investment.presentValue}" style="word-break: break-all;"></td>
+                    <td th:text="${investment.profit}" style="word-break: break-all;"></td>
+                    <td th:text="${investment.yield}" style="word-break: break-all;"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
