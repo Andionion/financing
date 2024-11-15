@@ -56,7 +56,7 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
                     if (null == fundPurchaseInfoBO.getShare()) {
                         // 份额为空，需要根据费率计算
                         double feeRate = fundPurchaseInfoBO.getFeeRate() / 100;
-                        double share = fundPurchaseInfoBO.getAmount() * (1 - feeRate) / fundNetValue.getUnitNetValue();
+                        double share = -1 * fundPurchaseInfoBO.getAmount() * (1 - feeRate) / fundNetValue.getUnitNetValue();
                         fundPurchaseInfoBO.setShare(new BigDecimal(share).setScale(2, RoundingMode.HALF_UP).doubleValue());
                     }
                     return new FundInvestmentEntity(bo.getFundCode(), fundNetValue.getFundName(), fundPurchaseInfoBO);
@@ -106,7 +106,12 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
                     .map(purchase -> new Transaction(purchase.getAmount(), DateUtil.parse(purchase.getPurchaseDate(), DatePattern.PURE_DATE_PATTERN).toString(DatePattern.NORM_DATE_PATTERN)))
                     .collect(Collectors.toList());
             transactions.add(new Transaction(presentValue, DateUtil.format(DateUtil.date(), DatePattern.NORM_DATE_PATTERN)));
-            double xirr = new Xirr(transactions).xirr();
+            double xirr = -1 * fundCalculateVO.getProfit() / totalAmount;
+            try {
+                xirr = new Xirr(transactions).xirr();
+            } catch (Exception e) {
+                log.info("计算xirr失败，直接使用持有收益率");
+            }
             NumberFormat numberFormat = NumberFormat.getPercentInstance();
             numberFormat.setMinimumFractionDigits(2);
             fundCalculateVO.setYield(numberFormat.format(xirr));
