@@ -22,5 +22,5 @@ public class BondFundPurchaseBO extends FundCodeBO {
     /**
      * 基金购买信息列表
      */
-    List<FundPurchaseInfoBO> list;
+    private List<FundPurchaseInfoBO> list;
 }

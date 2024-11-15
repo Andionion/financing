@@ -49,9 +49,18 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
     @Override
     public void purchaseBondFund(BondFundPurchaseBO bo) {
         // 获取基金信息
-        FundNetValueEntity fundLatestNetValue = fundNetValueDao.getFundLatestNetValue(bo.getFundCode());
-        List<FundInvestmentEntity> fundInvestmentEntities = bo.getList().stream()
-                .map(fundPurchaseInfoBO -> new FundInvestmentEntity(bo.getFundCode(), fundLatestNetValue.getFundName(), fundPurchaseInfoBO))
+        List<FundInvestmentEntity> fundInvestmentEntities = bo.getList()
+                .stream()
+                .map(fundPurchaseInfoBO -> {
+                    FundNetValueEntity fundNetValue = fundNetValueDao.getFundNetValue(bo.getFundCode(), fundPurchaseInfoBO.getPurchaseDate());
+                    if (null == fundPurchaseInfoBO.getShare()) {
+                        // 份额为空，需要根据费率计算
+                        double feeRate = fundPurchaseInfoBO.getFeeRate() / 100;
+                        double share = fundPurchaseInfoBO.getAmount() * (1 - feeRate) / fundNetValue.getUnitNetValue();
+                        fundPurchaseInfoBO.setShare(new BigDecimal(share).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                    }
+                    return new FundInvestmentEntity(bo.getFundCode(), fundNetValue.getFundName(), fundPurchaseInfoBO);
+                })
                 .collect(Collectors.toList());
         log.info("开始更新基金投资信息：{}", JSON.toJSONString(fundInvestmentEntities));
         fundInvestmentDao.saveBatch(fundInvestmentEntities);

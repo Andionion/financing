@@ -24,6 +24,10 @@ public class FundPurchaseInfoBO {
      */
     private Double amount;
     /**
+     * 费率
+     */
+    private Double feeRate;
+    /**
      * 份额
      */
     private Double share;

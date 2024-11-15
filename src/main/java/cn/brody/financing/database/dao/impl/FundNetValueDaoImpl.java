@@ -35,16 +35,25 @@ public class FundNetValueDaoImpl extends ServiceImpl<FundNetValueMapper, FundNet
 
     @Override
     public List<FundNetValueEntity> listFundNetValue(Collection<String> fundCodes, String tradeDate) {
+        if (null == tradeDate) {
+            tradeDate = lambdaQuery()
+                    .orderByDesc(FundNetValueEntity::getNetValueDate)
+                    .last("limit 1")
+                    .one().getNetValueDate();
+        }
         return lambdaQuery()
                 .in(FundNetValueEntity::getFundCode, fundCodes)
                 .eq(FundNetValueEntity::getNetValueDate, tradeDate)
+                .orderByDesc(FundNetValueEntity::getNetValueDate)
                 .list();
     }
 
+
     @Override
-    public FundNetValueEntity getFundLatestNetValue(String fundCode) {
+    public FundNetValueEntity getFundNetValue(String fundCode, String tradeDate) {
         return lambdaQuery()
                 .eq(FundNetValueEntity::getFundCode, fundCode)
+                .eq(null != tradeDate, FundNetValueEntity::getNetValueDate, tradeDate)
                 .orderByDesc(FundNetValueEntity::getNetValueDate)
                 .last("limit 1")
                 .one();

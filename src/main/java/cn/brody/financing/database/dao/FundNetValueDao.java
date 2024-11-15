@@ -38,7 +38,7 @@ public interface FundNetValueDao extends IService<FundNetValueEntity> {
      * 获取基金净值列表。
      *
      * @param fundCodes 需要查询的基金代码列表。
-     * @param tradeDate 交易日期，格式为"yyyy-MM-dd"。
+     * @param tradeDate 交易日期，格式为"yyyyMMdd"。如果日期为空，则返回每个基金的最新净值
      * @return 返回一个包含所有指定基金在指定交易日期的净值信息的列表。
      */
     List<FundNetValueEntity> listFundNetValue(Collection<String> fundCodes, String tradeDate);
@@ -46,10 +46,11 @@ public interface FundNetValueDao extends IService<FundNetValueEntity> {
     /**
      * 获取基金的最新净值。
      *
-     * @param fundCode 需要查询的基金代码。
-     * @return 返回一个FundNetValueEntity对象，该对象包含了指定基金代码的最新净值信息。
+     * @param fundCode  需要查询的基金代码。
+     * @param tradeDate 查询的日期，格式为"yyyyMMdd"。如果为空，则返回最新净值
+     * @return 返回一个FundNetValueEntity对象，该对象包含了基金在指定日期的最新净值信息。
      */
-    FundNetValueEntity getFundLatestNetValue(String fundCode);
+    FundNetValueEntity getFundNetValue(String fundCode, String tradeDate);
 
     /**
      * 查找所有已存储净值的基金代码。
