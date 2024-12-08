@@ -13,6 +13,10 @@ import java.util.List;
 @Data
 public class FundCalculateVO {
     /**
+     * 交易所属方
+     */
+    private String belong;
+    /**
      * 基金代码
      */
     private String fundCode;

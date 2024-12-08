@@ -42,10 +42,15 @@ public class FundInvestmentEntity {
      * 购买份额
      */
     private Double share;
+    /**
+     * 交易所属方
+     */
+    private String belong;
 
-    public FundInvestmentEntity(String fundCode, String fundName, FundPurchaseInfoBO fundPurchaseInfoBO) {
+    public FundInvestmentEntity(String fundCode, String belong, String fundName, FundPurchaseInfoBO fundPurchaseInfoBO) {
         this.fundCode = fundCode;
         this.fundName = fundName;
+        this.belong = belong;
         this.purchaseDate = fundPurchaseInfoBO.getPurchaseDate();
         this.amount = fundPurchaseInfoBO.getAmount();
         this.share = fundPurchaseInfoBO.getShare();

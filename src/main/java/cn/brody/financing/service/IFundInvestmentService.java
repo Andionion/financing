@@ -4,6 +4,8 @@ import cn.brody.financing.pojo.base.BaseList;
 import cn.brody.financing.pojo.bo.BondFundPurchaseBO;
 import cn.brody.financing.pojo.vo.FundCalculateVO;
 
+import java.util.List;
+
 /**
  * IFundInvestmentService
  *
@@ -21,4 +23,19 @@ public interface IFundInvestmentService {
     void purchaseBondFund(BondFundPurchaseBO bo);
 
     BaseList<FundCalculateVO> calculateBondFund();
+
+    /**
+     * 查询交易所属方的校验
+     *
+     * @param belong
+     * @return
+     */
+    BaseList<FundCalculateVO> calculateBondFund(String belong);
+
+    /**
+     * 查询所有交易方
+     *
+     * @return
+     */
+    List<String> listAllNames();
 }

@@ -18,7 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BondFundPurchaseBO extends FundCodeBO {
-
+    /**
+     * 交易所属方
+     */
+    private String belong;
     /**
      * 基金购买信息列表
      */

@@ -39,10 +39,12 @@ CREATE TABLE IF NOT EXISTS fund_investment
     fund_code     VARCHAR(6) COMMENT '基金代码',
     -- 基金名称
     fund_name     VARCHAR(50) COMMENT '基金名称',
-    -- 投资日期，长度为50个字符的字符串类型，用于记录购买基金的具体日期
+    -- 投资日期，长度为50个字符的字符串类型，用于记录基金交易的具体日期
     purchase_date VARCHAR(50) COMMENT '投资日期',
-    -- 购买金额，双精度浮点数类型，用于记录购买基金所花费的金额
+    -- 交易金额，双精度浮点数类型，用于记录基金交易所花费的金额
     amount        DOUBLE COMMENT '购买金额',
     -- 购买份额，双精度浮点数类型，用于记录购买基金所获得的份额
-    share         DOUBLE COMMENT '购买份额'
+    share         DOUBLE COMMENT '购买份额',
+    -- 交易所属方，用于记录交易所属方
+    belong        VARCHAR(50) COMMENT '交易所属方'
 );

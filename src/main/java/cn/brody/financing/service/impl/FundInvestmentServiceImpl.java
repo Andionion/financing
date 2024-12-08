@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
                         double share = -1 * fundPurchaseInfoBO.getAmount() * (1 - feeRate) / fundNetValue.getUnitNetValue();
                         fundPurchaseInfoBO.setShare(new BigDecimal(share).setScale(2, RoundingMode.HALF_UP).doubleValue());
                     }
-                    return new FundInvestmentEntity(bo.getFundCode(), fundNetValue.getFundName(), fundPurchaseInfoBO);
+                    return new FundInvestmentEntity(bo.getFundCode(), bo.getBelong(), fundNetValue.getFundName(), fundPurchaseInfoBO);
                 })
                 .collect(Collectors.toList());
         log.info("开始更新基金投资信息：{}", JSON.toJSONString(fundInvestmentEntities));
@@ -68,9 +69,28 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
 
     @Override
     public BaseList<FundCalculateVO> calculateBondFund() {
-        List<FundCalculateVO> list = new ArrayList<>();
         // 获取所有基金交易记录
         List<FundInvestmentEntity> allFundInvestmentList = fundInvestmentDao.list();
+        return getFundCalculateVOBaseList(allFundInvestmentList);
+    }
+
+    @Override
+    public BaseList<FundCalculateVO> calculateBondFund(String belong) {
+        List<FundInvestmentEntity> fundInvestmentEntities = fundInvestmentDao.listByInvestmentBelong(belong);
+        return getFundCalculateVOBaseList(fundInvestmentEntities);
+    }
+
+    @Override
+    public List<String> listAllNames() {
+        return fundInvestmentDao.listAllNames();
+    }
+
+    /**
+     * @param allFundInvestmentList
+     * @return
+     */
+    private BaseList<FundCalculateVO> getFundCalculateVOBaseList(List<FundInvestmentEntity> allFundInvestmentList) {
+        List<FundCalculateVO> list = new ArrayList<>();
         // 按照基金代码分组
         Map<String, List<FundInvestmentEntity>> fundGroup = allFundInvestmentList.stream().collect(Collectors.groupingBy(FundInvestmentEntity::getFundCode));
         // 获取所有基金的最新净值
@@ -117,6 +137,7 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
             fundCalculateVO.setYield(numberFormat.format(xirr));
             list.add(fundCalculateVO);
         });
+        list.sort(Comparator.comparing(FundCalculateVO::getPresentValue).reversed());
         BaseList<FundCalculateVO> result = new BaseList<>();
         result.setList(list);
         result.setTotal(list.size());
