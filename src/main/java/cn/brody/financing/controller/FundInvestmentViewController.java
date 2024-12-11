@@ -30,6 +30,7 @@ public class FundInvestmentViewController {
         BaseList<FundCalculateVO> fundCalculateVOBaseList = fundInvestmentService.calculateBondFund(belong);
         Map<String, Object> map = new HashMap<>(1);
         map.put("investmentList", fundCalculateVOBaseList.getList());
+        map.put("belong", belong);
         return new ModelAndView("fundInvestment", map);
     }
 }

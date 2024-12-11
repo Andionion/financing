@@ -75,6 +75,13 @@
 
 <body>
 <div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title" style="font-size: 16px;">
+                <a href="javascript:" class="btn-purchase-fund" th:data-belong="${belong}">记一笔</a>
+            </h5>
+        </div>
+    </div>
     <table>
         <thead>
         <tr>
@@ -98,7 +105,8 @@
                 <td class="fund-info-cell" th:text="${investment.presentValue}"></td>
                 <td class="profit-yield-cell" th:classappend="${investment.profit >= 0? 'positive' : 'negative'}"
                     th:text="${investment.profit}"></td>
-                <td class="profit-yield-cell" th:classappend="${investment.yield.startsWith('-')? 'negative' : 'positive'}"
+                <td class="profit-yield-cell"
+                    th:classappend="${investment.yield.startsWith('-')? 'negative' : 'positive'}"
                     th:text="${investment.yield}"></td>
                 <td class="fund-info-cell">
                     <table class="purchase-info-table">
@@ -126,4 +134,15 @@
     </table>
 </div>
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
+<script>
+    $(function () {
+        $(".btn-purchase-fund").click(function () {
+            const belong = this.getAttribute('data-belong');
+            console.log("belong:", belong);
+            window.location.href = '/financing/fund/investment/view/bond/calculate/' + belong;
+        });
+    })
+</script>
 </html>
