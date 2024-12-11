@@ -17,7 +17,7 @@ public class MaiRuiConstant {
     /**
      * licence
      */
-    private static final String LICENCE = "9D5E61EE-1F7A-4A77-BDED-2A4D853B9B84";
+    private static final String LICENCE = "A84FD9E6-3C71-476D-BE5C-13DE08D162AD";
 
     /**
      * 全部日期的基金净值URI
