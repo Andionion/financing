@@ -75,13 +75,39 @@
 
 <body>
 <div class="container">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title" style="font-size: 16px;">
-                <a href="javascript:" class="btn-purchase-fund" th:data-belong="${belong}">记一笔</a>
-            </h5>
+    <div class="container mt-5">
+        <!-- Bootstrap卡片 -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">数据输入及提交</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="fundCodeInput" class="form-label">基金代码</label>
+                    <input type="text" id="fundCodeInput" class="form-control" placeholder="请输入基金代码">
+                </div>
+                <div class="mb-3">
+                    <label for="belongInput" class="form-label">belong值</label>
+                    <input type="text" id="belongInput" class="form-control" placeholder="请输入belong值">
+                </div>
+                <div class="mb-3">
+                    <label for="purchaseDateInput" class="form-label">购买日期</label>
+                    <input type="text" id="purchaseDateInput" class="form-control"
+                           placeholder="请输入购买日期（格式如20241128）">
+                </div>
+                <div class="mb-3">
+                    <label for="amountInput" class="form-label">金额</label>
+                    <input type="text" id="amountInput" class="form-control" placeholder="请输入金额">
+                </div>
+                <div class="mb-3">
+                    <label for="shareInput" class="form-label">份额</label>
+                    <input type="text" id="shareInput" class="form-control" placeholder="请输入份额">
+                </div>
+                <button type="button" class="btn btn-primary" id="submitButton">提交</button>
+            </div>
         </div>
     </div>
+
     <table>
         <thead>
         <tr>
@@ -136,12 +162,54 @@
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
+<!-- 引入Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 <script>
     $(function () {
         $(".btn-purchase-fund").click(function () {
             const belong = this.getAttribute('data-belong');
             console.log("belong:", belong);
             window.location.href = '/financing/fund/investment/view/bond/calculate/' + belong;
+        });
+    })
+
+    $(function () {
+        // 给提交按钮绑定点击事件
+        $('#submitButton').click(function () {
+            // 获取用户输入的值
+            const fundCode = $('#fundCodeInput').val();
+            const belong = $('#belongInput').val();
+            const purchaseDate = $('#purchaseDateInput').val();
+            const amount = $('#amountInput').val();
+            const share = $('#shareInput').val();
+
+            // 构建请求体数据
+            const requestData = {
+                "fundCode": fundCode,
+                "belong": belong,
+                "list": [
+                    {
+                        "purchaseDate": purchaseDate,
+                        "amount": parseFloat(amount),
+                        "share": parseFloat(share)
+                    }
+                ]
+            };
+
+            // 发送POST请求
+            $.ajax({
+                url: '/financing/fund/investment/bond/purchase',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function (response) {
+                    console.log('请求成功，响应内容：', response);
+                },
+                error: function (error) {
+                    console.log('请求出错：', error);
+                }
+            });
         });
     })
 </script>
