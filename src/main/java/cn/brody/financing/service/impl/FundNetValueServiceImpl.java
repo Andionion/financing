@@ -1,17 +1,13 @@
 package cn.brody.financing.service.impl;
 
-import cn.brody.financing.constant.AkToolConstant;
-import cn.brody.financing.constant.MaiRuiConstant;
 import cn.brody.financing.database.dao.FundNetValueDao;
 import cn.brody.financing.database.dao.TradeDateHistDao;
 import cn.brody.financing.database.entity.FundNetValueEntity;
 import cn.brody.financing.database.entity.TradeDateHistEntity;
 import cn.brody.financing.pojo.vo.FundNetValueVO;
 import cn.brody.financing.service.IFundNetValueService;
-import cn.brody.financing.utils.HttpUtils;
+import cn.brody.financing.service.IThirdPlatformFundService;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +29,8 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
     private FundNetValueDao fundNetValueDao;
     @Autowired
     private TradeDateHistDao tradeDateHistDao;
+    @Autowired
+    private IThirdPlatformFundService thirdPlatformFundService;
 
     @Override
     public void saveAllFundNetValue(List<String> fundCodes) {
@@ -41,8 +39,8 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
                 log.info("基金[{}]已经全量更新过，不需要再次全量更新", fundCode);
                 continue;
             }
-            String fundFullNetValueUrl = AkToolConstant.getFundFullNetValueUrl(fundCode);
-            requestAndSave(fundCode, fundFullNetValueUrl);
+            List<FundNetValueVO> fundNetValueFull = thirdPlatformFundService.getFundNetValueFull(fundCode);
+            requestAndSave(fundNetValueFull);
         }
     }
 
@@ -56,13 +54,14 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
                 log.info("基金[{}]在[{}]的净值已经更新过，不需要再次更新", fundCode, previousTradeDate.getTradeDate());
                 continue;
             }
-            String fundLatestNetValueUrl = AkToolConstant.getFundLatestNetValueUrl(fundCode, previousTradeDate.getTradeDate());
-            requestAndSave(fundCode, fundLatestNetValueUrl);
+            // 开始获取最新净值
+            FundNetValueVO fundNetValueLatest = thirdPlatformFundService.getFundNetValueLatest(fundCode);
+            requestAndSave(List.of(fundNetValueLatest));
         }
     }
 
     @Override
-    public List<FundNetValueVO> latestFundNetValue(List<String> fundCodes) {
+    public List<FundNetValueVO> getlatestFundNetValue(List<String> fundCodes) {
         TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDate();
         List<FundNetValueEntity> fundNetValueEntities = fundNetValueDao.listFundNetValue(fundCodes, previousTradeDate.getTradeDate());
         return fundNetValueEntities.stream()
@@ -76,22 +75,10 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
      * @param fundCode 基金代码。
      * @param url      请求的URL地址。
      */
-    private void requestAndSave(String fundCode, String url) {
-        String response = HttpUtils.get(url);
-        log.info("请求获取[{}]基金净值接口，响应：{}", fundCode, response);
-        // 解析响应数据
-        List<FundNetValueVO> fundNetValueList = JSON.parseArray(response, FundNetValueVO.class);
-        if (CollectionUtil.isEmpty(fundNetValueList)) {
-            log.warn("基金净值数据为空");
-            return;
-        }
-        // 请求基金信息
-        String fundOverview = HttpUtils.get(MaiRuiConstant.getFundOverviewUrl(fundCode));
-        log.info("请求获取[{}]基金信息接口，响应：{}", fundCode, fundOverview);
-        String fundName = JSON.parseObject(fundOverview).get("jc").toString();
+    private void requestAndSave(List<FundNetValueVO> fundNetValueList) {
         // 保存数据
         List<FundNetValueEntity> fundNetValueEntities = fundNetValueList.stream()
-                .map(fundNetValueVO -> new FundNetValueEntity(fundNetValueVO, fundCode, fundName))
+                .map(FundNetValueEntity::new)
                 .collect(Collectors.toList());
         fundNetValueDao.saveBatch(fundNetValueEntities);
     }

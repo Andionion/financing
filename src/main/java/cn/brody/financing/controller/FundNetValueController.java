@@ -4,7 +4,6 @@ import cn.brody.financing.pojo.base.BaseResponse;
 import cn.brody.financing.pojo.bo.FundCodeListBO;
 import cn.brody.financing.service.IFundNetValueService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/financing/fund/net-value")
 public class FundNetValueController {
 
-    @Qualifier("fundNetValueServiceImpl")
     @Autowired
     private IFundNetValueService fundNetValueService;
 
@@ -61,6 +59,6 @@ public class FundNetValueController {
      */
     @PostMapping("/latest")
     public BaseResponse<?> latestFundNetValue(@RequestBody FundCodeListBO bo, HttpServletRequest request) {
-        return new BaseResponse<>(fundNetValueService.latestFundNetValue(bo.getFundCodes()));
+        return new BaseResponse<>(fundNetValueService.getlatestFundNetValue(bo.getFundCodes()));
     }
 }

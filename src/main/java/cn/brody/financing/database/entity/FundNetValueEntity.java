@@ -60,11 +60,10 @@ public class FundNetValueEntity {
      */
     private String redemptionStatus;
 
-    public FundNetValueEntity(FundNetValueVO fundNetValueVO, String fundCode, String fundName) {
-        this.fundCode = fundCode;
-        this.fundName = fundName;
-        this.netValueDate = DatePattern.PURE_DATE_FORMAT
-                .format(DateUtil.parse(fundNetValueVO.getNetValueDate(), DatePattern.UTC_SIMPLE_MS_PATTERN));
+    public FundNetValueEntity(FundNetValueVO fundNetValueVO) {
+        this.fundCode = fundNetValueVO.getFundCode();
+        this.fundName = fundNetValueVO.getFundName();
+        this.netValueDate = fundNetValueVO.getNetValueDate();
         this.unitNetValue = fundNetValueVO.getUnitNetValue();
         this.accumulatedNetValue = fundNetValueVO.getAccumulatedNetValue();
         this.dailyGrowthRate = fundNetValueVO.getDailyGrowthRate();
