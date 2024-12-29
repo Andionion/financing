@@ -11,6 +11,7 @@ import cn.brody.financing.pojo.bo.BondFundPurchaseBO;
 import cn.brody.financing.pojo.vo.FundCalculateVO;
 import cn.brody.financing.pojo.vo.FundPurchaseInfoVO;
 import cn.brody.financing.service.IFundInvestmentService;
+import cn.brody.financing.service.IFundNetValueService;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -46,6 +47,8 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
     private FundNetValueDao fundNetValueDao;
     @Autowired
     private TradeDateHistDao tradeDateHistDao;
+    @Autowired
+    private IFundNetValueService fundNetValueService;
 
     @Override
     public void purchaseBondFund(BondFundPurchaseBO bo) {
@@ -91,12 +94,21 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
      */
     private BaseList<FundCalculateVO> getFundCalculateVOBaseList(List<FundInvestmentEntity> allFundInvestmentList) {
         List<FundCalculateVO> list = new ArrayList<>();
-        // 按照基金代码分组
+        // 全部投资按照基金代码分组
         Map<String, List<FundInvestmentEntity>> fundGroup = allFundInvestmentList.stream().collect(Collectors.groupingBy(FundInvestmentEntity::getFundCode));
         // 获取所有基金的最新净值
         TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDate();
         List<FundNetValueEntity> fundNetValueEntities = fundNetValueDao.listFundNetValue(fundGroup.keySet(), previousTradeDate.getTradeDate());
-        Map<String, FundNetValueEntity> fundNetValueMap = fundNetValueEntities.stream().collect(Collectors.toMap(FundNetValueEntity::getFundCode, netValue -> netValue));
+        // 如果最新日期的基金净值列表长度和所有基金的投资记录不相等，说明少，需要重新更新一次
+        if (fundNetValueEntities.size() != fundGroup.size()) {
+            List<String> existNetValueFundCodes = fundNetValueEntities.stream().map(FundNetValueEntity::getFundCode).collect(Collectors.toList());
+            List<String> notExistNetValueFundCodes = fundGroup.keySet().stream().filter(fundCode -> !existNetValueFundCodes.contains(fundCode)).collect(Collectors.toList());
+            log.info("最新日期的基金净值为空，重新更新一次基金净值，日期：{}，基金列表：{}", previousTradeDate.getTradeDate(), notExistNetValueFundCodes);
+            fundNetValueService.updateTimedFundNetValue(notExistNetValueFundCodes);
+            fundNetValueEntities = fundNetValueDao.listFundNetValue(fundGroup.keySet(), previousTradeDate.getTradeDate());
+        }
+        Map<String, FundNetValueEntity> fundNetValueMap = fundNetValueEntities.stream()
+                .collect(Collectors.toMap(FundNetValueEntity::getFundCode, netValue -> netValue));
         // 遍历每个基金的交易记录，计算总金额和总份额
         fundGroup.forEach((fundCode, fundInvestmentList) -> {
             FundCalculateVO fundCalculateVO = new FundCalculateVO();

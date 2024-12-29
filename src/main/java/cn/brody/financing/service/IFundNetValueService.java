@@ -2,6 +2,7 @@ package cn.brody.financing.service;
 
 import cn.brody.financing.pojo.vo.FundNetValueVO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface IFundNetValueService {
      *
      * @param fundCodes 需要保存网络价值的基金代码列表。
      */
-    void saveAllFundNetValue(List<String> fundCodes);
+    void saveAllFundNetValue(Collection<String> fundCodes);
 
 
     /**
@@ -26,7 +27,7 @@ public interface IFundNetValueService {
      *
      * @param fundCodes 需要更新净值的基金代码列表。
      */
-    void updateTimedFundNetValue(List<String> fundCodes);
+    void updateTimedFundNetValue(Collection<String> fundCodes);
 
 
     /**
@@ -35,6 +36,6 @@ public interface IFundNetValueService {
      * @param fundCodes 需要查询的基金代码列表。
      * @return 返回一个包含所有输入基金代码的最新基金净值的列表，每个元素是一个FundNetValueVO对象，其中包含了基金代码、当前净值等信息。
      */
-    List<FundNetValueVO> getlatestFundNetValue(List<String> fundCodes);
+    List<FundNetValueVO> getLatestFundNetValue(Collection<String> fundCodes);
 
 }

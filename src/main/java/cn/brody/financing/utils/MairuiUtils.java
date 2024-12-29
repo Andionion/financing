@@ -1,8 +1,8 @@
 package cn.brody.financing.utils;
 
 import cn.brody.financing.constant.MaiRuiConstant;
-import cn.brody.financing.pojo.mairui.MairuiOpenFundLatestNetValueVO;
 import cn.brody.financing.pojo.mairui.MairuiFundOverviewVO;
+import cn.brody.financing.pojo.mairui.MairuiOpenFundLatestNetValueVO;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +40,7 @@ public class MairuiUtils {
      */
     public static MairuiOpenFundLatestNetValueVO getFundNetValueLatestVO(String fundCode) {
         String openFundNetValueLatest = HttpUtils.get(MaiRuiConstant.getOpenFundNetValueLatestUrl(fundCode));
+        log.info("向Mairui请求获取开放型基金最新净值成功，fundCode：{}，响应参数：{}", fundCode, openFundNetValueLatest);
         if (StrUtil.isBlank(openFundNetValueLatest)) {
             log.error("响应为空");
             throw new RuntimeException("向Mairui请求获取开放型基金最新净值失败");

@@ -59,6 +59,6 @@ public class FundNetValueController {
      */
     @PostMapping("/latest")
     public BaseResponse<?> latestFundNetValue(@RequestBody FundCodeListBO bo, HttpServletRequest request) {
-        return new BaseResponse<>(fundNetValueService.getlatestFundNetValue(bo.getFundCodes()));
+        return new BaseResponse<>(fundNetValueService.getLatestFundNetValue(bo.getFundCodes()));
     }
 }

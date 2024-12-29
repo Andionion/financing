@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
     private IThirdPlatformFundService thirdPlatformFundService;
 
     @Override
-    public void saveAllFundNetValue(List<String> fundCodes) {
+    public void saveAllFundNetValue(Collection<String> fundCodes) {
         for (String fundCode : fundCodes) {
             if (fundNetValueDao.fundNetValueExists(fundCode)) {
                 log.info("基金[{}]已经全量更新过，不需要再次全量更新", fundCode);
@@ -45,7 +46,7 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
     }
 
     @Override
-    public void updateTimedFundNetValue(List<String> fundCodes) {
+    public void updateTimedFundNetValue(Collection<String> fundCodes) {
         for (String fundCode : fundCodes) {
             // 获取最新交易日
             TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDate();
@@ -61,7 +62,7 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
     }
 
     @Override
-    public List<FundNetValueVO> getlatestFundNetValue(List<String> fundCodes) {
+    public List<FundNetValueVO> getLatestFundNetValue(Collection<String> fundCodes) {
         TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDate();
         List<FundNetValueEntity> fundNetValueEntities = fundNetValueDao.listFundNetValue(fundCodes, previousTradeDate.getTradeDate());
         return fundNetValueEntities.stream()
