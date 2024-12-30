@@ -3,109 +3,183 @@
 <head>
     <meta charset="utf-8"/>
     <title>基金数据展示</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f2f5, #e0e3e7);
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        .form-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .form-control#belong {
+            font-size: 16px;
+        }
+
+        .btn-submit {
+            background: #3498db;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #2980b9;
+        }
+    </style>
 </head>
 <body>
+
 <div class="container">
-
-    <div class="container mt-5">
-        <!-- Bootstrap卡片 -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">数据输入及提交</h5>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <label for="fundCodeInput" class="form-label">基金代码</label>
-                    <input type="text" id="fundCodeInput" class="form-control" placeholder="请输入基金代码">
-                </div>
-                <div class="mb-3">
-                    <label for="belongInput" class="form-label">belong值</label>
-                    <input type="text" id="belongInput" class="form-control" placeholder="请输入belong值">
-                </div>
-                <div class="mb-3">
-                    <label for="purchaseDateInput" class="form-label">购买日期</label>
-                    <input type="text" id="purchaseDateInput" class="form-control"
-                           placeholder="请输入购买日期（格式如20241128）">
-                </div>
-                <div class="mb-3">
-                    <label for="amountInput" class="form-label">金额</label>
-                    <input type="text" id="amountInput" class="form-control" placeholder="请输入金额">
-                </div>
-                <div class="mb-3">
-                    <label for="shareInput" class="form-label">份额</label>
-                    <input type="text" id="shareInput" class="form-control" placeholder="请输入份额">
-                </div>
-                <button type="button" class="btn btn-primary" id="submitButton">提交</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <div class="col col-3 pt-1 pb-1" th:each="name : ${names}">
-            <div class="card">
+    <h1>基金数据展示</h1>
+    <div class="row">
+        <div class="col col-3" th:each="name : ${names}">
+            <div class="card h-100" th:data-name="${name}">
                 <div class="card-body">
-                    <h5 class="card-title" style="font-size: 16px;">
-                        <a href="javascript:" class="btn-enter-user" th:data-name="${name}" th:text="${name}"></a>
-                    </h5>
+                    <h5 class="card-title" th:text="${name}"></h5>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="form-container">
+        <h2>新增交易记录</h2>
+        <form id="transactionForm">
+            <div class="form-group">
+                <label for="fundCode">基金代码</label>
+                <input type="text" class="form-control" id="fundCode" placeholder="请输入基金代码" required>
+            </div>
+            <div class="form-group">
+                <label for="belong">所属</label>
+                <select class="form-control" id="belong" required>
+                    <option value="">请选择所属</option>
+                    <option th:each="name : ${names}" th:value="${name}" th:text="${name}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="purchaseDate">购买日期</label>
+                <input type="date" class="form-control" id="purchaseDate" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">金额</label>
+                <input type="number" class="form-control" id="amount" placeholder="请输入金额" required>
+            </div>
+            <div class="form-group">
+                <label for="share">份额</label>
+                <input type="number" class="form-control" id="share" placeholder="请输入份额" required>
+            </div>
+            <button type="submit" class="btn-submit">提交</button>
+        </form>
+    </div>
 </div>
 
-</body>
-
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
-<!-- 引入Bootstrap JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-
 <script>
     $(function () {
-        $(".btn-enter-user").click(function () {
-            const name = this.getAttribute('data-name');
-            console.log("name:", name);
-            window.location.href = '/financing/fund/investment/view/bond/calculate/' + name;
+        $(".card").click(function () {
+            const name = $(this).attr('data-name');
+            window.location.href = '/financing/fund/investment/view/bond/calculate/' + encodeURIComponent(name);
         });
-    })
 
-    $(function () {
-        // 给提交按钮绑定点击事件
-        $('#submitButton').click(function () {
-            // 获取用户输入的值
-            const fundCode = $('#fundCodeInput').val();
-            const belong = $('#belongInput').val();
-            const purchaseDate = $('#purchaseDateInput').val();
-            const amount = $('#amountInput').val();
-            const share = $('#shareInput').val();
+        $("#transactionForm").submit(function (event) {
+            event.preventDefault();
+            const fundCode = $("#fundCode").val();
+            const belong = $("#belong").val();
+            const purchaseDate = $("#purchaseDate").val();
+            const amount = parseFloat($("#amount").val());
+            const share = parseFloat($("#share").val());
 
-            // 构建请求体数据
-            const requestData = {
-                "fundCode": fundCode,
-                "belong": belong,
-                "list": [
-                    {
-                        "purchaseDate": purchaseDate,
-                        "amount": -1 * parseFloat(amount),
-                        "share": parseFloat(share)
-                    }
-                ]
+            const formattedDate = formatDateToYYYYMMDD(purchaseDate);
+            const requestBody = {
+                fundCode: fundCode,
+                belong: belong,
+                list: [{purchaseDate: formattedDate, amount: amount, share: share}]
             };
 
-            // 发送POST请求
             $.ajax({
                 url: '/financing/fund/investment/bond/purchase',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(requestData),
+                data: JSON.stringify(requestBody),
                 success: function (response) {
-                    console.log('请求成功，响应内容：', response);
+                    alert("交易记录提交成功！");
+                    $("#transactionForm")[0].reset(); // 重置表单
                 },
-                error: function (error) {
-                    console.log('请求出错：', error);
+                error: function (xhr, status, error) {
+                    alert("交易记录提交失败，请重试。");
                 }
             });
         });
-    })
+
+        function formatDateToYYYYMMDD(dateString) {
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}${month}${day}`;
+        }
+    });
 </script>
+
+</body>
 </html>
