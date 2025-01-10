@@ -40,8 +40,8 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
                 log.info("基金[{}]已经全量更新过，不需要再次全量更新", fundCode);
                 continue;
             }
-            List<FundNetValueVO> fundNetValueFull = thirdPlatformFundService.getFundNetValueFull(fundCode);
-            requestAndSave(fundNetValueFull);
+            List<FundNetValueVO> fundNetValueFull = thirdPlatformFundService.getFundNetValue(fundCode);
+            saveNetValue(fundNetValueFull);
         }
     }
 
@@ -56,8 +56,8 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
                 continue;
             }
             // 开始获取最新净值
-            FundNetValueVO fundNetValueLatest = thirdPlatformFundService.getFundNetValueLatest(fundCode);
-            requestAndSave(List.of(fundNetValueLatest));
+            FundNetValueVO fundNetValueLatest = thirdPlatformFundService.getFundNetValue(fundCode, previousTradeDate.getTradeDate());
+            saveNetValue(List.of(fundNetValueLatest));
         }
     }
 
@@ -76,7 +76,7 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
      * @param fundCode 基金代码。
      * @param url      请求的URL地址。
      */
-    private void requestAndSave(List<FundNetValueVO> fundNetValueList) {
+    private void saveNetValue(List<FundNetValueVO> fundNetValueList) {
         // 保存数据
         List<FundNetValueEntity> fundNetValueEntities = fundNetValueList.stream()
                 .map(FundNetValueEntity::new)

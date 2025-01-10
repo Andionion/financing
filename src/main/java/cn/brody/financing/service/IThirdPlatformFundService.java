@@ -27,7 +27,7 @@ public interface IThirdPlatformFundService {
      * @param fundCode
      * @return
      */
-    List<FundNetValueVO> getFundNetValueFull(String fundCode);
+    List<FundNetValueVO> getFundNetValue(String fundCode);
 
     /**
      * 获取基金最新净值
@@ -35,5 +35,5 @@ public interface IThirdPlatformFundService {
      * @param fundCode
      * @return
      */
-    FundNetValueVO getFundNetValueLatest(String fundCode);
+    FundNetValueVO getFundNetValue(String fundCode, String tradeDate);
 }
