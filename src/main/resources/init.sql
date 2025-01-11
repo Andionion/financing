@@ -48,3 +48,14 @@ CREATE TABLE IF NOT EXISTS fund_investment
     -- 交易所属方，用于记录交易所属方
     belong        VARCHAR(50) COMMENT '交易所属方'
 );
+-- 创建黄金交易数据表，如果表不存在则创建
+CREATE TABLE IF NOT EXISTS gold
+(
+    id               BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键，自增',
+    transaction_date datetime COMMENT '交易日期',
+    amount           DOUBLE comment '交易金额',
+    transaction_type varchar(20) comment '交易类型，sale-卖出，purchase-买入',
+    unit_price       DOUBLE comment '单价',
+    gram_number      double comment '克数',
+    gold_type        varchar(20) comment '黄金类型，physical-实物，paper-纸黄金'
+) comment '黄金交易数据表';
