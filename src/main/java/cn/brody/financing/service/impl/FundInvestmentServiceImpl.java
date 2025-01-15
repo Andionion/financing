@@ -119,6 +119,7 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
             fundCalculateVO.setUnitNetValue(fundNetValueEntity.getUnitNetValue());
             // 总投入
             double totalAmount = fundInvestmentList.stream().mapToDouble(FundInvestmentEntity::getAmount).sum();
+            totalAmount = totalAmount >= 0 ? 0 : totalAmount;
             fundCalculateVO.setTotalAmount(new BigDecimal(totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue());
             // 总份额
             double totalShare = fundInvestmentList.stream().mapToDouble(FundInvestmentEntity::getShare).sum();
