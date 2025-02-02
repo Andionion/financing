@@ -1,5 +1,6 @@
 package cn.brody.financing.pojo.vo;
 
+import cn.brody.financing.pojo.aktool.AktoolFundOverviewVO;
 import cn.brody.financing.pojo.mairui.MairuiFundOverviewVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +26,10 @@ public class FundOverviewVO {
     public FundOverviewVO(MairuiFundOverviewVO fundOverviewVO) {
         this.fundCode = fundOverviewVO.getDm();
         this.fundName = fundOverviewVO.getJc();
+    }
+
+    public FundOverviewVO(AktoolFundOverviewVO fundOverviewVO) {
+        this.fundCode = fundOverviewVO.getFundCode();
+        this.fundName = fundOverviewVO.getFundShortName();
     }
 }
