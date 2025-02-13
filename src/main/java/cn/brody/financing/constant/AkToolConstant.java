@@ -30,6 +30,10 @@ public class AkToolConstant {
      * 交易日期历史记录
      */
     private static final String URI_TRADE_DATE_HIST_SINA = "/api/public/tool_trade_date_hist_sina";
+    /**
+     * 基金概况基金净值URI
+     */
+    private static final String URI_FUND_OVERVIEW = "/api/public/fund_name_em";
 
 
     /**
@@ -76,6 +80,17 @@ public class AkToolConstant {
      */
     public static String getTradeDateHistSinaUrl() {
         return UrlBuilderUtils.fromBaseUrl(SERVER_ADDRESS + URI_TRADE_DATE_HIST_SINA).build();
+    }
+
+    /**
+     * 获取基金概览的URL。
+     *
+     * @return 返回构建好的基金概览URL，该URL包含了基金代码和许可证信息。
+     */
+    public static String getFundOverviewUrl() {
+        return UrlBuilderUtils.
+                fromBaseUrl(SERVER_ADDRESS + URI_FUND_OVERVIEW)
+                .build();
     }
 
 }
