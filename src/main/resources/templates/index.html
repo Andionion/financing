@@ -87,6 +87,10 @@
             background: #2980b9;
         }
     </style>
+    <!-- flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
 
@@ -116,9 +120,18 @@
                     <option th:each="name : ${names}" th:value="${name}" th:text="${name}"></option>
                 </select>
             </div>
+            <!-- 新增的下拉框 -->
             <div class="form-group">
-                <label for="purchaseDate">购买日期</label>
-                <input type="date" class="form-control" id="purchaseDate" required>
+                <label for="tradeType">交易类型</label>
+                <select class="form-control" id="tradeType" required>
+                    <option value="">请选择交易类型</option>
+                    <option value="purchase" selected>申购</option>
+                    <option value="redeem">赎回</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tradeDate">交易日期</label>
+                <input type="text" class="form-control" id="tradeDate" placeholder="请选择交易日期" required>
             </div>
             <div class="form-group">
                 <label for="amount">金额</label>
@@ -134,30 +147,60 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
+
 <script>
     $(function () {
         $(".card").click(function () {
             const name = $(this).attr('data-name');
-            window.location.href = '/financing/fund/investment/view/bond/calculate/' + encodeURIComponent(name);
+            window.location.href = '/financing/fund/investment/view/calculate/' + encodeURIComponent(name);
         });
 
+        // 初始化 flatpickr 日期选择器
+        flatpickr("#tradeDate", {
+            dateFormat: "Y-m-d", // 设置日期格式为 YYYY-MM-DD
+            defaultDate: new Date(), // 默认日期为当天
+            locale: "zh", // 设置语言为中文
+        });
+
+        // 设置交易类型下拉框默认值
+        $("#tradeType").val("purchase");
+
+        // 表单提交事件
         $("#transactionForm").submit(function (event) {
             event.preventDefault();
+
+            // 获取表单数据
             const fundCode = $("#fundCode").val();
             const belong = $("#belong").val();
-            const purchaseDate = $("#purchaseDate").val();
+            const tradeDate = $("#tradeDate").val(); // 直接获取 flatpickr 的值
             const amount = parseFloat($("#amount").val());
             const share = parseFloat($("#share").val());
+            const tradeType = $("#tradeType").val(); // 获取下拉框选中的值
 
-            const formattedDate = formatDateToYYYYMMDD(purchaseDate);
+            // 校验交易类型是否为空
+            if (!tradeType) {
+                alert("请选择交易类型！");
+                return;
+            }
+
+            // 格式化日期为 YYYYMMDD
+            const formattedDate = formatDateToYYYYMMDD(tradeDate);
+
+            // 构建请求体
             const requestBody = {
                 fundCode: fundCode,
                 belong: belong,
-                list: [{purchaseDate: formattedDate, amount: amount, share: share}]
+                list: [{
+                    tradeDate: formattedDate,
+                    amount: amount,
+                    share: share,
+                    tradeType: tradeType // 将交易类型加入请求体
+                }]
             };
 
+            // 发送 AJAX 请求
             $.ajax({
-                url: '/financing/fund/investment/bond/purchase',
+                url: '/financing/fund/investment/trade',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(requestBody),
@@ -171,6 +214,7 @@
             });
         });
 
+        // 格式化日期函数
         function formatDateToYYYYMMDD(dateString) {
             const date = new Date(dateString);
             const year = date.getFullYear();

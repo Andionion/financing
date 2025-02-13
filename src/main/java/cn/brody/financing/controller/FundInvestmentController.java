@@ -1,7 +1,7 @@
 package cn.brody.financing.controller;
 
 import cn.brody.financing.pojo.base.BaseResponse;
-import cn.brody.financing.pojo.bo.BondFundPurchaseBO;
+import cn.brody.financing.pojo.bo.FundTradeBO;
 import cn.brody.financing.service.IFundInvestmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,24 +24,15 @@ public class FundInvestmentController {
     @Autowired
     private IFundInvestmentService fundInvestmentService;
 
-
-    /**
-     * 购买债券基金。
-     *
-     * @param bo      包含购买债券基金所需信息的BondFundPurchaseBO对象。
-     * @param request HttpServletRequest对象，用于获取请求信息。
-     * @return 返回一个BaseResponse对象，表示操作的结果。
-     */
-    @PostMapping("/bond/purchase")
-    public BaseResponse<?> purchaseBondFund(@RequestBody BondFundPurchaseBO bo, HttpServletRequest request) {
-        fundInvestmentService.purchaseBondFund(bo);
+    @PostMapping("/trade")
+    public BaseResponse<?> trade(@RequestBody FundTradeBO bo, HttpServletRequest request) {
+        fundInvestmentService.trade(bo);
         return new BaseResponse<>();
     }
 
-
-    @PostMapping("/bond/calculate")
-    public BaseResponse<?> calculateBondFund(HttpServletRequest request) {
-        return new BaseResponse<>(fundInvestmentService.calculateBondFund());
+    @PostMapping("/calculate")
+    public BaseResponse<?> calculate(HttpServletRequest request) {
+        return new BaseResponse<>(fundInvestmentService.calculate());
     }
 
 }

@@ -1,6 +1,6 @@
 package cn.brody.financing.database.mapper;
 
-import cn.brody.financing.database.entity.FundInvestmentEntity;
+import cn.brody.financing.database.entity.FundTradeEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,6 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024/11/08 09:56
  */
 @Mapper
-public interface FundInvestmentMapper extends BaseMapper<FundInvestmentEntity> {
+public interface FundInvestmentMapper extends BaseMapper<FundTradeEntity> {
 
 }

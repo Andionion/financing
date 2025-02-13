@@ -5,13 +5,13 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * FundCalculateVO
+ * FundTradeVO
  *
  * @author chenyifu6
  * @since 2024/11/08 13:44
  */
 @Data
-public class FundCalculateVO {
+public class FundTradeVO {
     /**
      * 交易所属方
      */
@@ -51,5 +51,5 @@ public class FundCalculateVO {
     /**
      * 投入记录列表
      */
-    private List<FundPurchaseInfoVO> purchaseList;
+    private List<FundTradeInfoVO> tradeDetailList;
 }

@@ -1,5 +1,5 @@
 # 基础镜像，使用OpenJDK 11作为基础镜像
-FROM openjdk:11-jdk-slim
+FROM registry.cn-hangzhou.aliyuncs.com/cyf397/openjdk:11-jre-slim
 
 # 安装时区数据包
 RUN apt-get update && apt-get install -y tzdata

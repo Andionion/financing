@@ -1,4 +1,4 @@
-package cn.brody.financing.pojo.bo;
+package cn.brody.financing.pojo.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,20 +13,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FundPurchaseInfoBO {
+public class FundTradeInfoVO {
 
     /**
      * 记录购买操作发生的日期
      */
-    private String purchaseDate;
+    private String tradeDate;
+    /**
+     * 交易类型
+     */
+    private String tradeType;
     /**
      * 金额
      */
     private Double amount;
-    /**
-     * 费率
-     */
-    private Double feeRate;
     /**
      * 份额
      */

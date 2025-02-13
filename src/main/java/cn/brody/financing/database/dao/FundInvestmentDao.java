@@ -1,6 +1,6 @@
 package cn.brody.financing.database.dao;
 
-import cn.brody.financing.database.entity.FundInvestmentEntity;
+import cn.brody.financing.database.entity.FundTradeEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -11,13 +11,13 @@ import java.util.List;
  * @author chenyifu6
  * @since 2024/11/08 09:58
  */
-public interface FundInvestmentDao extends IService<FundInvestmentEntity> {
+public interface FundInvestmentDao extends IService<FundTradeEntity> {
 
     /**
      * @param belong
      * @return
      */
-    List<FundInvestmentEntity> listByInvestmentBelong(String belong);
+    List<FundTradeEntity> listByInvestmentBelong(String belong);
 
     /**
      * 获取所有交易方

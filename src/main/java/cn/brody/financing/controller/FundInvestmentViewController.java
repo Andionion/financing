@@ -1,7 +1,7 @@
 package cn.brody.financing.controller;
 
 import cn.brody.financing.pojo.base.BaseList;
-import cn.brody.financing.pojo.vo.FundCalculateVO;
+import cn.brody.financing.pojo.vo.FundTradeVO;
 import cn.brody.financing.service.IFundInvestmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,11 +25,11 @@ public class FundInvestmentViewController {
     @Autowired
     private IFundInvestmentService fundInvestmentService;
 
-    @RequestMapping("/bond/calculate/{belong}")
-    public ModelAndView calculateBondFund(@PathVariable("belong") String belong) {
-        BaseList<FundCalculateVO> fundCalculateVOBaseList = fundInvestmentService.calculateBondFund(belong);
-        Map<String, Object> map = new HashMap<>(1);
-        map.put("investmentList", fundCalculateVOBaseList.getList());
+    @RequestMapping("/calculate/{belong}")
+    public ModelAndView calculate(@PathVariable("belong") String belong) {
+        BaseList<FundTradeVO> fundCalculateVOBaseList = fundInvestmentService.calculate(belong);
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("tradeList", fundCalculateVOBaseList.getList());
         map.put("belong", belong);
         return new ModelAndView("fundInvestment", map);
     }
