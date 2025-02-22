@@ -1,0 +1,154 @@
+/* 基础样式 */
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #f0f2f5, #e0e3e7);
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+/* 导航栏 */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #333;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #007bff;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    color: #333;
+}
+
+/* 卡片组件 */
+.card {
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    font-size: 1.25rem; /* 统一使用rem单位 */
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.card-body {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+/* 按钮样式 */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-submit {
+    background: #3498db;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: background 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: #2980b9;
+}
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #2c3e50;
+    color: white;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: center;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* 容器布局 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+}
+
+/* 辅助类 */
+.mt-3 {
+    margin-top: 2rem !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* 在原有styles.css中添加 */
+thead {
+    background-color: #2c3e50;
+    color: white;
+    /* 移除pointer-events: none 更精准控制样式 */
+}
+
+/* 覆盖全局tr:hover对表头的影响 */
+thead tr:hover {
+    background-color: inherit;
+    cursor: default;
+}
+
+/* 确保表头单元格的悬停状态 */
+thead th:hover {
+    background-color: inherit;
+    cursor: default;
+}

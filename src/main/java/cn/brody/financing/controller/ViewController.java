@@ -28,6 +28,6 @@ public class ViewController {
         Map<String, Object> map = new HashMap<>();
         List<String> names = fundInvestmentService.listAllNames();
         map.put("names", names);
-        return new ModelAndView("index", map);
+        return new ModelAndView("fund", map);
     }
 }

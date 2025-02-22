@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>基金</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引用外部CSS文件 -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>基金数据展示</h1>
+    <div class="row">
+        <div class="col col-3" th:each="name : ${names}">
+            <div class="card h-100" th:data-name="${name}">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${name}"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>新增交易记录</h2>
+        <form id="transactionForm">
+            <div class="form-group">
+                <label for="fundCode">基金代码</label>
+                <input type="text" class="form-control" id="fundCode" placeholder="请输入基金代码" required>
+            </div>
+            <div class="form-group">
+                <label for="belong">所属</label>
+                <select class="form-control" id="belong" required>
+                    <option value="">请选择所属</option>
+                    <option th:each="name : ${names}" th:value="${name}" th:text="${name}"></option>
+                </select>
+            </div>
+            <!-- 新增的下拉框 -->
+            <div class="form-group">
+                <label for="tradeType">交易类型</label>
+                <select class="form-control" id="tradeType" required>
+                    <option value="">请选择交易类型</option>
+                    <option value="purchase" selected>申购</option>
+                    <option value="redeem">赎回</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tradeDate">交易日期</label>
+                <input type="text" class="form-control" id="tradeDate" placeholder="请选择交易日期" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">金额</label>
+                <input type="number" class="form-control" id="amount" placeholder="请输入金额" required>
+            </div>
+            <div class="form-group">
+                <label for="share">份额</label>
+                <input type="number" class="form-control" id="share" placeholder="请输入份额" required>
+            </div>
+            <button type="submit" class="btn-submit">提交</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
+
+<script src="../static/js/fund.js"></script>
+
+</body>
+</html>
