@@ -152,3 +152,12 @@ thead th:hover {
     background-color: inherit;
     cursor: default;
 }
+
+/* 收益率样式 */
+.profit-yield-cell.positive {
+    color: red;
+}
+
+.profit-yield-cell.negative {
+    color: green;
+}

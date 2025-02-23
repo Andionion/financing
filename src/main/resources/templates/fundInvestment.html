@@ -8,7 +8,7 @@
     <!-- 引入Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- 引用外部CSS文件 -->
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div class="container">
@@ -34,7 +34,8 @@
                 <td class="fund-info-cell" th:text="${trade.totalAmount}"></td>
                 <td class="fund-info-cell" th:text="${trade.totalShare}"></td>
                 <td class="fund-info-cell" th:text="${trade.presentValue}"></td>
-                <td class="profit-yield-cell" th:classappend="${trade.profit >= 0? 'positive' : 'negative'}"
+                <td class="profit-yield-cell"
+                    th:classappend="${trade.profit >= 0? 'positive' : 'negative'}"
                     th:text="${trade.profit}"></td>
                 <td class="profit-yield-cell"
                     th:classappend="${trade.yield.startsWith('-')? 'negative' : 'positive'}"
@@ -72,6 +73,6 @@
 <!-- 引入Bootstrap JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
-<script src="../static/js/fundInvestment.js"></script>
+<script src="/js/fundInvestment.js"></script>
 </body>
 </html>

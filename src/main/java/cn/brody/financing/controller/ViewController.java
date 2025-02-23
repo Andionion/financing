@@ -20,14 +20,8 @@ import java.util.Map;
 @RequestMapping("")
 public class ViewController {
 
-    @Autowired
-    private IFundInvestmentService fundInvestmentService;
-
     @RequestMapping("")
     public ModelAndView index() {
-        Map<String, Object> map = new HashMap<>();
-        List<String> names = fundInvestmentService.listAllNames();
-        map.put("names", names);
-        return new ModelAndView("fund", map);
+        return new ModelAndView("index");
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,13 +20,21 @@ import java.util.Map;
  * @since 2024/11/14 15:10
  */
 @Controller
-@RequestMapping("/financing/fund/investment/view")
+@RequestMapping("/financing/fund")
 public class FundInvestmentViewController {
 
     @Autowired
     private IFundInvestmentService fundInvestmentService;
 
-    @RequestMapping("/calculate/{belong}")
+    @RequestMapping("")
+    public ModelAndView index() {
+        Map<String, Object> map = new HashMap<>();
+        List<String> names = fundInvestmentService.listAllNames();
+        map.put("names", names);
+        return new ModelAndView("fund", map);
+    }
+
+    @RequestMapping("/investment/view/calculate/{belong}")
     public ModelAndView calculate(@PathVariable("belong") String belong) {
         BaseList<FundTradeVO> fundCalculateVOBaseList = fundInvestmentService.calculate(belong);
         Map<String, Object> map = new HashMap<>(2);
