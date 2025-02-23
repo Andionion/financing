@@ -1,8 +1,8 @@
 package cn.brody.financing.database.dao.impl;
 
-import cn.brody.financing.database.dao.FundInvestmentDao;
+import cn.brody.financing.database.dao.FundTradeDao;
 import cn.brody.financing.database.entity.FundTradeEntity;
-import cn.brody.financing.database.mapper.FundInvestmentMapper;
+import cn.brody.financing.database.mapper.FundTradeMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * FundInvestmentDaoImpl
+ * FundTradeDaoImpl
  *
  * @author chenyifu6
  * @since 2024/11/08 09:58
  */
 @Service
-public class FundInvestmentDaoImpl extends ServiceImpl<FundInvestmentMapper, FundTradeEntity> implements FundInvestmentDao {
+public class FundTradeDaoImpl extends ServiceImpl<FundTradeMapper, FundTradeEntity> implements FundTradeDao {
 
     @Override
-    public List<FundTradeEntity> listByInvestmentBelong(String belong) {
+    public List<FundTradeEntity> listByTradeBelong(String belong) {
         return lambdaQuery()
                 .eq(FundTradeEntity::getBelong, belong)
                 .list();

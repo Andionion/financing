@@ -1,7 +1,7 @@
 package cn.brody.financing.service.impl;
 
-import cn.brody.financing.database.dao.FundInvestmentDao;
 import cn.brody.financing.database.dao.FundNetValueDao;
+import cn.brody.financing.database.dao.FundTradeDao;
 import cn.brody.financing.database.dao.TradeDateHistDao;
 import cn.brody.financing.database.entity.FundNetValueEntity;
 import cn.brody.financing.database.entity.FundTradeEntity;
@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class FundInvestmentServiceImpl implements IFundInvestmentService {
 
     @Autowired
-    private FundInvestmentDao fundInvestmentDao;
+    private FundTradeDao fundTradeDao;
     @Autowired
     private FundNetValueDao fundNetValueDao;
     @Autowired
@@ -68,25 +68,25 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
                 })
                 .collect(Collectors.toList());
         log.info("开始更新基金投资信息：{}", JSON.toJSONString(fundInvestmentEntities));
-        fundInvestmentDao.saveBatch(fundInvestmentEntities);
+        fundTradeDao.saveBatch(fundInvestmentEntities);
     }
 
     @Override
     public BaseList<FundTradeVO> calculate() {
         // 获取所有基金交易记录
-        List<FundTradeEntity> allFundInvestmentList = fundInvestmentDao.list();
+        List<FundTradeEntity> allFundInvestmentList = fundTradeDao.list();
         return getFundCalculateVOBaseList(allFundInvestmentList);
     }
 
     @Override
     public BaseList<FundTradeVO> calculate(String belong) {
-        List<FundTradeEntity> fundInvestmentEntities = fundInvestmentDao.listByInvestmentBelong(belong);
+        List<FundTradeEntity> fundInvestmentEntities = fundTradeDao.listByTradeBelong(belong);
         return getFundCalculateVOBaseList(fundInvestmentEntities);
     }
 
     @Override
     public List<String> listAllNames() {
-        return fundInvestmentDao.listAllNames();
+        return fundTradeDao.listAllNames();
     }
 
     /**

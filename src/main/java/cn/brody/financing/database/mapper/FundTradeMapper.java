@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * FundInvestmentMapper
+ * FundTradeMapper
  *
  * @author chenyifu6
  * @since 2024/11/08 09:56
  */
 @Mapper
-public interface FundInvestmentMapper extends BaseMapper<FundTradeEntity> {
+public interface FundTradeMapper extends BaseMapper<FundTradeEntity> {
 
 }

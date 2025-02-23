@@ -6,18 +6,18 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 
 /**
- * FundInvestmentDao
+ * FundTradeDao
  *
  * @author chenyifu6
  * @since 2024/11/08 09:58
  */
-public interface FundInvestmentDao extends IService<FundTradeEntity> {
+public interface FundTradeDao extends IService<FundTradeEntity> {
 
     /**
      * @param belong
      * @return
      */
-    List<FundTradeEntity> listByInvestmentBelong(String belong);
+    List<FundTradeEntity> listByTradeBelong(String belong);
 
     /**
      * 获取所有交易方
