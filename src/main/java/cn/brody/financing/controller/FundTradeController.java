@@ -22,7 +22,7 @@ import java.util.Map;
  * @since 2024/11/14 15:10
  */
 @Controller
-@RequestMapping("/financing/fund")
+@RequestMapping("/financing/fund/trade")
 public class FundTradeController {
 
     @Autowired
@@ -36,7 +36,7 @@ public class FundTradeController {
         return new ModelAndView("/fund/index", map);
     }
 
-    @RequestMapping("/trade/calculate/{belong}")
+    @RequestMapping("/calculate/{belong}")
     public ModelAndView calculate(@PathVariable("belong") String belong) {
         BaseList<FundTradeVO> fundCalculateVOBaseList = fundInvestmentService.calculate(belong);
         Map<String, Object> map = new HashMap<>(2);
@@ -45,14 +45,14 @@ public class FundTradeController {
         return new ModelAndView("fund/trade", map);
     }
 
-    @PostMapping("/trade/add")
+    @PostMapping("/add")
     @ResponseBody
     public BaseResponse<?> trade(@RequestBody FundTradeAddBO bo, HttpServletRequest request) {
         fundInvestmentService.trade(bo);
         return new BaseResponse<>();
     }
 
-    @PostMapping("/trade/calculate")
+    @PostMapping("/calculate")
     @ResponseBody
     public BaseResponse<?> calculate(HttpServletRequest request) {
         return new BaseResponse<>(fundInvestmentService.calculate());

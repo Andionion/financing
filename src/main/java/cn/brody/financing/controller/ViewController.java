@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 2024/09/20 11:53
  */
 @Controller
-@RequestMapping("")
 public class ViewController {
 
     @RequestMapping("")
