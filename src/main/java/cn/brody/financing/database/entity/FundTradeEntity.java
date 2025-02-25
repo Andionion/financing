@@ -1,6 +1,6 @@
 package cn.brody.financing.database.entity;
 
-import cn.brody.financing.pojo.bo.FundTradeInfoBO;
+import cn.brody.financing.pojo.bo.FundTradeAddInfoBO;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -55,13 +55,13 @@ public class FundTradeEntity {
      */
     private String belong;
 
-    public FundTradeEntity(String fundCode, String belong, String fundName, FundTradeInfoBO fundTradeInfoBO) {
+    public FundTradeEntity(String fundCode, String belong, String fundName, FundTradeAddInfoBO fundTradeAddInfoBO) {
         this.fundCode = fundCode;
         this.fundName = fundName;
         this.belong = belong;
-        this.tradeDate = fundTradeInfoBO.getTradeDate();
-        this.tradeType = fundTradeInfoBO.getTradeType().name().toLowerCase();
-        this.amount = fundTradeInfoBO.getAmount();
-        this.share = fundTradeInfoBO.getShare();
+        this.tradeDate = fundTradeAddInfoBO.getTradeDate();
+        this.tradeType = fundTradeAddInfoBO.getTradeType().name().toLowerCase();
+        this.amount = fundTradeAddInfoBO.getAmount();
+        this.share = fundTradeAddInfoBO.getShare();
     }
 }

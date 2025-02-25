@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FundTradeInfoBO {
+public class FundTradeAddInfoBO {
 
     /**
      * 记录交易操作发生的日期

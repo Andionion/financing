@@ -8,11 +8,11 @@ import cn.brody.financing.database.entity.FundTradeEntity;
 import cn.brody.financing.database.entity.TradeDateHistEntity;
 import cn.brody.financing.enums.TradeTypeEnum;
 import cn.brody.financing.pojo.base.BaseList;
-import cn.brody.financing.pojo.bo.FundTradeBO;
+import cn.brody.financing.pojo.bo.FundTradeAddBO;
 import cn.brody.financing.pojo.vo.FundTradeInfoVO;
 import cn.brody.financing.pojo.vo.FundTradeVO;
-import cn.brody.financing.service.IFundInvestmentService;
 import cn.brody.financing.service.IFundNetValueService;
+import cn.brody.financing.service.IFundTradeService;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -33,14 +33,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * FundInvestmentServiceImpl
+ * FundTradeServiceImpl
  *
  * @author chenyifu6
  * @since 2024/11/08 09:43
  */
 @Slf4j
 @Service
-public class FundInvestmentServiceImpl implements IFundInvestmentService {
+public class FundTradeServiceImpl implements IFundTradeService {
 
     @Autowired
     private FundTradeDao fundTradeDao;
@@ -52,7 +52,7 @@ public class FundInvestmentServiceImpl implements IFundInvestmentService {
     private IFundNetValueService fundNetValueService;
 
     @Override
-    public void trade(FundTradeBO bo) {
+    public void trade(FundTradeAddBO bo) {
         // 获取基金信息
         List<FundTradeEntity> fundInvestmentEntities = bo.getList()
                 .stream()

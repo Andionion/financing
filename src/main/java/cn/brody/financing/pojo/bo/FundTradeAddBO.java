@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * FundTradeBO
+ * FundTradeAddBO
  *
  * @author chenyifu6
  * @since 2024/11/08 09:14
@@ -17,7 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class FundTradeBO extends FundCodeBO {
+public class FundTradeAddBO extends FundCodeBO {
     /**
      * 交易所属方
      */
@@ -25,5 +25,5 @@ public class FundTradeBO extends FundCodeBO {
     /**
      * 基金购买信息列表
      */
-    private List<FundTradeInfoBO> list;
+    private List<FundTradeAddInfoBO> list;
 }
