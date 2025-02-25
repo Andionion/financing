@@ -33,5 +33,5 @@ public interface FundTradeDao extends IService<FundTradeEntity> {
      *
      * @return
      */
-    List<String> listAllNames();
+    List<String> listAllBelongs();
 }

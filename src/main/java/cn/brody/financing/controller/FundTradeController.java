@@ -36,8 +36,8 @@ public class FundTradeController {
     @RequestMapping("")
     public ModelAndView index() {
         Map<String, Object> map = new HashMap<>();
-        List<String> names = fundTradeService.listAllNames();
-        map.put("names", names);
+        List<String> belongs = fundTradeService.listAllBelongs();
+        map.put("belongs", belongs);
         return new ModelAndView("/fund/index", map);
     }
 

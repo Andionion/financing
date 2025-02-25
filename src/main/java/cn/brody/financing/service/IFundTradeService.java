@@ -45,5 +45,5 @@ public interface IFundTradeService {
      *
      * @return 返回一个包含所有名称的字符串列表。
      */
-    List<String> listAllNames();
+    List<String> listAllBelongs();
 }

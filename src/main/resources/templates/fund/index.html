@@ -16,10 +16,10 @@
 <div class="container">
     <h1>基金交易所属人</h1>
     <div class="row">
-        <div class="col col-3" th:each="name : ${names}">
-            <div class="card h-100" th:data-name="${name}">
+        <div class="col col-3" th:each="belong : ${belongs}">
+            <div class="card h-100" th:data-name="${belong}">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${name}"></h5>
+                    <h1 class="card-title" th:text="${belong}"></h1>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                 <label for="belong">所属</label>
                 <select class="form-control" id="belong" required>
                     <option value="">请选择所属</option>
-                    <option th:each="name : ${names}" th:value="${name}" th:text="${name}"></option>
+                    <option th:each="name : ${belongs}" th:value="${name}" th:text="${name}"></option>
                 </select>
             </div>
             <!-- 新增的下拉框 -->
@@ -67,7 +67,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
 
-<script src="/js/fund.js"></script>
+<script>
+    $(function () {
+        $(".card").click(function () {
+            const name = $(this).attr('data-name');
+            window.location.href = '/financing/fund/trade/tabulate/' + encodeURIComponent(name);
+        });
+    });
+</script>
 
 </body>
 </html>

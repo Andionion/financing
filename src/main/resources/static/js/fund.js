@@ -1,9 +1,4 @@
 $(function () {
-    $(".card").click(function () {
-        const name = $(this).attr('data-name');
-        window.location.href = '/financing/fund/trade/tabulate/' + encodeURIComponent(name);
-    });
-
     // 初始化 flatpickr 日期选择器
     flatpickr("#tradeDate", {
         dateFormat: "Y-m-d", // 设置日期格式为 YYYY-MM-DD

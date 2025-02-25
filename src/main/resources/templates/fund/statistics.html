@@ -28,7 +28,11 @@
         <tbody>
         <th:block th:each="statistics : ${statisticsList}">
             <tr>
-                <td class="fund-info-cell" th:text="${statistics.fundName}"></td>
+                <!-- 将基金名称替换为可点击的链接 -->
+                <td class="fund-info-cell">
+                    <a th:href="@{/financing/fund/trade/{belong}/{fundCode}(belong=${belong}, fundCode=${statistics.fundCode})}"
+                       th:text="${statistics.fundName}"></a>
+                </td>
                 <td class="fund-info-cell" th:text="${statistics.fundCode}"></td>
                 <td class="fund-info-cell" th:text="${statistics.totalAmount}"></td>
                 <td class="fund-info-cell" th:text="${statistics.totalShare}"></td>
@@ -49,5 +53,10 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
 <!-- 引入Bootstrap JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+
+    });
+</script>
 </body>
 </html>

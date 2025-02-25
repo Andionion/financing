@@ -87,8 +87,8 @@ public class FundTradeServiceImpl implements IFundTradeService {
     }
 
     @Override
-    public List<String> listAllNames() {
-        return fundTradeDao.listAllNames();
+    public List<String> listAllBelongs() {
+        return fundTradeDao.listAllBelongs();
     }
 
     /**

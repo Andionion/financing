@@ -34,7 +34,7 @@ public class FundTradeDaoImpl extends ServiceImpl<FundTradeMapper, FundTradeEnti
     }
 
     @Override
-    public List<String> listAllNames() {
+    public List<String> listAllBelongs() {
         return lambdaQuery().list()
                 .stream()
                 .map(FundTradeEntity::getBelong)
