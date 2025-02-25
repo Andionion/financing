@@ -11,5 +11,10 @@ import cn.brody.financing.pojo.vo.GoldTradeVO;
  */
 public interface IGoldTradeService {
 
+    /**
+     * 统计黄金交易的列表。
+     *
+     * @return 返回一个包含所有黄金交易信息的BaseList对象。
+     */
     BaseList<GoldTradeVO> calculate();
 }

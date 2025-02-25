@@ -22,20 +22,28 @@ public interface IFundTradeService {
      */
     void trade(FundTradeAddBO bo);
 
-    BaseList<FundTradeVO> calculate();
 
     /**
-     * 查询交易所属方的校验
+     * 计算基金交易数据。
      *
-     * @param belong
-     * @return
+     * @return 返回一个包含基金交易数据的BaseList对象，其中每个元素都是FundTradeVO类型。
+     */
+    BaseList<FundTradeVO> calculate();
+
+
+    /**
+     * 查询交易所属方的统计数据
+     *
+     * @param belong 需要查询的基金所属类别。
+     * @return 返回一个包含基金交易信息的列表，每个元素是一个FundTradeVO对象。
      */
     BaseList<FundTradeVO> calculate(String belong);
 
+
     /**
-     * 查询所有交易方
+     * 查询所有交易方。
      *
-     * @return
+     * @return 返回一个包含所有名称的字符串列表。
      */
     List<String> listAllNames();
 }

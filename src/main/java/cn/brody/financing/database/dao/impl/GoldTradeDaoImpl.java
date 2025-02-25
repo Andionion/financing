@@ -6,6 +6,8 @@ import cn.brody.financing.database.mapper.GoldTradeMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * GoldTradeDaoImpl
  *
@@ -14,4 +16,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GoldTradeDaoImpl extends ServiceImpl<GoldTradeMapper, GoldTradeEntity> implements GoldTradeDao {
+
+    @Override
+    public List<GoldTradeEntity> listByTradeDateAsc() {
+        return lambdaQuery().orderByAsc(GoldTradeEntity::getTradeTime).list();
+    }
 }

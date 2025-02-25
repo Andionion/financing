@@ -20,10 +20,10 @@ import java.time.LocalDateTime;
  * @author BrodyChen
  * @since 2025/02/23 21:29
  */
-@TableName("gold_trade") // 表名保持为 gold_trade
-@Data // 自动生成 Getter/Setter/toString/equalsHashCode
-@NoArgsConstructor // 无参构造器
-@AllArgsConstructor // 全参构造器
+@TableName("gold_trade")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GoldTradeEntity {
 
 

@@ -23,24 +23,20 @@ public class FinancingFastJsonConfig {
     @Bean
     public FastJsonHttpMessageConverter fastJsonHttpMessageConverter() {
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
-
         // 配置 FastJSON
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(
                 SerializerFeature.PrettyFormat,
                 SerializerFeature.WriteMapNullValue
         );
-
         // 注册自定义序列化器
         SerializeConfig serializeConfig = SerializeConfig.globalInstance;
         serializeConfig.put(TradeTypeEnum.class, new TradeTypeEnumSerializer());
         fastJsonConfig.setSerializeConfig(serializeConfig);
-
         // 注册自定义反序列化器
         ParserConfig parserConfig = ParserConfig.getGlobalInstance();
         parserConfig.putDeserializer(TradeTypeEnum.class, new TradeTypeEnumDeserializer());
         fastJsonConfig.setParserConfig(parserConfig);
-
         fastConverter.setFastJsonConfig(fastJsonConfig);
         return fastConverter;
     }

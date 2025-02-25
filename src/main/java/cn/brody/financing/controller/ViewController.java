@@ -13,6 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ViewController {
 
+    /**
+     * 处理首页请求。
+     *
+     * @return 返回一个ModelAndView对象，该对象包含视图名称"index"。
+     */
     @RequestMapping("")
     public ModelAndView index() {
         return new ModelAndView("index");
