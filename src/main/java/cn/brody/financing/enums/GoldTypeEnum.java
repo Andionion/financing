@@ -14,5 +14,5 @@ public enum GoldTypeEnum {
     /**
      * 实体金（对应 "physical"）
      */
-    PHYSICAL;
+    PHYSICAL
 }

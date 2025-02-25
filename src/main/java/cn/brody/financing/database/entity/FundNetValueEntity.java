@@ -1,8 +1,6 @@
 package cn.brody.financing.database.entity;
 
 import cn.brody.financing.pojo.vo.FundNetValueVO;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
