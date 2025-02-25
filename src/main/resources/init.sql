@@ -55,11 +55,12 @@ CREATE TABLE IF NOT EXISTS fund_trade
 CREATE TABLE if not exists gold_trade
 (
     id           BIGINT PRIMARY KEY COMMENT '唯一交易标识',
+    trade_time   DATETIME                    NOT NULL COMMENT '交易时间（由业务侧显式填写）',
     amount       DECIMAL(12, 2)              NOT NULL COMMENT '交易金额（单位：人民币元，精确到分）',
     unit_price   DECIMAL(10, 4)              NOT NULL COMMENT '单价（单位：人民币元/单位，最多保留四位小数）',
     handling_fee DECIMAL(6, 2)               NOT NULL COMMENT '手续费金额（单位：人民币元，精确到分）',
+    weight       DECIMAL(6, 4)               NOT NULL COMMENT '重量（单位：g，保留四位小数）',
     trade_type   ENUM ('purchase', 'redeem') NOT NULL COMMENT '交易类型（purchase-申购，redeem-赎回）',
-    gold_type    ENUM ('paper', 'physical')  NOT NULL COMMENT '黄金类型（paper-纸面金，physical-实体金）',
-    trade_time   DATETIME                    NOT NULL COMMENT '交易时间（由业务侧显式填写）'
+    gold_type    ENUM ('paper', 'physical')  NOT NULL COMMENT '黄金类型（paper-纸面金，physical-实体金）'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='黄金交易记录表';

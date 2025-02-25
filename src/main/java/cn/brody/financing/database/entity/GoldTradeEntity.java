@@ -30,6 +30,11 @@ public class GoldTradeEntity {
     @TableId
     private Long id;
     /**
+     * 交易时间（由业务方填充）
+     */
+    @Column(name = "trade_time", nullable = false)
+    private LocalDateTime tradeTime;
+    /**
      * 交易金额（精确到分）
      */
     @Column(name = "amount", precision = 12, scale = 2)
@@ -45,6 +50,11 @@ public class GoldTradeEntity {
     @Column(name = "handling_fee", precision = 6, scale = 2)
     private BigDecimal handlingFee;
     /**
+     * 重量（单位：g，保留四位小数）
+     */
+    @Column(name = "weight", precision = 6, scale = 6)
+    private BigDecimal weight;
+    /**
      * 交易类型（purchase-申购，redeem-赎回）
      */
     @Enumerated(EnumType.STRING)
@@ -56,9 +66,5 @@ public class GoldTradeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "gold_type", nullable = false)
     private GoldTypeEnum goldType;
-    /**
-     * 交易时间（由业务方填充）
-     */
-    @Column(name = "trade_time", nullable = false)
-    private LocalDateTime tradeTime;
+
 }
