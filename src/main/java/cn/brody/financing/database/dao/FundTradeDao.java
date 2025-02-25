@@ -17,7 +17,16 @@ public interface FundTradeDao extends IService<FundTradeEntity> {
      * @param belong
      * @return
      */
-    List<FundTradeEntity> listByTradeBelong(String belong);
+    List<FundTradeEntity> listByBelong(String belong);
+
+    /**
+     * 根据基金代码和所属人列出交易实体。
+     *
+     * @param fundCode 需要查询的基金代码。
+     * @param belong   需要查询的基金所属类别。
+     * @return 返回一个包含所有符合条件的FundTradeEntity对象的列表。
+     */
+    List<FundTradeEntity> listByFundCodeAndBelong(String fundCode, String belong);
 
     /**
      * 获取所有交易方

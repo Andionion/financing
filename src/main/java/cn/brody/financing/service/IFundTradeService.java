@@ -1,7 +1,7 @@
 package cn.brody.financing.service;
 
-import cn.brody.financing.pojo.base.BaseList;
 import cn.brody.financing.pojo.bo.FundTradeAddBO;
+import cn.brody.financing.pojo.vo.FundStatisticsVO;
 import cn.brody.financing.pojo.vo.FundTradeVO;
 
 import java.util.List;
@@ -22,23 +22,23 @@ public interface IFundTradeService {
      */
     void trade(FundTradeAddBO bo);
 
+    /**
+     * 对指定类别的交易进行汇总。
+     *
+     * @param belong 需要汇总的交易类别。
+     * @return 返回一个包含所有符合指定类别交易的列表，每个元素是一个FundTradeVO对象，包含了该交易的详细信息。
+     */
+    List<FundStatisticsVO> tabulate(String belong);
+
 
     /**
-     * 计算基金交易数据。
+     * 获取基金交易信息。
      *
-     * @return 返回一个包含基金交易数据的BaseList对象，其中每个元素都是FundTradeVO类型。
+     * @param fundCode 需要查询的基金代码。
+     * @param belong   基金所属人。
+     * @return 返回一个包含所有符合条件的基金交易信息的列表，每个元素是一个FundTradeVO对象。
      */
-    BaseList<FundTradeVO> calculate();
-
-
-    /**
-     * 查询交易所属方的统计数据
-     *
-     * @param belong 需要查询的基金所属类别。
-     * @return 返回一个包含基金交易信息的列表，每个元素是一个FundTradeVO对象。
-     */
-    BaseList<FundTradeVO> calculate(String belong);
-
+    List<FundTradeVO> listFundTrade(String fundCode, String belong);
 
     /**
      * 查询所有交易方。

@@ -1,21 +1,19 @@
 package cn.brody.financing.pojo.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 /**
- * FundTradeVO
+ * 基金购买的具体信息
  *
  * @author chenyifu6
- * @since 2024/11/08 13:44
+ * @since 2024/11/08 09:40
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FundTradeVO {
-    /**
-     * 交易所属方
-     */
-    private String belong;
     /**
      * 基金代码
      */
@@ -25,31 +23,19 @@ public class FundTradeVO {
      */
     private String fundName;
     /**
-     * 单位净值
+     * 记录购买操作发生的日期
      */
-    private Double unitNetValue;
+    private String tradeDate;
     /**
-     * 总投入
+     * 交易类型
      */
-    private Double totalAmount;
+    private String tradeType;
     /**
-     * 总份额
+     * 金额
      */
-    private Double totalShare;
+    private Double amount;
     /**
-     * 现值
+     * 份额
      */
-    private Double presentValue;
-    /**
-     * 收益
-     */
-    private Double profit;
-    /**
-     * 收益率
-     */
-    private String yield;
-    /**
-     * 投入记录列表
-     */
-    private List<FundTradeInfoVO> tradeDetailList;
+    private Double share;
 }

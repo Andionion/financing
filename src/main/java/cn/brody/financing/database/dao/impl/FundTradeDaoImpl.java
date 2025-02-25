@@ -19,8 +19,16 @@ import java.util.stream.Collectors;
 public class FundTradeDaoImpl extends ServiceImpl<FundTradeMapper, FundTradeEntity> implements FundTradeDao {
 
     @Override
-    public List<FundTradeEntity> listByTradeBelong(String belong) {
+    public List<FundTradeEntity> listByBelong(String belong) {
         return lambdaQuery()
+                .eq(FundTradeEntity::getBelong, belong)
+                .list();
+    }
+
+    @Override
+    public List<FundTradeEntity> listByFundCodeAndBelong(String fundCode, String belong) {
+        return lambdaQuery()
+                .eq(FundTradeEntity::getFundCode, fundCode)
                 .eq(FundTradeEntity::getBelong, belong)
                 .list();
     }

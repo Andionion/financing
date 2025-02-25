@@ -1,7 +1,7 @@
 $(function () {
     $(".card").click(function () {
         const name = $(this).attr('data-name');
-        window.location.href = '/financing/fund/trade/calculate/' + encodeURIComponent(name);
+        window.location.href = '/financing/fund/trade/tabulate/' + encodeURIComponent(name);
     });
 
     // 初始化 flatpickr 日期选择器

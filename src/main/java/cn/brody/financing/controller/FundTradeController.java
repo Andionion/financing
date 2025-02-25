@@ -1,8 +1,8 @@
 package cn.brody.financing.controller;
 
-import cn.brody.financing.pojo.base.BaseList;
 import cn.brody.financing.pojo.base.BaseResponse;
 import cn.brody.financing.pojo.bo.FundTradeAddBO;
+import cn.brody.financing.pojo.vo.FundStatisticsVO;
 import cn.brody.financing.pojo.vo.FundTradeVO;
 import cn.brody.financing.service.IFundTradeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,19 +41,38 @@ public class FundTradeController {
         return new ModelAndView("/fund/index", map);
     }
 
+
     /**
-     * 计算并返回交易信息。
+     * 获取指定类别的交易记录。
      *
-     * @param belong 需要计算的交易所属类别。
-     * @return 返回一个包含交易列表和所属类别的ModelAndView对象，用于展示在"fund/trade"页面上。
+     * @param belong 需要查询的交易类别。
+     * @return 返回一个包含交易列表和类别的ModelAndView对象，用于展示在"/fund/trade"页面上。
      */
-    @RequestMapping("/calculate/{belong}")
-    public ModelAndView calculate(@PathVariable("belong") String belong) {
-        BaseList<FundTradeVO> fundCalculateVOBaseList = fundTradeService.calculate(belong);
+    @RequestMapping("/tabulate/{belong}")
+    public ModelAndView tabulate(@PathVariable("belong") String belong) {
+        List<FundStatisticsVO> fundStatisticsVOList = fundTradeService.tabulate(belong);
         Map<String, Object> map = new HashMap<>(2);
-        map.put("tradeList", fundCalculateVOBaseList.getList());
+        map.put("statisticsList", fundStatisticsVOList);
         map.put("belong", belong);
-        return new ModelAndView("fund/trade", map);
+        return new ModelAndView("/fund/statistics", map);
+    }
+
+    /**
+     * 获取基金交易列表。
+     *
+     * @param belong   基金所属类别。
+     * @param fundCode 基金代码。
+     * @return 返回一个包含基金交易列表的ModelAndView对象，该对象用于展示基金交易信息。
+     */
+    @RequestMapping("/{belong}/{fundCode}")
+    public ModelAndView listFundTrade(@PathVariable("belong") String belong, @PathVariable("fundCode") String fundCode) {
+        List<FundTradeVO> fundTradeList = fundTradeService.listFundTrade(fundCode, belong);
+        Map<String, Object> map = new HashMap<>(4);
+        map.put("belong", belong);
+        map.put("fundCode", fundCode);
+        map.put("fundName", fundTradeList.get(0).getFundName());
+        map.put("fundTradeList", fundTradeList);
+        return new ModelAndView("/fund/trade", map);
     }
 
     /**
@@ -68,17 +87,5 @@ public class FundTradeController {
     public BaseResponse<?> trade(@RequestBody FundTradeAddBO bo, HttpServletRequest request) {
         fundTradeService.trade(bo);
         return new BaseResponse<>();
-    }
-
-    /**
-     * 统计交易。
-     *
-     * @param request HttpServletRequest对象，用于获取请求信息。
-     * @return 返回一个BaseResponse对象，其中包含计算结果。
-     */
-    @PostMapping("/calculate")
-    @ResponseBody
-    public BaseResponse<?> calculate(HttpServletRequest request) {
-        return new BaseResponse<>(fundTradeService.calculate());
     }
 }
