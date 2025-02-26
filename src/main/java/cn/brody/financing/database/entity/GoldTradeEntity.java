@@ -52,7 +52,7 @@ public class GoldTradeEntity {
     /**
      * 重量（单位：g，保留四位小数）
      */
-    @Column(name = "weight", precision = 6, scale = 6)
+    @Column(name = "weight", precision = 6, scale = 4)
     private BigDecimal weight;
     /**
      * 交易类型（purchase-申购，redeem-赎回）

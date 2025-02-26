@@ -1,6 +1,11 @@
 package cn.brody.financing.pojo.vo;
 
+import cn.brody.financing.database.entity.GoldTradeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.format.DateTimeFormatter;
 
 /**
  * GoldTradeVO
@@ -9,6 +14,8 @@ import lombok.Data;
  * @since 2025/02/25 14:08
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GoldTradeVO {
     /**
      * 交易时间（由业务方填充）
@@ -34,4 +41,13 @@ public class GoldTradeVO {
      * 黄金类型（paper-纸面金，physical-实体金）
      */
     private String goldType;
+
+    public GoldTradeVO(GoldTradeEntity goldTradeEntity) {
+        this.tradeTime = goldTradeEntity.getTradeTime().format(DateTimeFormatter.BASIC_ISO_DATE);
+        this.amount = goldTradeEntity.getAmount().doubleValue();
+        this.unitPrice = goldTradeEntity.getUnitPrice().doubleValue();
+        this.weight = goldTradeEntity.getWeight().doubleValue();
+        this.tradeType = goldTradeEntity.getTradeType().name().toLowerCase();
+        this.goldType = goldTradeEntity.getGoldType().name().toLowerCase();
+    }
 }

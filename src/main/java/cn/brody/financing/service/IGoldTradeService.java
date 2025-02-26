@@ -1,7 +1,6 @@
 package cn.brody.financing.service;
 
-import cn.brody.financing.pojo.base.BaseList;
-import cn.brody.financing.pojo.vo.GoldTradeVO;
+import cn.brody.financing.pojo.vo.GoldStatisticsVO;
 
 /**
  * IGoldTradeService
@@ -13,8 +12,10 @@ public interface IGoldTradeService {
 
     /**
      * 统计黄金交易的列表。
+     * <p>
+     * 因统计数据只有一行，和基金不一样，所以既展示相关统计数据，也展示详细交易数据
      *
      * @return 返回一个包含所有黄金交易信息的BaseList对象。
      */
-    BaseList<GoldTradeVO> calculate();
+    GoldStatisticsVO tabulate();
 }

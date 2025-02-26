@@ -2,8 +2,6 @@ package cn.brody.financing.pojo.vo;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * FundStatisticsVO
  *
@@ -44,8 +42,4 @@ public class FundStatisticsVO {
      * 收益率
      */
     private String yield;
-    /**
-     * 详细交易记录列表
-     */
-    private List<FundTradeVO> tradeDetailList;
 }

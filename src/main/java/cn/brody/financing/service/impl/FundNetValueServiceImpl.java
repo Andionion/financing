@@ -70,11 +70,11 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
                 .collect(Collectors.toList());
     }
 
+
     /**
-     * 请求并保存基金净值数据。
+     * 保存基金净值数据。
      *
-     * @param fundCode 基金代码。
-     * @param url      请求的URL地址。
+     * @param fundNetValueList 需要保存的基金净值列表，每个元素是一个FundNetValueVO对象。
      */
     private void saveNetValue(List<FundNetValueVO> fundNetValueList) {
         // 保存数据

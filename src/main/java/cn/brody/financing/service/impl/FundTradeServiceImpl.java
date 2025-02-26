@@ -141,7 +141,6 @@ public class FundTradeServiceImpl implements IFundTradeService {
             List<FundTradeVO> fundPurchaseList = fundTradeList.stream()
                     .map(investment -> BeanUtil.copyProperties(investment, FundTradeVO.class))
                     .collect(Collectors.toList());
-            fundStatisticsVO.setTradeDetailList(fundPurchaseList);
             // 计算xirr
             List<Transaction> transactions = fundPurchaseList.stream()
                     // 计算xirr，申购为负，赎回为正
