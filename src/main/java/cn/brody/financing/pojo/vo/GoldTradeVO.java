@@ -43,7 +43,7 @@ public class GoldTradeVO {
     private String goldType;
 
     public GoldTradeVO(GoldTradeEntity goldTradeEntity) {
-        this.tradeTime = goldTradeEntity.getTradeTime().format(DateTimeFormatter.BASIC_ISO_DATE);
+        this.tradeTime = goldTradeEntity.getTradeTime().format(DateTimeFormatter.ISO_LOCAL_DATE);
         this.amount = goldTradeEntity.getAmount().doubleValue();
         this.unitPrice = goldTradeEntity.getUnitPrice().doubleValue();
         this.weight = goldTradeEntity.getWeight().doubleValue();

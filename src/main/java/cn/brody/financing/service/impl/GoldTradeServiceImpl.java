@@ -18,7 +18,11 @@ import org.decampo.xirr.Xirr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,14 +72,14 @@ public class GoldTradeServiceImpl implements IGoldTradeService {
         log.info("工银瑞信黄金ETF联接E基金（020341）最新净值为：{}", JSONUtil.toJsonStr(fundNetValue));
         goldStatisticsVO.setCurrentUnitPrice(fundNetValue.getUnitNetValue() * 425);
         // 现值 = 总克数 * 当前价
-        goldStatisticsVO.setPresentValue(goldStatisticsVO.getTotalWeight() * goldStatisticsVO.getCurrentUnitPrice());
+        goldStatisticsVO.setPresentValue(BigDecimal.valueOf(goldStatisticsVO.getTotalWeight() * goldStatisticsVO.getCurrentUnitPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
         // 净投入 = -1*Sum（赎回）+ Sum（购买）
         double netInvestment = goldTradeEntities.stream()
-                .mapToDouble(goldTradeEntity -> TradeTypeEnum.PURCHASE.equals(goldTradeEntity.getTradeType()) ? goldTradeEntity.getWeight().doubleValue() : goldTradeEntity.getWeight().negate().doubleValue())
+                .mapToDouble(goldTradeEntity -> TradeTypeEnum.PURCHASE.equals(goldTradeEntity.getTradeType()) ? goldTradeEntity.getAmount().doubleValue() : goldTradeEntity.getAmount().negate().doubleValue())
                 .sum();
-        goldStatisticsVO.setNetInvestment(netInvestment);
+        goldStatisticsVO.setNetInvestment(BigDecimal.valueOf(netInvestment).setScale(2, RoundingMode.HALF_UP).doubleValue());
         // 收益 = 现值 - 净投入
-        goldStatisticsVO.setProfit(goldStatisticsVO.getPresentValue() - netInvestment);
+        goldStatisticsVO.setProfit(BigDecimal.valueOf(goldStatisticsVO.getPresentValue() - netInvestment).setScale(2, RoundingMode.HALF_UP).doubleValue());
         // 年化利率 = xirr(所有交易日期，金额（购买为负数，赎回为正数）,现值）
         List<Transaction> transactions = goldTradeEntities.stream()
                 // 计算xirr，申购为负，赎回为正
@@ -89,9 +93,14 @@ public class GoldTradeServiceImpl implements IGoldTradeService {
         } catch (Exception e) {
             log.info("计算xirr失败，直接使用持有收益率");
         }
-        goldStatisticsVO.setAnnualizedRate(xirr);
+        NumberFormat numberFormat = NumberFormat.getPercentInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        goldStatisticsVO.setYield(numberFormat.format(xirr));
         // 交易记录
-        goldStatisticsVO.setTradeDetailList(goldTradeEntities.stream().map(GoldTradeVO::new).collect(Collectors.toList()));
+        goldStatisticsVO.setTradeDetailList(goldTradeEntities.stream()
+                .sorted(Comparator.comparing(GoldTradeEntity::getTradeTime).reversed())
+                .map(GoldTradeVO::new)
+                .collect(Collectors.toList()));
         return goldStatisticsVO;
     }
 }

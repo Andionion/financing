@@ -118,11 +118,6 @@ tr:hover {
     margin-top: 2rem;
 }
 
-/* 表单组样式 */
-.form-group {
-    margin-bottom: 1.5rem; /* 增加 form-group 之间的距离 */
-}
-
 /* 辅助类 */
 .mt-3 {
     margin-top: 2rem !important;
