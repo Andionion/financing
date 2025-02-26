@@ -38,7 +38,7 @@ public class FundTradeController {
         Map<String, Object> map = new HashMap<>();
         List<String> belongs = fundTradeService.listAllBelongs();
         map.put("belongs", belongs);
-        return new ModelAndView("/fund/index", map);
+        return new ModelAndView("fund/index", map);
     }
 
 
@@ -54,7 +54,7 @@ public class FundTradeController {
         Map<String, Object> map = new HashMap<>(2);
         map.put("statisticsList", fundStatisticsVOList);
         map.put("belong", belong);
-        return new ModelAndView("/fund/statistics", map);
+        return new ModelAndView("fund/statistics", map);
     }
 
     /**
@@ -72,7 +72,7 @@ public class FundTradeController {
         map.put("fundCode", fundCode);
         map.put("fundName", fundTradeList.get(0).getFundName());
         map.put("fundTradeList", fundTradeList);
-        return new ModelAndView("/fund/trade", map);
+        return new ModelAndView("fund/trade", map);
     }
 
     /**

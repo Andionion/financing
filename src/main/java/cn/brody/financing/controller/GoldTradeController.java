@@ -30,7 +30,7 @@ public class GoldTradeController {
         GoldStatisticsVO goldStatisticsVO = goldTradeService.tabulate();
         Map<String, Object> map = new HashMap<>(1);
         map.put("goldStatistics", goldStatisticsVO);
-        return new ModelAndView("/gold/trade", map);
+        return new ModelAndView("gold/trade", map);
     }
 
     @RequestMapping("/tabulate")
