@@ -1,5 +1,6 @@
 package cn.brody.financing.service;
 
+import cn.brody.financing.pojo.bo.GoldTradeAddBO;
 import cn.brody.financing.pojo.vo.GoldStatisticsVO;
 
 /**
@@ -9,6 +10,13 @@ import cn.brody.financing.pojo.vo.GoldStatisticsVO;
  * @since 2025/02/25 14:08
  */
 public interface IGoldTradeService {
+
+    /**
+     * 新增黄金交易
+     *
+     * @param bo 黄金交易请求参数
+     */
+    void addGoldTrade(GoldTradeAddBO bo);
 
     /**
      * 统计黄金交易的列表。

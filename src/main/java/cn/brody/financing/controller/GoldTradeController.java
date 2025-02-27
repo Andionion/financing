@@ -1,9 +1,11 @@
 package cn.brody.financing.controller;
 
+import cn.brody.financing.pojo.bo.GoldTradeAddBO;
 import cn.brody.financing.pojo.vo.GoldStatisticsVO;
 import cn.brody.financing.service.IGoldTradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +33,12 @@ public class GoldTradeController {
         Map<String, Object> map = new HashMap<>(1);
         map.put("goldStatistics", goldStatisticsVO);
         return new ModelAndView("gold/trade", map);
+    }
+
+    @RequestMapping("/add")
+    @ResponseBody
+    public void add(@RequestBody GoldTradeAddBO bo) {
+        goldTradeService.addGoldTrade(bo);
     }
 
     @RequestMapping("/tabulate")

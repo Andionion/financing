@@ -1,12 +1,13 @@
 package cn.brody.financing.database.entity;
 
 import cn.brody.financing.pojo.vo.FundNetValueVO;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * FundNetValueEntity
@@ -23,7 +24,7 @@ public class FundNetValueEntity {
     /**
      * 主键，自增
      */
-    @TableId(type = IdType.AUTO)
+    @TableId
     private Long id;
     /**
      * 基金代码
@@ -57,6 +58,14 @@ public class FundNetValueEntity {
      * 赎回状态
      */
     private String redemptionStatus;
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     public FundNetValueEntity(FundNetValueVO fundNetValueVO) {
         this.fundCode = fundNetValueVO.getFundCode();

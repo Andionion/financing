@@ -28,6 +28,10 @@ public class GoldTradeAddBO {
      */
     private Double amount;
     /**
+     * 交易克数
+     */
+    private Double weight;
+    /**
      * 单价（最多四位小数）
      */
     private Double unitPrice;

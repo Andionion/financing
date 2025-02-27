@@ -1,12 +1,13 @@
 package cn.brody.financing.database.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * FundNetValueEntity
@@ -21,15 +22,23 @@ import lombok.NoArgsConstructor;
 public class TradeDateHistEntity {
 
     /**
-     * 主键，自增
+     * 主键
      */
-    @TableId(type = IdType.AUTO)
+    @TableId
     private Integer id;
     /**
      * 交易日
      */
     @TableField("trade_date")
     private String tradeDate;
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     public TradeDateHistEntity(String tradeDate) {
         this.tradeDate = tradeDate;

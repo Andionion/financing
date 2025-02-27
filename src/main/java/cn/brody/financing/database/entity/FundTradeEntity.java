@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * FundTradeEntity
  *
@@ -54,6 +56,14 @@ public class FundTradeEntity {
      * 交易所属方
      */
     private String belong;
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     public FundTradeEntity(String fundCode, String belong, String fundName, FundTradeAddInfoBO fundTradeAddInfoBO) {
         this.fundCode = fundCode;

@@ -14,5 +14,16 @@ public enum GoldTypeEnum {
     /**
      * 实体金（对应 "physical"）
      */
-    PHYSICAL
+    PHYSICAL,
+    ;
+
+    /**
+     * 根据字符串获取对应的枚举值（大小写不敏感）
+     *
+     * @param goldType
+     * @return
+     */
+    public static GoldTypeEnum forValue(String goldType) {
+        return GoldTypeEnum.valueOf(goldType.toUpperCase());
+    }
 }

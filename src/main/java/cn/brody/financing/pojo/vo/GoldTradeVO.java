@@ -18,6 +18,10 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 public class GoldTradeVO {
     /**
+     * 交易id
+     */
+    private String id;
+    /**
      * 交易时间（由业务方填充）
      */
     private String tradeTime;
@@ -43,6 +47,7 @@ public class GoldTradeVO {
     private String goldType;
 
     public GoldTradeVO(GoldTradeEntity goldTradeEntity) {
+        this.id = goldTradeEntity.getId().toString();
         this.tradeTime = goldTradeEntity.getTradeTime().format(DateTimeFormatter.ISO_LOCAL_DATE);
         this.amount = goldTradeEntity.getAmount().doubleValue();
         this.unitPrice = goldTradeEntity.getUnitPrice().doubleValue();

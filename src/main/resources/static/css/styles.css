@@ -161,3 +161,16 @@ thead th:hover {
 .profit-yield-cell.negative {
     color: green;
 }
+
+/* 优化日期选择器在模态框中的显示 */
+.flatpickr-calendar {
+    z-index: 99999 !important; /* 确保在模态框上方 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+/* 现代主题配色 */
+.flatpickr-day.selected {
+    background: #2196F3;
+    border-color: #2196F3;
+}

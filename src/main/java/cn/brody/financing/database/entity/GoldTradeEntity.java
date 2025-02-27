@@ -66,5 +66,13 @@ public class GoldTradeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "gold_type", nullable = false)
     private GoldTypeEnum goldType;
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
 }

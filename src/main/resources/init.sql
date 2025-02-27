@@ -18,37 +18,43 @@ CREATE TABLE IF NOT EXISTS fund_net_value
     -- 申购状态，长度为50个字符的字符串类型，用于表示当前基金是否允许申购等情况
     subscription_status   VARCHAR(50) COMMENT '申购状态',
     -- 赎回状态，长度为50个字符的字符串类型，用于表示当前基金是否允许赎回等情况
-    redemption_status     VARCHAR(50) COMMENT '赎回状态'
+    redemption_status     VARCHAR(50) COMMENT '赎回状态',
+    create_time           timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time           timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 );
 
 -- 创建交易日历史数据表，如果表不存在则创建
 CREATE TABLE IF NOT EXISTS trade_date_hist
 (
     -- 主键，用于唯一标识每条交易日历史记录
-    id         BIGINT PRIMARY KEY COMMENT '主键',
+    id          BIGINT PRIMARY KEY COMMENT '主键',
     -- 交易日，长度为50个字符的字符串类型，用于记录具体的交易日日期
-    trade_date VARCHAR(50) COMMENT '交易日'
+    trade_date  VARCHAR(50) COMMENT '交易日',
+    create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 );
 
 -- 创建基金交易数据表，如果表不存在则创建
 CREATE TABLE IF NOT EXISTS fund_trade
 (
     -- 主键，用于唯一标识每条基金交易记录
-    id         BIGINT PRIMARY KEY COMMENT '主键',
+    id          BIGINT PRIMARY KEY COMMENT '主键',
     -- 基金代码，长度为6个字符的字符串类型
-    fund_code  VARCHAR(6) COMMENT '基金代码',
+    fund_code   VARCHAR(6) COMMENT '基金代码',
     -- 基金名称
-    fund_name  VARCHAR(50) COMMENT '基金名称',
+    fund_name   VARCHAR(50) COMMENT '基金名称',
     -- 交易日期，长度为50个字符的字符串类型，用于记录基金交易的具体日期
-    trade_date VARCHAR(50) COMMENT '交易日期',
+    trade_date  VARCHAR(50) COMMENT '交易日期',
     -- 交易类型，长度为50个字符的字符串类型，用于记录交易的类型
-    trade_type VARCHAR(50) COMMENT '交易类型，purchase-申购，redeem-赎回',
+    trade_type  VARCHAR(50) COMMENT '交易类型，purchase-申购，redeem-赎回',
     -- 交易金额，双精度浮点数类型，用于记录基金交易所花费的金额
-    amount     DOUBLE COMMENT '购买金额',
+    amount      DOUBLE COMMENT '购买金额',
     -- 购买份额，双精度浮点数类型，用于记录购买基金所获得的份额
-    share      DOUBLE COMMENT '购买份额',
+    share       DOUBLE COMMENT '购买份额',
     -- 交易所属方，用于记录交易所属方
-    belong     VARCHAR(50) COMMENT '交易所属方'
+    belong      VARCHAR(50) COMMENT '交易所属方',
+    create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 );
 
 -- 创建黄金交易数据表，如果表不存在则创建
@@ -61,7 +67,10 @@ CREATE TABLE if not exists gold_trade
     handling_fee DECIMAL(6, 2)               NOT NULL COMMENT '手续费金额（单位：人民币元，精确到分）',
     weight       DECIMAL(6, 4)               NOT NULL COMMENT '重量（单位：g，保留四位小数）',
     trade_type   ENUM ('PURCHASE', 'REDEEM') NOT NULL COMMENT '交易类型（purchase-申购，redeem-赎回）',
-    gold_type    ENUM ('PAPER', 'PHYSICAL')  NOT NULL COMMENT '黄金类型（paper-纸面金，physical-实体金）'
+    gold_type    ENUM ('PAPER', 'PHYSICAL')  NOT NULL COMMENT '黄金类型（paper-纸面金，physical-实体金）',
+    create_time  timestamp                   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time  timestamp                   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='黄金交易记录表';
 
