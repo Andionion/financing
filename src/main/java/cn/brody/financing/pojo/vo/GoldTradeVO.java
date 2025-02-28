@@ -24,7 +24,7 @@ public class GoldTradeVO {
     /**
      * 交易时间（由业务方填充）
      */
-    private String tradeTime;
+    private String tradeDate;
     /**
      * 交易金额（精确到分）
      */
@@ -48,7 +48,7 @@ public class GoldTradeVO {
 
     public GoldTradeVO(GoldTradeEntity goldTradeEntity) {
         this.id = goldTradeEntity.getId().toString();
-        this.tradeTime = goldTradeEntity.getTradeTime().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        this.tradeDate = goldTradeEntity.getTradeDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
         this.amount = goldTradeEntity.getAmount().doubleValue();
         this.unitPrice = goldTradeEntity.getUnitPrice().doubleValue();
         this.weight = goldTradeEntity.getWeight().doubleValue();

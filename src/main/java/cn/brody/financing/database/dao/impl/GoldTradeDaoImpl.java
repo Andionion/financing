@@ -19,6 +19,6 @@ public class GoldTradeDaoImpl extends ServiceImpl<GoldTradeMapper, GoldTradeEnti
 
     @Override
     public List<GoldTradeEntity> listByTradeDateAsc() {
-        return lambdaQuery().orderByAsc(GoldTradeEntity::getTradeTime).list();
+        return lambdaQuery().orderByAsc(GoldTradeEntity::getTradeDate).list();
     }
 }

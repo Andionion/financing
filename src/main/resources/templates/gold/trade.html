@@ -83,7 +83,7 @@
         <tbody>
         <th:block th:each="trade : ${goldStatistics.tradeDetailList}">
             <tr>
-                <td class="fund-info-cell" th:text="${trade.tradeTime}"></td>
+                <td class="fund-info-cell" th:text="${trade.tradeDate}"></td>
                 <td class="fund-info-cell" th:text="${trade.amount}"></td>
                 <td class="fund-info-cell" th:text="${trade.unitPrice}"></td>
                 <td class="fund-info-cell" th:text="${trade.weight}"></td>
@@ -108,10 +108,10 @@
                     <div class="modal-body">
                         <!-- 修改后的日期选择器 -->
                         <div class="form-group">
-                            <label for="tradeTime">交易日期</label>
+                            <label for="tradeDate">交易日期</label>
                             <input type="text"
                                    class="form-control flatpickr"
-                                   id="tradeTime"
+                                   id="tradeDate"
                                    placeholder="选择日期"
                                    data-date-format="Y-m-d"
                                    required>
@@ -176,7 +176,7 @@
 
 <script>
     // 初始化日期选择器
-    flatpickr("#tradeTime", {
+    flatpickr("#tradeDate", {
         locale: "zh",           // 中文显示
         dateFormat: "Y-m-d",     // 日期格式
         allowInput: true,        // 允许手动输入
@@ -201,7 +201,7 @@
 
             // 构建JSON对象
             const formData = {
-                tradeTime: $('#tradeTime').val(),
+                tradeDate: $('#tradeDate').val(),
                 goldType: $('#goldType').val(),
                 tradeType: $('#tradeType').val(),
                 unitPrice: parseFloat($('#unitPrice').val()),

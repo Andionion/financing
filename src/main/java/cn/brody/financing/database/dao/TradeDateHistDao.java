@@ -17,7 +17,7 @@ public interface TradeDateHistDao extends IService<TradeDateHistEntity> {
      *
      * @return 返回上一个交易日期的实体对象。
      */
-    TradeDateHistEntity getPreviousTradeDate();
+    TradeDateHistEntity getPreviousTradeDay();
 
     /**
      * 获取最后一个交易日

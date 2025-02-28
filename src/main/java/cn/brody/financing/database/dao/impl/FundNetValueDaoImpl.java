@@ -6,6 +6,7 @@ import cn.brody.financing.database.mapper.FundNetValueMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class FundNetValueDaoImpl extends ServiceImpl<FundNetValueMapper, FundNet
     }
 
     @Override
-    public Boolean fundNetValueExists(String fundCode, String tradeDate) {
+    public Boolean fundNetValueExists(String fundCode, LocalDate tradeDate) {
         return lambdaQuery()
                 .eq(FundNetValueEntity::getFundCode, fundCode)
                 .eq(FundNetValueEntity::getNetValueDate, tradeDate)
@@ -34,7 +35,7 @@ public class FundNetValueDaoImpl extends ServiceImpl<FundNetValueMapper, FundNet
     }
 
     @Override
-    public List<FundNetValueEntity> listFundNetValue(Collection<String> fundCodes, String tradeDate) {
+    public List<FundNetValueEntity> listFundNetValue(Collection<String> fundCodes, LocalDate tradeDate) {
         if (null == tradeDate) {
             tradeDate = lambdaQuery()
                     .orderByDesc(FundNetValueEntity::getNetValueDate)
@@ -50,7 +51,7 @@ public class FundNetValueDaoImpl extends ServiceImpl<FundNetValueMapper, FundNet
 
 
     @Override
-    public FundNetValueEntity getFundNetValue(String fundCode, String tradeDate) {
+    public FundNetValueEntity getFundNetValue(String fundCode, LocalDate tradeDate) {
         return lambdaQuery()
                 .eq(FundNetValueEntity::getFundCode, fundCode)
                 .eq(null != tradeDate, FundNetValueEntity::getNetValueDate, tradeDate)

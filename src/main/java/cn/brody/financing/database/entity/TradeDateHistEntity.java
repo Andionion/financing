@@ -1,13 +1,17 @@
 package cn.brody.financing.database.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import cn.brody.financing.pojo.aktool.AktoolTradeDayVO;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * FundNetValueEntity
@@ -29,8 +33,7 @@ public class TradeDateHistEntity {
     /**
      * 交易日
      */
-    @TableField("trade_date")
-    private String tradeDate;
+    private LocalDate tradeDay;
     /**
      * 创建时间
      */
@@ -40,7 +43,9 @@ public class TradeDateHistEntity {
      */
     private LocalDateTime updateTime;
 
-    public TradeDateHistEntity(String tradeDate) {
-        this.tradeDate = tradeDate;
+    public TradeDateHistEntity(AktoolTradeDayVO tradeDayVO) {
+        this.tradeDay = LocalDateTimeUtil
+                .parse(tradeDayVO.getTradeDate(), DateTimeFormatter.ofPattern(DatePattern.UTC_SIMPLE_MS_PATTERN))
+                .toLocalDate();
     }
 }

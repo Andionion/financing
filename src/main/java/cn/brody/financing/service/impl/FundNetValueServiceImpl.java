@@ -49,22 +49,22 @@ public class FundNetValueServiceImpl implements IFundNetValueService {
     public void updateTimedFundNetValue(Collection<String> fundCodes) {
         for (String fundCode : fundCodes) {
             // 获取最新交易日
-            TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDate();
+            TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDay();
             // 查询基金的该交易日是否已经更新
-            if (fundNetValueDao.fundNetValueExists(fundCode, previousTradeDate.getTradeDate())) {
-                log.info("基金[{}]在[{}]的净值已经更新过，不需要再次更新", fundCode, previousTradeDate.getTradeDate());
+            if (fundNetValueDao.fundNetValueExists(fundCode, previousTradeDate.getTradeDay())) {
+                log.info("基金[{}]在[{}]的净值已经更新过，不需要再次更新", fundCode, previousTradeDate.getTradeDay());
                 continue;
             }
             // 开始获取最新净值
-            FundNetValueVO fundNetValueLatest = thirdPlatformFundService.getFundNetValue(fundCode, previousTradeDate.getTradeDate());
+            FundNetValueVO fundNetValueLatest = thirdPlatformFundService.getFundNetValue(fundCode, previousTradeDate.getTradeDay());
             saveNetValue(List.of(fundNetValueLatest));
         }
     }
 
     @Override
     public List<FundNetValueVO> getLatestFundNetValue(Collection<String> fundCodes) {
-        TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDate();
-        List<FundNetValueEntity> fundNetValueEntities = fundNetValueDao.listFundNetValue(fundCodes, previousTradeDate.getTradeDate());
+        TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDay();
+        List<FundNetValueEntity> fundNetValueEntities = fundNetValueDao.listFundNetValue(fundCodes, previousTradeDate.getTradeDay());
         return fundNetValueEntities.stream()
                 .map(fundNetValueEntity -> BeanUtil.copyProperties(fundNetValueEntity, FundNetValueVO.class))
                 .collect(Collectors.toList());

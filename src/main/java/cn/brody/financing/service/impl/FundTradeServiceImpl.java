@@ -15,7 +15,7 @@ import cn.brody.financing.service.IFundTradeService;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSON;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.decampo.xirr.Transaction;
 import org.decampo.xirr.Xirr;
@@ -51,29 +51,23 @@ public class FundTradeServiceImpl implements IFundTradeService {
     private IFundNetValueService fundNetValueService;
 
     @Override
-    public void trade(FundTradeAddBO bo) {
-        // 获取基金信息
-        List<FundTradeEntity> fundInvestmentEntities = bo.getList()
-                .stream()
-                .map(fundTradeInfoBO -> {
-                    FundNetValueEntity fundNetValue = fundNetValueDao.getFundNetValue(bo.getFundCode(), fundTradeInfoBO.getTradeDate());
-                    if (null == fundTradeInfoBO.getShare()) {
-                        // 份额为空，需要根据费率计算
-                        double feeRate = fundTradeInfoBO.getFeeRate() / 100;
-                        double share = fundTradeInfoBO.getAmount() * (1 - feeRate) / fundNetValue.getUnitNetValue();
-                        fundTradeInfoBO.setShare(new BigDecimal(share).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                    }
-                    return new FundTradeEntity(bo.getFundCode(), bo.getBelong(), fundNetValue.getFundName(), fundTradeInfoBO);
-                })
-                .collect(Collectors.toList());
-        log.info("开始更新基金投资信息：{}", JSON.toJSONString(fundInvestmentEntities));
-        fundTradeDao.saveBatch(fundInvestmentEntities);
+    public void add(FundTradeAddBO bo) {
+        FundNetValueEntity fundNetValue = fundNetValueDao.getFundNetValue(bo.getFundCode(), bo.getTradeDate());
+        if (null == bo.getShare()) {
+            // 份额为空，需要根据费率计算
+            double feeRate = bo.getFeeRate() / 100;
+            double share = bo.getAmount() * (1 - feeRate) / fundNetValue.getUnitNetValue();
+            bo.setShare(new BigDecimal(share).setScale(2, RoundingMode.HALF_UP).doubleValue());
+        }
+        FundTradeEntity fundTradeEntity = new FundTradeEntity(bo.getFundCode(), bo.getBelong(), fundNetValue.getFundName(), bo);
+        log.info("开始更新基金交易记录：{}", JSONUtil.toJsonStr(fundTradeEntity));
+        fundTradeDao.save(fundTradeEntity);
     }
 
     @Override
     public List<FundStatisticsVO> tabulate(String belong) {
         List<FundTradeEntity> fundInvestmentEntities = fundTradeDao.listByBelong(belong);
-        return getFundCalculateVOBaseList(fundInvestmentEntities);
+        return tabulate(fundInvestmentEntities);
     }
 
 
@@ -82,7 +76,7 @@ public class FundTradeServiceImpl implements IFundTradeService {
         List<FundTradeEntity> fundTradeEntities = fundTradeDao.listByFundCodeAndBelong(fundCode, belong);
         // 投入记录列表
         return fundTradeEntities.stream()
-                .map(investment -> BeanUtil.copyProperties(investment, FundTradeVO.class))
+                .map(trade -> BeanUtil.copyProperties(trade, FundTradeVO.class))
                 .collect(Collectors.toList());
     }
 
@@ -97,20 +91,20 @@ public class FundTradeServiceImpl implements IFundTradeService {
      * @param allFundTradeList 所有基金的交易记录列表。
      * @return 返回一个包含基金交易计算结果的列表，每个元素是一个FundTradeVO对象，包含了基金代码、基金名称、当前净值、总投入金额、总份额、当前价值、收益和投资详情等数据。
      */
-    private List<FundStatisticsVO> getFundCalculateVOBaseList(List<FundTradeEntity> allFundTradeList) {
+    private List<FundStatisticsVO> tabulate(List<FundTradeEntity> allFundTradeList) {
         List<FundStatisticsVO> list = new ArrayList<>();
         // 全部投资按照基金代码分组
         Map<String, List<FundTradeEntity>> fundGroup = allFundTradeList.stream().collect(Collectors.groupingBy(FundTradeEntity::getFundCode));
         // 获取所有基金的最新净值
-        TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDate();
-        List<FundNetValueEntity> fundNetValueEntities = fundNetValueDao.listFundNetValue(fundGroup.keySet(), previousTradeDate.getTradeDate());
+        TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDay();
+        List<FundNetValueEntity> fundNetValueEntities = fundNetValueDao.listFundNetValue(fundGroup.keySet(), previousTradeDate.getTradeDay());
         // 如果最新日期的基金净值列表长度和所有基金的投资记录不相等，说明少，需要重新更新一次
         if (fundNetValueEntities.size() != fundGroup.size()) {
             List<String> existNetValueFundCodes = fundNetValueEntities.stream().map(FundNetValueEntity::getFundCode).collect(Collectors.toList());
             List<String> notExistNetValueFundCodes = fundGroup.keySet().stream().filter(fundCode -> !existNetValueFundCodes.contains(fundCode)).collect(Collectors.toList());
-            log.info("最新日期的基金净值为空，重新更新一次基金净值，日期：{}，基金列表：{}", previousTradeDate.getTradeDate(), notExistNetValueFundCodes);
+            log.info("最新日期的基金净值为空，重新更新一次基金净值，日期：{}，基金列表：{}", previousTradeDate.getTradeDay(), notExistNetValueFundCodes);
             fundNetValueService.updateTimedFundNetValue(notExistNetValueFundCodes);
-            fundNetValueEntities = fundNetValueDao.listFundNetValue(fundGroup.keySet(), previousTradeDate.getTradeDate());
+            fundNetValueEntities = fundNetValueDao.listFundNetValue(fundGroup.keySet(), previousTradeDate.getTradeDay());
         }
         Map<String, FundNetValueEntity> fundNetValueMap = fundNetValueEntities.stream()
                 .collect(Collectors.toMap(FundNetValueEntity::getFundCode, netValue -> netValue));
@@ -137,15 +131,10 @@ public class FundTradeServiceImpl implements IFundTradeService {
             fundStatisticsVO.setPresentValue(new BigDecimal(presentValue).setScale(2, RoundingMode.HALF_UP).doubleValue());
             // 收益
             fundStatisticsVO.setProfit(new BigDecimal(presentValue - totalAmount).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            // 投入记录列表
-            List<FundTradeVO> fundPurchaseList = fundTradeList.stream()
-                    .map(investment -> BeanUtil.copyProperties(investment, FundTradeVO.class))
-                    .collect(Collectors.toList());
             // 计算xirr
-            List<Transaction> transactions = fundPurchaseList.stream()
-                    // 计算xirr，申购为负，赎回为正
-                    .map(purchase -> new Transaction((TradeTypeEnum.forValue(purchase.getTradeType()) == TradeTypeEnum.PURCHASE ? -1 : 1) * purchase.getAmount()
-                            , DateUtil.parse(purchase.getTradeDate(), DatePattern.PURE_DATE_PATTERN).toString(DatePattern.NORM_DATE_PATTERN)))
+            List<Transaction> transactions = fundTradeList.stream()
+                    .map(trade -> new Transaction((TradeTypeEnum.forValue(trade.getTradeType()) == TradeTypeEnum.PURCHASE ? -1 : 1) * trade.getAmount()
+                            , trade.getTradeDate()))
                     .collect(Collectors.toList());
             transactions.add(new Transaction(presentValue, DateUtil.format(DateUtil.date(), DatePattern.NORM_DATE_PATTERN)));
             double xirr = -1 * fundStatisticsVO.getProfit() / totalAmount;

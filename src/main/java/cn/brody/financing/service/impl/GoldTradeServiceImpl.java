@@ -51,7 +51,7 @@ public class GoldTradeServiceImpl implements IGoldTradeService {
     public void addGoldTrade(GoldTradeAddBO bo) {
         log.info("开始添加黄金交易记录，请求参数：{}", JSONUtil.toJsonStr(bo));
         GoldTradeEntity goldTradeEntity = new GoldTradeEntity();
-        goldTradeEntity.setTradeTime(bo.getTradeTime());
+        goldTradeEntity.setTradeDate(bo.getTradeDate());
         goldTradeEntity.setAmount(BigDecimal.valueOf(bo.getAmount()));
         goldTradeEntity.setUnitPrice(BigDecimal.valueOf(bo.getUnitPrice()));
         goldTradeEntity.setTradeType(TradeTypeEnum.forValue(bo.getTradeType()));
@@ -101,8 +101,8 @@ public class GoldTradeServiceImpl implements IGoldTradeService {
         // 总克数 = 所有交易克数之和
         goldStatisticsVO.setTotalWeight(goldWeightMap.values().stream().mapToDouble(Double::doubleValue).sum());
         // 当前价 = 工银瑞信黄金ETF联接E基金（020341）最新净值 * 425
-        TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDate();
-        FundNetValueEntity fundNetValue = fundNetValueDao.getFundNetValue("020341", previousTradeDate.getTradeDate());
+        TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDay();
+        FundNetValueEntity fundNetValue = fundNetValueDao.getFundNetValue("020341", previousTradeDate.getTradeDay());
         log.info("工银瑞信黄金ETF联接E基金（020341）最新净值为：{}", JSONUtil.toJsonStr(fundNetValue));
         goldStatisticsVO.setCurrentUnitPrice(fundNetValue.getUnitNetValue() * 425);
         // 现值 = 总克数 * 当前价
@@ -118,7 +118,7 @@ public class GoldTradeServiceImpl implements IGoldTradeService {
         List<Transaction> transactions = goldTradeEntities.stream()
                 // 计算xirr，申购为负，赎回为正
                 .map(goldTrade -> new Transaction((goldTrade.getTradeType() == TradeTypeEnum.PURCHASE ? -1 : 1) * goldTrade.getAmount().doubleValue()
-                        , goldTrade.getTradeTime().format(ISO_LOCAL_DATE)))
+                        , goldTrade.getTradeDate().format(ISO_LOCAL_DATE)))
                 .collect(Collectors.toList());
         transactions.add(new Transaction(goldStatisticsVO.getPresentValue(), LocalDateTime.now().format(ISO_LOCAL_DATE)));
         double xirr = -1 * goldStatisticsVO.getProfit() / goldStatisticsVO.getPresentValue();
@@ -132,7 +132,7 @@ public class GoldTradeServiceImpl implements IGoldTradeService {
         goldStatisticsVO.setYield(numberFormat.format(xirr));
         // 交易记录
         goldStatisticsVO.setTradeDetailList(goldTradeEntities.stream()
-                .sorted(Comparator.comparing(GoldTradeEntity::getTradeTime).reversed())
+                .sorted(Comparator.comparing(GoldTradeEntity::getTradeDate).reversed())
                 .map(GoldTradeVO::new)
                 .collect(Collectors.toList()));
         return goldStatisticsVO;

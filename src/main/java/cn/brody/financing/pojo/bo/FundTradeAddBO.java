@@ -1,11 +1,12 @@
 package cn.brody.financing.pojo.bo;
 
+import cn.brody.financing.enums.TradeTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.List;
+import java.time.LocalDate;
 
 /**
  * FundTradeAddBO
@@ -14,16 +15,36 @@ import java.util.List;
  * @since 2024/11/08 09:14
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class FundTradeAddBO extends FundCodeBO {
+public class FundTradeAddBO {
+    /**
+     * 基金代码
+     */
+    private String fundCode;
     /**
      * 交易所属方
      */
     private String belong;
     /**
-     * 基金购买信息列表
+     * 交易时间
      */
-    private List<FundTradeAddInfoBO> list;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate tradeDate;
+    /**
+     * 交易类型
+     */
+    private TradeTypeEnum tradeType;
+    /**
+     * 金额
+     */
+    private Double amount;
+    /**
+     * 费率
+     */
+    private Double feeRate;
+    /**
+     * 份额
+     */
+    private Double share;
 }

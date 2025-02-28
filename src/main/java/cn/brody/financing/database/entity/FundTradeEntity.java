@@ -1,12 +1,13 @@
 package cn.brody.financing.database.entity;
 
-import cn.brody.financing.pojo.bo.FundTradeAddInfoBO;
+import cn.brody.financing.pojo.bo.FundTradeAddBO;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -37,7 +38,7 @@ public class FundTradeEntity {
     /**
      * 交易日期
      */
-    private String tradeDate;
+    private LocalDate tradeDate;
     /**
      * 交易类型
      * <p>
@@ -65,13 +66,13 @@ public class FundTradeEntity {
      */
     private LocalDateTime updateTime;
 
-    public FundTradeEntity(String fundCode, String belong, String fundName, FundTradeAddInfoBO fundTradeAddInfoBO) {
+    public FundTradeEntity(String fundCode, String belong, String fundName, FundTradeAddBO bo) {
         this.fundCode = fundCode;
         this.fundName = fundName;
         this.belong = belong;
-        this.tradeDate = fundTradeAddInfoBO.getTradeDate();
-        this.tradeType = fundTradeAddInfoBO.getTradeType().name().toLowerCase();
-        this.amount = fundTradeAddInfoBO.getAmount();
-        this.share = fundTradeAddInfoBO.getShare();
+        this.tradeDate = bo.getTradeDate();
+        this.tradeType = bo.getTradeType().name().toLowerCase();
+        this.amount = bo.getAmount();
+        this.share = bo.getShare();
     }
 }

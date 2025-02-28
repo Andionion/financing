@@ -4,6 +4,9 @@ import cn.brody.financing.enums.TradeTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 /**
  * 基金购买的具体信息
@@ -20,6 +23,11 @@ public class FundTradeAddInfoBO {
      * 记录交易操作发生的日期
      */
     private String tradeDate;
+    /**
+     * 交易时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime tradeTime;
     /**
      * 交易类型
      */

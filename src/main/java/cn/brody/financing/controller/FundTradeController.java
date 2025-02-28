@@ -46,7 +46,7 @@ public class FundTradeController {
      * 获取指定类别的交易记录。
      *
      * @param belong 需要查询的交易类别。
-     * @return 返回一个包含交易列表和类别的ModelAndView对象，用于展示在"/fund/trade"页面上。
+     * @return 返回一个包含交易列表和类别的ModelAndView对象，用于展示在"/fund/add"页面上。
      */
     @RequestMapping("/tabulate/{belong}")
     public ModelAndView tabulate(@PathVariable("belong") String belong) {
@@ -84,8 +84,8 @@ public class FundTradeController {
      */
     @PostMapping("/add")
     @ResponseBody
-    public BaseResponse<?> trade(@RequestBody FundTradeAddBO bo, HttpServletRequest request) {
-        fundTradeService.trade(bo);
+    public BaseResponse<?> add(@RequestBody FundTradeAddBO bo, HttpServletRequest request) {
+        fundTradeService.add(bo);
         return new BaseResponse<>();
     }
 }

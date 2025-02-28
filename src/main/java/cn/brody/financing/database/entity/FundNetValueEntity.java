@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -37,7 +38,7 @@ public class FundNetValueEntity {
     /**
      * 净值日期
      */
-    private String netValueDate;
+    private LocalDate netValueDate;
     /**
      * 单位净值
      */

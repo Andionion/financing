@@ -20,7 +20,7 @@ public interface IFundTradeService {
      *
      * @param bo 包含购买债券基金所需信息的BondFundPurchaseBO对象。
      */
-    void trade(FundTradeAddBO bo);
+    void add(FundTradeAddBO bo);
 
     /**
      * 对指定类别的交易进行汇总。

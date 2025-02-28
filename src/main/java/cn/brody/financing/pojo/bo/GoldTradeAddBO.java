@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * FundTradeAddBO
@@ -22,7 +22,7 @@ public class GoldTradeAddBO {
      * 交易时间（由业务方填充）
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime tradeTime;
+    private LocalDate tradeDate;
     /**
      * 交易金额（精确到分）
      */

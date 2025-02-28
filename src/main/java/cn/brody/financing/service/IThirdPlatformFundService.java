@@ -3,6 +3,7 @@ package cn.brody.financing.service;
 import cn.brody.financing.pojo.vo.FundNetValueVO;
 import cn.brody.financing.pojo.vo.FundOverviewVO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -35,5 +36,5 @@ public interface IThirdPlatformFundService {
      * @param fundCode
      * @return
      */
-    FundNetValueVO getFundNetValue(String fundCode, String tradeDate);
+    FundNetValueVO getFundNetValue(String fundCode, LocalDate tradeDate);
 }

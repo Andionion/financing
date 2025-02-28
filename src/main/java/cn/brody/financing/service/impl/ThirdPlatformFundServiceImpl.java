@@ -9,6 +9,7 @@ import cn.brody.financing.utils.AktoolUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class ThirdPlatformFundServiceImpl implements IThirdPlatformFundService {
     }
 
     @Override
-    public FundNetValueVO getFundNetValue(String fundCode, String tradeDate) {
+    public FundNetValueVO getFundNetValue(String fundCode, LocalDate tradeDate) {
         FundOverviewVO fundOverview = getFundOverview(fundCode);
         List<AktoolFundNetValueVO> openFundNetValueFullList = AktoolUtils.getOpenFundNetValueFull(fundCode);
         AktoolFundNetValueVO aktoolFundNetValueVO = openFundNetValueFullList.get(openFundNetValueFullList.size() - 1);

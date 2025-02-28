@@ -3,11 +3,11 @@ package cn.brody.financing.database.dao.impl;
 import cn.brody.financing.database.dao.TradeDateHistDao;
 import cn.brody.financing.database.entity.TradeDateHistEntity;
 import cn.brody.financing.database.mapper.TradeDateHistMapper;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 /**
  * TradeDateHistDaoImpl
@@ -19,16 +19,18 @@ import org.springframework.stereotype.Service;
 public class TradeDateHistDaoImpl extends ServiceImpl<TradeDateHistMapper, TradeDateHistEntity> implements TradeDateHistDao {
 
     @Override
-    public TradeDateHistEntity getPreviousTradeDate() {
+    public TradeDateHistEntity getPreviousTradeDay() {
         return lambdaQuery()
-                .lt(TradeDateHistEntity::getTradeDate, DateUtil.format(DateUtil.date(), DatePattern.PURE_DATE_PATTERN))
-                .orderByDesc(TradeDateHistEntity::getTradeDate).last("limit 1").one();
+                .lt(TradeDateHistEntity::getTradeDay, LocalDate.now())
+                .orderByDesc(TradeDateHistEntity::getTradeDay)
+                .last("limit 1")
+                .one();
     }
 
     @Override
     public TradeDateHistEntity getLastTradeDate() {
         return lambdaQuery()
-                .orderByDesc(TradeDateHistEntity::getTradeDate)
+                .orderByDesc(TradeDateHistEntity::getTradeDay)
                 .last("limit 1")
                 .one();
     }

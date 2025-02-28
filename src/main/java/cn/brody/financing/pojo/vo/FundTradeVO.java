@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 /**
  * 基金购买的具体信息
  *
@@ -25,7 +27,7 @@ public class FundTradeVO {
     /**
      * 记录购买操作发生的日期
      */
-    private String tradeDate;
+    private LocalDate tradeDate;
     /**
      * 交易类型
      */

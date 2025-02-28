@@ -70,17 +70,23 @@
                     <option value="redeem">赎回</option>
                 </select>
             </div>
+            <!-- 修改后的日期选择器 -->
             <div class="form-group">
                 <label for="tradeDate">交易日期</label>
-                <input type="text" class="form-control" id="tradeDate" placeholder="请选择交易日期" required>
+                <input type="text"
+                       class="form-control flatpickr"
+                       id="tradeDate"
+                       placeholder="选择日期"
+                       data-date-format="Y-m-d"
+                       required>
             </div>
             <div class="form-group">
                 <label for="amount">金额</label>
-                <input type="number" class="form-control" id="amount" placeholder="请输入金额" required>
+                <input type="number" step="0.01" class="form-control" id="amount" placeholder="请输入金额" required>
             </div>
             <div class="form-group">
                 <label for="share">份额</label>
-                <input type="number" class="form-control" id="share" placeholder="请输入份额" required>
+                <input type="number" step="0.01" class="form-control" id="share" placeholder="请输入份额" required>
             </div>
             <button type="submit" class="btn-submit">提交</button>
         </form>
@@ -95,14 +101,13 @@
             const name = $(this).attr('data-name');
             window.location.href = '/financing/fund/trade/tabulate/' + encodeURIComponent(name);
         });
-
-        // 初始化 flatpickr 日期选择器
+        // 初始化日期选择器
         flatpickr("#tradeDate", {
-            dateFormat: "Y-m-d", // 设置日期格式为 YYYY-MM-DD
-            defaultDate: new Date(), // 默认日期为当天
-            locale: "zh", // 设置语言为中文
+            locale: "zh",           // 中文显示
+            dateFormat: "Y-m-d",     // 日期格式
+            allowInput: true,        // 允许手动输入
+            theme: "airbnb"  // Airbnb 风格
         });
-
         // 设置交易类型下拉框默认值
         $("#tradeType").val("purchase");
 
@@ -124,19 +129,14 @@
                 return;
             }
 
-            // 格式化日期为 YYYYMMDD
-            const formattedDate = formatDateToYYYYMMDD(tradeDate);
-
             // 构建请求体
             const requestBody = {
                 fundCode: fundCode,
                 belong: belong,
-                list: [{
-                    tradeDate: formattedDate,
-                    amount: amount,
-                    share: share,
-                    tradeType: tradeType // 将交易类型加入请求体
-                }]
+                tradeDate: tradeDate,
+                amount: amount,
+                share: share,
+                tradeType: tradeType
             };
 
             // 发送 AJAX 请求
@@ -155,14 +155,6 @@
             });
         });
 
-        // 格式化日期函数
-        function formatDateToYYYYMMDD(dateString) {
-            const date = new Date(dateString);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}${month}${day}`;
-        }
     });
 </script>
 

@@ -3,6 +3,7 @@ package cn.brody.financing.database.dao;
 import cn.brody.financing.database.entity.FundNetValueEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,7 +24,6 @@ public interface FundNetValueDao extends IService<FundNetValueEntity> {
      */
     Boolean fundNetValueExists(String fundCode);
 
-
     /**
      * 检查特定基金代码在指定交易日期的净值是否存在。
      *
@@ -31,8 +31,7 @@ public interface FundNetValueDao extends IService<FundNetValueEntity> {
      * @param tradeDate 需要查询的交易日期。
      * @return 如果该基金代码在指定交易日期的净值存在，返回true；否则返回false。
      */
-    Boolean fundNetValueExists(String fundCode, String tradeDate);
-
+    Boolean fundNetValueExists(String fundCode, LocalDate tradeDate);
 
     /**
      * 获取基金净值列表。
@@ -41,16 +40,16 @@ public interface FundNetValueDao extends IService<FundNetValueEntity> {
      * @param tradeDate 交易日期，格式为"yyyyMMdd"。如果日期为空，则返回每个基金的最新净值
      * @return 返回一个包含所有指定基金在指定交易日期的净值信息的列表。
      */
-    List<FundNetValueEntity> listFundNetValue(Collection<String> fundCodes, String tradeDate);
+    List<FundNetValueEntity> listFundNetValue(Collection<String> fundCodes, LocalDate tradeDate);
 
     /**
      * 获取基金的最新净值。
      *
      * @param fundCode  需要查询的基金代码。
-     * @param tradeDate 查询的日期，格式为"yyyyMMdd"。如果为空，则返回最新净值
+     * @param tradeDate 查询的日期，格式为"yyyy-MMd-d"。如果为空，则返回最新净值
      * @return 返回一个FundNetValueEntity对象，该对象包含了基金在指定日期的最新净值信息。
      */
-    FundNetValueEntity getFundNetValue(String fundCode, String tradeDate);
+    FundNetValueEntity getFundNetValue(String fundCode, LocalDate tradeDate);
 
     /**
      * 查找所有已存储净值的基金代码。

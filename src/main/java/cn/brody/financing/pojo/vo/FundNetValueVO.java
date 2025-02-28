@@ -1,11 +1,13 @@
 package cn.brody.financing.pojo.vo;
 
 import cn.brody.financing.pojo.aktool.AktoolFundNetValueVO;
-import cn.brody.financing.pojo.mairui.MairuiOpenFundLatestNetValueVO;
 import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * FundNetValueVO 净值响应
@@ -27,7 +29,7 @@ public class FundNetValueVO {
     /**
      * 净值日期
      */
-    private String netValueDate;
+    private LocalDate netValueDate;
     /**
      * 单位净值
      */
@@ -52,8 +54,8 @@ public class FundNetValueVO {
     public FundNetValueVO(AktoolFundNetValueVO fundNetValueVO, String fundCode, String fundName) {
         this.fundCode = fundCode;
         this.fundName = fundName;
-        this.netValueDate = DatePattern.PURE_DATE_FORMAT
-                .format(DateUtil.parse(fundNetValueVO.getNetValueDate(), DatePattern.UTC_SIMPLE_MS_PATTERN));
+        this.netValueDate = LocalDateTimeUtil.parse(fundNetValueVO.getNetValueDate()
+                , DateTimeFormatter.ofPattern(DatePattern.UTC_SIMPLE_MS_PATTERN)).toLocalDate();
         this.unitNetValue = fundNetValueVO.getUnitNetValue();
         this.accumulatedNetValue = fundNetValueVO.getAccumulatedNetValue();
         this.dailyGrowthRate = fundNetValueVO.getDailyGrowthRate();
@@ -61,14 +63,4 @@ public class FundNetValueVO {
         this.redemptionStatus = fundNetValueVO.getRedemptionStatus();
     }
 
-    public FundNetValueVO(MairuiOpenFundLatestNetValueVO fundNetValueLatestVO) {
-        this.fundCode = fundNetValueLatestVO.getDm();
-        this.fundName = fundNetValueLatestVO.getMc();
-        this.netValueDate = DatePattern.PURE_DATE_FORMAT
-                .format(DateUtil.parse(fundNetValueLatestVO.getJzrq(), DatePattern.NORM_DATE_PATTERN));
-        this.unitNetValue = fundNetValueLatestVO.getDwjz();
-        this.accumulatedNetValue = fundNetValueLatestVO.getLjjz();
-        this.dailyGrowthRate = fundNetValueLatestVO.getZzl();
-        this.subscriptionStatus = fundNetValueLatestVO.getSgzt();
-    }
 }
