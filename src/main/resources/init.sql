@@ -58,3 +58,15 @@ CREATE TABLE if not exists gold_trade
     update_time  timestamp                   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 
 ) COMMENT ='黄金交易记录表';
+
+-- 创建公积金账户操作记录表
+CREATE TABLE IF NOT EXISTS housing_provident_fund
+(
+    id             BIGINT PRIMARY KEY COMMENT '唯一标识',
+    operation_date DATE                                      NOT NULL COMMENT '业务发生日期',
+    operation_type ENUM ('DEPOSIT', 'WITHDRAWAL','INTEREST') NOT NULL COMMENT '操作类型（如：DEPOSIT-存款, WITHDRAWAL-提款, INTEREST-利息结算）',
+    amount         DECIMAL(15, 2)                            NOT NULL COMMENT '金额',
+    balance        DECIMAL(15, 2)                            NOT NULL COMMENT '账户余额',
+    create_time    TIMESTAMP                                 NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time    TIMESTAMP                                 NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT = '公积金账户操作记录表';

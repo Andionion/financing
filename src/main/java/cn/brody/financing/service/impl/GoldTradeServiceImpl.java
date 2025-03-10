@@ -104,7 +104,7 @@ public class GoldTradeServiceImpl implements IGoldTradeService {
         TradeDateHistEntity previousTradeDate = tradeDateHistDao.getPreviousTradeDay();
         FundNetValueEntity fundNetValue = fundNetValueDao.getFundNetValue("020341", previousTradeDate.getTradeDay());
         log.info("工银瑞信黄金ETF联接E基金（020341）最新净值为：{}", JSONUtil.toJsonStr(fundNetValue));
-        goldStatisticsVO.setCurrentUnitPrice(fundNetValue.getUnitNetValue() * 425);
+        goldStatisticsVO.setCurrentUnitPrice(BigDecimal.valueOf(fundNetValue.getUnitNetValue() * 425).setScale(2, RoundingMode.HALF_UP).doubleValue());
         // 现值 = 总克数 * 当前价
         goldStatisticsVO.setPresentValue(BigDecimal.valueOf(goldStatisticsVO.getTotalWeight() * goldStatisticsVO.getCurrentUnitPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
         // 净投入 = -1*Sum（赎回）+ Sum（购买）
