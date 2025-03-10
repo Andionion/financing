@@ -1,3 +1,7 @@
+SET NAMES 'utf8mb4';
+CREATE DATABASE IF NOT EXISTS financing DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
+USE financing;
+
 -- 创建基金净值数据表，如果表不存在则创建
 CREATE TABLE IF NOT EXISTS fund_net_value
 (
@@ -10,18 +14,19 @@ CREATE TABLE IF NOT EXISTS fund_net_value
     daily_growth_rate     DOUBLE COMMENT '日增长率',
     subscription_status   VARCHAR(50) COMMENT '申购状态',
     redemption_status     VARCHAR(50) COMMENT '赎回状态',
-    create_time           timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time           timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-);
+    create_time           timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time           timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT ='基金净值数据表';
 
 -- 创建交易日历史数据表，如果表不存在则创建
 CREATE TABLE IF NOT EXISTS trade_date_hist
 (
     id          BIGINT PRIMARY KEY COMMENT '主键',
     trade_day   DATE COMMENT '交易日',
-    create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-);
+    create_time timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT ='交易日历史数据表';
+
 
 -- 创建基金交易数据表，如果表不存在则创建
 CREATE TABLE IF NOT EXISTS fund_trade
@@ -34,9 +39,9 @@ CREATE TABLE IF NOT EXISTS fund_trade
     amount      DOUBLE COMMENT '购买金额',
     share       DOUBLE COMMENT '购买份额',
     belong      VARCHAR(50) COMMENT '交易所属方',
-    create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-);
+    create_time timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT ='基金交易数据表';
 
 -- 创建黄金交易数据表，如果表不存在则创建
 CREATE TABLE if not exists gold_trade
@@ -52,5 +57,4 @@ CREATE TABLE if not exists gold_trade
     create_time  timestamp                   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time  timestamp                   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='黄金交易记录表';
+) COMMENT ='黄金交易记录表';
