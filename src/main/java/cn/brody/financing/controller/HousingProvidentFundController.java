@@ -2,12 +2,14 @@ package cn.brody.financing.controller;
 
 import cn.brody.financing.pojo.base.BaseResponse;
 import cn.brody.financing.pojo.bo.HousingProvidentFundAddBO;
+import cn.brody.financing.pojo.bo.HousingProvidentFundDelBO;
+import cn.brody.financing.pojo.bo.HousingProvidentFundUpdateBO;
 import cn.brody.financing.service.IHousingProvidentFundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * HousingProvidentFundController
@@ -22,10 +24,43 @@ public class HousingProvidentFundController {
     @Autowired
     private IHousingProvidentFundService housingProvidentFundService;
 
-    @RequestMapping("/add")
+    @PostMapping("/add")
     @ResponseBody
     public BaseResponse<?> add(@RequestBody HousingProvidentFundAddBO bo) {
         housingProvidentFundService.add(bo);
         return new BaseResponse<>();
+    }
+
+    @PostMapping("/add_batch")
+    @ResponseBody
+    public BaseResponse<?> addBatch(@RequestBody List<HousingProvidentFundAddBO> list) {
+        housingProvidentFundService.addBatch(list);
+        return new BaseResponse<>();
+    }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public BaseResponse<?> update(@RequestBody HousingProvidentFundUpdateBO bo) {
+        housingProvidentFundService.update(bo);
+        return new BaseResponse<>();
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public BaseResponse<?> delete(@RequestBody HousingProvidentFundDelBO bo) {
+        housingProvidentFundService.delete(bo);
+        return new BaseResponse<>();
+    }
+
+    @GetMapping("/list")
+    @ResponseBody
+    public BaseResponse<?> listAll() {
+        return new BaseResponse<>(housingProvidentFundService.listAll());
+    }
+
+    @GetMapping("/tabulate")
+    @ResponseBody
+    public BaseResponse<?> tabulate() {
+        return new BaseResponse<>(housingProvidentFundService.tabulate());
     }
 }

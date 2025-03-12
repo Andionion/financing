@@ -24,6 +24,13 @@ public interface IHousingProvidentFundService {
     void add(HousingProvidentFundAddBO bo);
 
     /**
+     * 批量新增
+     *
+     * @param bo
+     */
+    void addBatch(List<HousingProvidentFundAddBO> bo);
+
+    /**
      * 修改
      *
      * @param bo 参数
