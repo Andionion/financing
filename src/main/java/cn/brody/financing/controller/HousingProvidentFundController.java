@@ -4,12 +4,16 @@ import cn.brody.financing.pojo.base.BaseResponse;
 import cn.brody.financing.pojo.bo.HousingProvidentFundAddBO;
 import cn.brody.financing.pojo.bo.HousingProvidentFundDelBO;
 import cn.brody.financing.pojo.bo.HousingProvidentFundUpdateBO;
+import cn.brody.financing.pojo.vo.HousingProvidentFundStatisticsVO;
 import cn.brody.financing.service.IHousingProvidentFundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * HousingProvidentFundController
@@ -23,6 +27,14 @@ public class HousingProvidentFundController {
 
     @Autowired
     private IHousingProvidentFundService housingProvidentFundService;
+
+    @RequestMapping("")
+    public ModelAndView index() {
+        HousingProvidentFundStatisticsVO tabulate = housingProvidentFundService.tabulate();
+        Map<String, Object> map = new HashMap<>(1);
+        map.put("recordStatistics", tabulate);
+        return new ModelAndView("housingProvidentFund/recordAndTabulate", map);
+    }
 
     @PostMapping("/add")
     @ResponseBody

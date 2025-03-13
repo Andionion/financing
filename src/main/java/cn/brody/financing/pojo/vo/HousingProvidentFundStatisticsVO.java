@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * HousingProvidentFundStatisticsVO
@@ -14,6 +16,10 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 public class HousingProvidentFundStatisticsVO {
+    /**
+     * 统计日
+     */
+    private String currentDate;
     /**
      * 总入账
      */
@@ -34,7 +40,10 @@ public class HousingProvidentFundStatisticsVO {
      * 可贷款额度
      */
     private Double loanAvailable;
-
+    /**
+     * 公积金记录列表
+     */
+    List<HousingProvidentFundRecordVO> recordList;
 
     public HousingProvidentFundStatisticsVO() {
         this.totalDeposit = BigDecimal.ZERO.doubleValue();
@@ -42,5 +51,6 @@ public class HousingProvidentFundStatisticsVO {
         this.totalInterest = BigDecimal.ZERO.doubleValue();
         this.balance = BigDecimal.ZERO.doubleValue();
         this.loanAvailable = BigDecimal.ZERO.doubleValue();
+        this.recordList = new ArrayList<>();
     }
 }

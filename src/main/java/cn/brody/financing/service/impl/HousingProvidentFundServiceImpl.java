@@ -22,6 +22,8 @@ import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+
 /**
  * HousingProvidentFundServiceImpl
  *
@@ -139,6 +141,7 @@ public class HousingProvidentFundServiceImpl implements IHousingProvidentFundSer
     @Override
     public HousingProvidentFundStatisticsVO tabulate() {
         HousingProvidentFundStatisticsVO result = new HousingProvidentFundStatisticsVO();
+        result.setCurrentDate(LocalDate.now().format(ISO_LOCAL_DATE));
         List<HousingProvidentFundEntity> providentFundEntities = housingProvidentFundDao.list();
         if (CollectionUtil.isEmpty(providentFundEntities)) {
             return result;
@@ -174,6 +177,11 @@ public class HousingProvidentFundServiceImpl implements IHousingProvidentFundSer
                 .ifPresent(lastRecord -> result.setBalance(lastRecord.getBalance().doubleValue()));
         // 可贷额度应该查询到最近的12个月的平均余额
         result.setLoanAvailable(calculateLast12MonthsAverageBalance(providentFundEntities).doubleValue());
+        // 公积金记录
+        result.setRecordList(providentFundEntities.stream()
+                .map(HousingProvidentFundRecordVO::new)
+                .sorted(Comparator.comparing(HousingProvidentFundRecordVO::getOperationDate).reversed())
+                .collect(Collectors.toList()));
         return result;
     }
 
