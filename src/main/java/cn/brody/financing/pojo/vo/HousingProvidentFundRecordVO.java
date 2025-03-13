@@ -18,6 +18,10 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 public class HousingProvidentFundRecordVO {
     /**
+     * 记录唯一值
+     */
+    private String id;
+    /**
      * 操作日期
      */
     private String operationDate;
@@ -35,6 +39,7 @@ public class HousingProvidentFundRecordVO {
     private Double balance;
 
     public HousingProvidentFundRecordVO(HousingProvidentFundEntity housingProvidentFundEntity) {
+        this.id = String.valueOf(housingProvidentFundEntity.getId());
         this.operationDate = housingProvidentFundEntity.getOperationDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
         this.operationType = housingProvidentFundEntity.getOperationType().name().toLowerCase();
         this.amount = housingProvidentFundEntity.getAmount().doubleValue();

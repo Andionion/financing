@@ -13,15 +13,10 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/financing/fund/trade">基金</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/financing/gold/trade">黄金</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
+                <li class="nav-item"><a class="nav-link" href="/financing/fund/trade">基金</a></li>
+                <li class="nav-item"><a class="nav-link" href="/financing/gold/trade">黄金</a></li>
+                <li class="nav-item"><a class="nav-link" href="/financing/housing_provident_fund">公积金</a></li>
             </ul>
         </div>
     </nav>
@@ -33,8 +28,10 @@
         </div>
     </div>
 
+    <!-- 修改行布局为三列 -->
     <div class="row mt-3">
-        <div class="col col-6">
+        <!-- 基金卡片 -->
+        <div class="col col-4">
             <div class="card">
                 <div class="card-body text-center">
                     <h5 class="card-title">基金</h5>
@@ -42,11 +39,23 @@
                 </div>
             </div>
         </div>
-        <div class="col col-6">
+
+        <!-- 黄金卡片 -->
+        <div class="col col-4">
             <div class="card">
                 <div class="card-body text-center">
                     <h5 class="card-title">黄金</h5>
                     <a href="/financing/gold/trade" class="btn btn-primary">进入黄金页面</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增的公积金卡片 -->
+        <div class="col col-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">公积金</h5>
+                    <a href="/financing/housing_provident_fund" class="btn btn-primary">进入公积金页面</a>
                 </div>
             </div>
         </div>
