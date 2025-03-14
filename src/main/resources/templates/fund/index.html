@@ -1,40 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8"/>
+<head th:replace="~{common/header :: commonHeader}">
     <title>基金交易统计数据展示</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <!-- 引用外部CSS文件 -->
-    <link rel="stylesheet" href="/css/styles.css">
-    <!-- flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <!-- flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
-
 <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="/">首页</a></li>
-                <li class="nav-item active"><a class="nav-link" href="/financing/fund/trade">基金</a></li>
-                <li class="nav-item"><a class="nav-link" href="/financing/gold/trade">黄金</a></li>
-                <li class="nav-item"><a class="nav-link" href="/financing/housing_provident_fund">公积金</a></li>
-            </ul>
-        </div>
-    </nav>
+    <!-- 导航栏 -->
+    <th:block th:replace="~{common/navbar :: navbar('fund')}"></th:block>
 </div>
 
 <div class="container">
-    <div class="row">
-        <h1 class="text-center mb-4">基金交易所属人</h1>
-        <div class="col col-3" th:each="belong : ${belongs}">
-            <div class="card h-100" th:data-name="${belong}">
-                <div class="card-body">
-                    <h1 class="card-title" th:text="${belong}"></h1>
+    <div class="row mt-3">
+        <div class="col col-12 text-center">
+            <h2>基金交易所属人</h2>
+            <p class="text-secondary">请选择交易所属人</p>
+        </div>
+    </div>
+    <div class="row row-cols-auto g-4 justify-content-center">
+        <div class="col" th:each="belong : ${belongs}">
+            <div class="belong-item" th:data-name="${belong}">
+                <div class="belong-content">
+                    <span class="belong-icon">🏦</span>
+                    <h3 class="belong-title" th:text="${belong}"></h3>
+                    <div class="hover-indicator"></div>
                 </div>
             </div>
         </div>
@@ -42,8 +30,12 @@
 </div>
 
 <div class="container">
+    <div class="row mt-3">
+        <div class="col col-12 text-center">
+            <h2>新增交易记录</h2>
+        </div>
+    </div>
     <div class="row">
-        <h1 class="text-center mb-4">新增交易记录</h1>
         <form id="transactionForm">
             <div class="form-group">
                 <label for="fundCode">基金代码</label>
@@ -92,7 +84,7 @@
 
 <script>
     $(function () {
-        $(".card").click(function () {
+        $(".belong-item").click(function () {
             const name = $(this).attr('data-name');
             window.location.href = '/financing/fund/trade/tabulate/' + encodeURIComponent(name);
         });
