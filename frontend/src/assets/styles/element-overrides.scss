@@ -1,0 +1,312 @@
+/* Element Plus Overrides - Airtable Design System */
+
+/* Button Overrides */
+.el-button {
+  font-family: var(--font-family-sans);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-normal);
+  letter-spacing: var(--tracking-wide);
+}
+
+.el-button--primary {
+  background-color: var(--color-blue);
+  border-color: var(--color-blue);
+  color: var(--text-inverse);
+}
+
+.el-button--primary:hover {
+  background-color: var(--color-blue-light);
+  border-color: var(--color-blue-light);
+}
+
+.el-button--success {
+  background-color: var(--color-green);
+  border-color: var(--color-green);
+  color: var(--text-inverse);
+}
+
+.el-button--success:hover {
+  background-color: var(--color-green-light);
+  border-color: var(--color-green-light);
+}
+
+.el-button--danger {
+  background-color: var(--color-red);
+  border-color: var(--color-red);
+  color: var(--text-inverse);
+}
+
+.el-button--warning {
+  background-color: var(--color-yellow);
+  border-color: var(--color-yellow);
+  color: var(--text-inverse);
+}
+
+.el-button--default {
+  background-color: var(--bg-primary);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.el-button--default:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--border-dark);
+}
+
+/* Card Overrides */
+.el-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  background-color: var(--bg-primary);
+}
+
+.el-card__header {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.el-card__body {
+  padding: var(--spacing-6);
+}
+
+/* Table Overrides */
+.el-table {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  font-family: var(--font-family-sans);
+}
+
+.el-table th {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+  border-bottom-color: var(--border-light);
+}
+
+.el-table td {
+  border-bottom-color: var(--border-light);
+  color: var(--text-secondary);
+}
+
+.el-table--border {
+  border-color: var(--border-light);
+}
+
+.el-table--border::after,
+.el-table--border::before,
+.el-table__inner-wrapper::after {
+  background-color: var(--border-light);
+}
+
+.el-table tr.hover-row > td,
+.el-table tr.hover-row > td:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Form Overrides */
+.el-form-item__label {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.el-input__wrapper {
+  border-radius: var(--radius-md);
+  border-color: var(--border-medium);
+  transition: all var(--transition-fast);
+}
+
+.el-input__wrapper:hover {
+  border-color: var(--border-dark);
+}
+
+.el-input__wrapper.is-focus {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.1);
+}
+
+.el-textarea__inner {
+  border-radius: var(--radius-md);
+  border-color: var(--border-medium);
+}
+
+.el-textarea__inner:focus {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.1);
+}
+
+/* Dialog Overrides */
+.el-dialog {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.el-dialog__header {
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: var(--spacing-6);
+}
+
+.el-dialog__title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.el-dialog__body {
+  padding: var(--spacing-6);
+}
+
+.el-dialog__footer {
+  padding: var(--spacing-4) var(--spacing-6) var(--spacing-6);
+}
+
+/* Message Overrides */
+.el-message {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.el-message--success {
+  border-color: var(--color-green);
+}
+
+.el-message--warning {
+  border-color: var(--color-yellow);
+}
+
+.el-message--error {
+  border-color: var(--color-red);
+}
+
+/* Tag Overrides */
+.el-tag {
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.el-tag--primary {
+  background-color: var(--color-blue);
+  border-color: var(--color-blue);
+  color: var(--text-inverse);
+}
+
+.el-tag--success {
+  background-color: var(--color-green);
+  border-color: var(--color-green);
+  color: var(--text-inverse);
+}
+
+.el-tag--warning {
+  background-color: var(--color-yellow);
+  border-color: var(--color-yellow);
+  color: var(--text-inverse);
+}
+
+.el-tag--danger {
+  background-color: var(--color-red);
+  border-color: var(--color-red);
+  color: var(--text-inverse);
+}
+
+.el-tag--info {
+  background-color: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+  color: var(--text-inverse);
+}
+
+/* Pagination Overrides */
+.el-pagination {
+  font-weight: var(--font-weight-medium);
+}
+
+.el-pagination .el-pager li {
+  border-radius: var(--radius-md);
+  margin: 0 var(--spacing-1);
+}
+
+.el-pagination .el-pager li.is-active {
+  background-color: var(--color-blue);
+  color: var(--text-inverse);
+}
+
+.el-pagination .el-pager li:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Select Overrides */
+.el-select .el-input__wrapper {
+  border-radius: var(--radius-md);
+}
+
+.el-select-dropdown {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+
+.el-select-dropdown__item.is-hovering {
+  background-color: var(--bg-hover);
+}
+
+.el-select-dropdown__item.is-selected {
+  color: var(--color-blue);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Date Picker Overrides */
+.el-picker-panel {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+
+.el-date-picker__header {
+  font-weight: var(--font-weight-semibold);
+}
+
+.el-date-table th {
+  border-bottom-color: var(--border-light);
+  color: var(--text-tertiary);
+}
+
+.el-date-table td.is-today .el-date-table-cell__text {
+  color: var(--color-blue);
+  font-weight: var(--font-weight-semibold);
+}
+
+.el-date-table td.current:not(.disabled) .el-date-table-cell__text {
+  background-color: var(--color-blue);
+  color: var(--text-inverse);
+}
+
+.el-date-table td .el-date-table-cell__text:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Alert Overrides */
+.el-alert {
+  border-radius: var(--radius-md);
+}
+
+.el-alert--success {
+  background-color: rgba(0, 138, 40, 0.1);
+  border-color: var(--color-green);
+}
+
+.el-alert--warning {
+  background-color: rgba(244, 144, 21, 0.1);
+  border-color: var(--color-yellow);
+}
+
+.el-alert--error {
+  background-color: rgba(217, 35, 35, 0.1);
+  border-color: var(--color-red);
+}
+
+.el-alert--info {
+  background-color: rgba(0, 102, 255, 0.1);
+  border-color: var(--color-blue);
+}
