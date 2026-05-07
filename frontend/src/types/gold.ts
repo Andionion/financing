@@ -1,19 +1,14 @@
 // Gold Module Types
 
-// Gold Trade VO
+// Gold Trade VO - 匹配后端实际结构
 export interface GoldTradeVO {
-  id: number;
-  tradeType: string;
-  tradeAmount: number;
-  tradePrice: number;
-  tradeNum: number;
+  id: string;
   tradeDate: string;
-  tradeTime: string;
-  fee: number;
-  totalAmount: number;
-  remark: string;
-  createTime: string;
-  updateTime: string;
+  amount: number;
+  unitPrice: number;
+  weight: number;
+  tradeType: string;
+  goldType: string;
 }
 
 // Gold Statistics VO

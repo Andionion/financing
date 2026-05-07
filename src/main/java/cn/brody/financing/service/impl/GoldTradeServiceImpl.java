@@ -13,6 +13,9 @@ import cn.brody.financing.pojo.vo.GoldStatisticsVO;
 import cn.brody.financing.pojo.vo.GoldTradeVO;
 import cn.brody.financing.service.IGoldTradeService;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.decampo.xirr.Transaction;
 import org.decampo.xirr.Xirr;
@@ -78,6 +81,31 @@ public class GoldTradeServiceImpl implements IGoldTradeService {
         BigDecimal bd = new BigDecimal(Double.toString(value));
         // 设置小数位数并截断多余部分
         return bd.setScale(scale, RoundingMode.DOWN);
+    }
+
+    @Override
+    public IPage<GoldTradeVO> listGoldTrades(int page, int size) {
+        // 创建分页对象
+        Page<GoldTradeEntity> pageParam = new Page<>(page, size);
+        
+        // 查询分页数据，按交易日期倒序
+        LambdaQueryWrapper<GoldTradeEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(GoldTradeEntity::getTradeDate);
+        
+        IPage<GoldTradeEntity> entityPage = goldTradeDao.page(pageParam, queryWrapper);
+        
+        // 转换为VO
+        Page<GoldTradeVO> voPage = new Page<>(page, size, entityPage.getTotal());
+        List<GoldTradeVO> voList = entityPage.getRecords().stream()
+                .map(this::convertToVO)
+                .collect(Collectors.toList());
+        voPage.setRecords(voList);
+        
+        return voPage;
+    }
+
+    private GoldTradeVO convertToVO(GoldTradeEntity entity) {
+        return new GoldTradeVO(entity);
     }
 
     @Override

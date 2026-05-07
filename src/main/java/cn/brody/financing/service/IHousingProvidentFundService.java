@@ -5,6 +5,7 @@ import cn.brody.financing.pojo.bo.HousingProvidentFundDelBO;
 import cn.brody.financing.pojo.bo.HousingProvidentFundUpdateBO;
 import cn.brody.financing.pojo.vo.HousingProvidentFundRecordVO;
 import cn.brody.financing.pojo.vo.HousingProvidentFundStatisticsVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -45,11 +46,13 @@ public interface IHousingProvidentFundService {
     void delete(HousingProvidentFundDelBO bo);
 
     /**
-     * 获取所有记录列表
+     * 获取所有记录列表（分页）
      *
-     * @return 记录列表
+     * @param page 页码
+     * @param size 每页大小
+     * @return 分页记录列表
      */
-    List<HousingProvidentFundRecordVO> listAll();
+    IPage<HousingProvidentFundRecordVO> listAll(int page, int size);
 
     /**
      * 统计

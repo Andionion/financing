@@ -32,25 +32,33 @@ public class UpdateTradeDaySchedule {
 
     @PostConstruct
     public void init() {
-        updateTradeDay();
+        try {
+            // updateTradeDay();
+        } catch (Exception e) {
+            log.warn("初始化更新交易日信息失败，将在定时任务中重试: {}", e.getMessage());
+        }
     }
 
     @Scheduled(cron = "0 0 2 1 1 *")
     public void updateTradeDay() {
-        TradeDateHistEntity lastTradeDateEntity = tradeDateHistDao.getLastTradeDate();
-        // 如果最新交易日为空或者最新交易日+1天在当前时间之前，说明需要更新了
-        if (null == lastTradeDateEntity || lastTradeDateEntity.getTradeDay().isBefore(LocalDate.now())) {
-            log.info("开始更新交易日信息");
-            // 如果数据库中没有交易日数据，或者当前日期大于数据库中的交易日，则进行数据更新操作
-            String response = HttpUtils.get(AkToolConstant.getTradeDateHistSinaUrl());
-            log.info("请求交易日数据，响应：{}", response);
-            List<AktoolTradeDayVO> aktoolTradeDayList = JSONUtil.toList(response, AktoolTradeDayVO.class);
-            if (CollectionUtil.isNotEmpty(aktoolTradeDayList)) {
-                List<TradeDateHistEntity> tradeDateHistEntities = aktoolTradeDayList.stream()
-                        .map(TradeDateHistEntity::new)
-                        .collect(Collectors.toList());
-                tradeDateHistDao.saveBatch(tradeDateHistEntities);
+        try {
+            TradeDateHistEntity lastTradeDateEntity = tradeDateHistDao.getLastTradeDate();
+            // 如果最新交易日为空或者最新交易日+1天在当前时间之前，说明需要更新了
+            if (null == lastTradeDateEntity || lastTradeDateEntity.getTradeDay().isBefore(LocalDate.now())) {
+                log.info("开始更新交易日信息");
+                // 如果数据库中没有交易日数据，或者当前日期大于数据库中的交易日，则进行数据更新操作
+                String response = HttpUtils.get(AkToolConstant.getTradeDateHistSinaUrl());
+                log.info("请求交易日数据，响应：{}", response);
+                List<AktoolTradeDayVO> aktoolTradeDayList = JSONUtil.toList(response, AktoolTradeDayVO.class);
+                if (CollectionUtil.isNotEmpty(aktoolTradeDayList)) {
+                    List<TradeDateHistEntity> tradeDateHistEntities = aktoolTradeDayList.stream()
+                            .map(TradeDateHistEntity::new)
+                            .collect(Collectors.toList());
+                    tradeDateHistDao.saveBatch(tradeDateHistEntities);
+                }
             }
+        } catch (Exception e) {
+            log.error("更新交易日信息失败: {}", e.getMessage(), e);
         }
     }
 }

@@ -9,45 +9,45 @@ import type {
 
 // Get all owners
 export function getOwners(): Promise<BaseResponse<string[]>> {
-  return get<string[]>('/owners');
+  return get<string[]>('/financing/fund/owners');
 }
 
 // Get fund index data
 export function getFundIndex(): Promise<BaseResponse<BaseList<FundIndexVO>>> {
-  return get<BaseList<FundIndexVO>>('/fund/index');
+  return get<BaseList<FundIndexVO>>('/financing/fund/index');
 }
 
 // Get fund trade info by belong and fund code
 export function getFundInfo(belong: string, fundCode: string): Promise<BaseResponse<FundTradeInfoVO>> {
-  return get<FundTradeInfoVO>(`/fund/info/${belong}/${fundCode}`);
+  return get<FundTradeInfoVO>(`/financing/fund/info/${belong}/${fundCode}`);
 }
 
 // Get fund trade list by belong
 export function getFundTradeList(belong: string): Promise<BaseResponse<FundTradeInfoVO[]>> {
-  return get<FundTradeInfoVO[]>(`/fund/list/${belong}`);
+  return get<FundTradeInfoVO[]>(`/financing/fund/list/${belong}`);
 }
 
 // Get fund statistics
 export function getFundStatistics(belong: string): Promise<BaseResponse<FundStatisticsVO>> {
-  return get<FundStatisticsVO>(`/fund/tabulate/${belong}`);
+  return get<FundStatisticsVO>(`/financing/fund/tabulate/${belong}`);
 }
 
 // Add fund trade
 export function addFundTrade(data: FundTradeFormDTO): Promise<BaseResponse<void>> {
-  return post<void>('/fund/add', data);
+  return post<void>('/financing/fund/add', data);
 }
 
 // Update fund trade
 export function updateFundTrade(id: number, data: FundTradeFormDTO): Promise<BaseResponse<void>> {
-  return post<void>(`/fund/update/${id}`, data);
+  return post<void>(`/financing/fund/update/${id}`, data);
 }
 
 // Delete fund trade
 export function deleteFundTrade(id: number): Promise<BaseResponse<void>> {
-  return del<void>(`/fund/delete/${id}`);
+  return del<void>(`/financing/fund/delete/${id}`);
 }
 
 // Calculate fund data
 export function calculateFund(belong: string): Promise<BaseResponse<void>> {
-  return post<void>(`/calculate/${belong}`);
+  return post<void>(`/financing/fund/calculate/${belong}`);
 }

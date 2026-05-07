@@ -2,6 +2,8 @@ package cn.brody.financing.service;
 
 import cn.brody.financing.pojo.bo.GoldTradeAddBO;
 import cn.brody.financing.pojo.vo.GoldStatisticsVO;
+import cn.brody.financing.pojo.vo.GoldTradeVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * IGoldTradeService
@@ -17,6 +19,15 @@ public interface IGoldTradeService {
      * @param bo 黄金交易请求参数
      */
     void addGoldTrade(GoldTradeAddBO bo);
+
+    /**
+     * 获取黄金交易列表（分页）
+     *
+     * @param page 页码
+     * @param size 每页大小
+     * @return 分页交易列表
+     */
+    IPage<GoldTradeVO> listGoldTrades(int page, int size);
 
     /**
      * 统计黄金交易的列表。

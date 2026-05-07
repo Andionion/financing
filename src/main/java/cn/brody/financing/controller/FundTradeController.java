@@ -6,86 +6,128 @@ import cn.brody.financing.pojo.vo.FundStatisticsVO;
 import cn.brody.financing.pojo.vo.FundTradeVO;
 import cn.brody.financing.service.IFundTradeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * FundTradeController
+ * FundTradeController - 基金交易REST API
  *
  * @author chenyifu6
  * @since 2024/11/14 15:10
  */
-@Controller
-@RequestMapping("/financing/fund/trade")
+@RestController
+@RequestMapping("/financing/fund")
 public class FundTradeController {
 
     @Autowired
     private IFundTradeService fundTradeService;
 
     /**
-     * 获取所有基金名称并返回。
+     * 获取所有所有者列表。
      *
-     * @return 返回一个包含所有基金名称的ModelAndView对象，路径为"/fund/index"。
+     * @return 返回包含所有所有者名称的BaseResponse对象。
      */
-    @RequestMapping("")
-    public ModelAndView index() {
-        Map<String, Object> map = new HashMap<>();
+    @GetMapping("/owners")
+    public BaseResponse<List<String>> getOwners() {
         List<String> belongs = fundTradeService.listAllBelongs();
-        map.put("belongs", belongs);
-        return new ModelAndView("fund/index", map);
-    }
-
-
-    /**
-     * 获取指定类别的交易记录。
-     *
-     * @param belong 需要查询的交易类别。
-     * @return 返回一个包含交易列表和类别的ModelAndView对象，用于展示在"/fund/add"页面上。
-     */
-    @RequestMapping("/tabulate/{belong}")
-    public ModelAndView tabulate(@PathVariable("belong") String belong) {
-        List<FundStatisticsVO> fundStatisticsVOList = fundTradeService.tabulate(belong);
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("statisticsList", fundStatisticsVOList);
-        map.put("belong", belong);
-        return new ModelAndView("fund/statistics", map);
+        return new BaseResponse<>(belongs);
     }
 
     /**
-     * 获取基金交易列表。
+     * 获取基金首页数据（所有所有者的基金列表）。
      *
-     * @param belong   基金所属类别。
-     * @param fundCode 基金代码。
-     * @return 返回一个包含基金交易列表的ModelAndView对象，该对象用于展示基金交易信息。
+     * @return 返回基金首页数据的BaseResponse对象。
      */
-    @RequestMapping("/{belong}/{fundCode}")
-    public ModelAndView listFundTrade(@PathVariable("belong") String belong, @PathVariable("fundCode") String fundCode) {
+    @GetMapping("/index")
+    public BaseResponse<List<FundTradeVO>> getFundIndex() {
+        // TODO: 实现获取基金首页数据的逻辑
+        return new BaseResponse<>();
+    }
+
+    /**
+     * 获取指定所有者和基金代码的交易信息。
+     *
+     * @param belong 所有者
+     * @param fundCode 基金代码
+     * @return 返回基金交易信息的BaseResponse对象。
+     */
+    @GetMapping("/info/{belong}/{fundCode}")
+    public BaseResponse<List<FundTradeVO>> getFundInfo(@PathVariable String belong, @PathVariable String fundCode) {
         List<FundTradeVO> fundTradeList = fundTradeService.listFundTrade(fundCode, belong);
-        Map<String, Object> map = new HashMap<>(4);
-        map.put("belong", belong);
-        map.put("fundCode", fundCode);
-        map.put("fundName", fundTradeList.get(0).getFundName());
-        map.put("fundTradeList", fundTradeList);
-        return new ModelAndView("fund/trade", map);
+        return new BaseResponse<>(fundTradeList);
     }
 
     /**
-     * 添加交易。
+     * 获取指定所有者的基金交易列表。
      *
-     * @param bo      需要添加的交易信息，包含交易的详细信息。
-     * @param request Http请求对象，用于获取请求相关的信息。
-     * @return 返回一个BaseResponse对象，该对象包含了操作的结果信息。
+     * @param belong 所有者
+     * @return 返回基金交易列表的BaseResponse对象。
+     */
+    @GetMapping("/list/{belong}")
+    public BaseResponse<List<FundTradeVO>> getFundTradeList(@PathVariable String belong) {
+        // TODO: 实现获取基金交易列表的逻辑
+        return new BaseResponse<>();
+    }
+
+    /**
+     * 获取指定所有者的基金统计数据。
+     *
+     * @param belong 所有者
+     * @return 返回基金统计数据的BaseResponse对象。
+     */
+    @GetMapping("/tabulate/{belong}")
+    public BaseResponse<List<FundStatisticsVO>> getFundStatistics(@PathVariable String belong) {
+        List<FundStatisticsVO> statisticsList = fundTradeService.tabulate(belong);
+        return new BaseResponse<>(statisticsList);
+    }
+
+    /**
+     * 添加基金交易。
+     *
+     * @param bo 基金交易添加业务对象
+     * @return 返回操作结果的BaseResponse对象。
      */
     @PostMapping("/add")
-    @ResponseBody
-    public BaseResponse<?> add(@RequestBody FundTradeAddBO bo, HttpServletRequest request) {
+    public BaseResponse<Void> addFundTrade(@RequestBody FundTradeAddBO bo) {
         fundTradeService.add(bo);
+        return new BaseResponse<>();
+    }
+
+    /**
+     * 更新基金交易。
+     *
+     * @param id 交易ID
+     * @param bo 基金交易添加业务对象
+     * @return 返回操作结果的BaseResponse对象。
+     */
+    @PostMapping("/update/{id}")
+    public BaseResponse<Void> updateFundTrade(@PathVariable Long id, @RequestBody FundTradeAddBO bo) {
+        // TODO: 实现更新基金交易的逻辑
+        return new BaseResponse<>();
+    }
+
+    /**
+     * 删除基金交易。
+     *
+     * @param id 交易ID
+     * @return 返回操作结果的BaseResponse对象。
+     */
+    @DeleteMapping("/delete/{id}")
+    public BaseResponse<Void> deleteFundTrade(@PathVariable Long id) {
+        // TODO: 实现删除基金交易的逻辑
+        return new BaseResponse<>();
+    }
+
+    /**
+     * 计算基金数据。
+     *
+     * @param belong 所有者
+     * @return 返回操作结果的BaseResponse对象。
+     */
+    @PostMapping("/calculate/{belong}")
+    public BaseResponse<Void> calculateFund(@PathVariable String belong) {
+        // TODO: 实现计算基金数据的逻辑
         return new BaseResponse<>();
     }
 }

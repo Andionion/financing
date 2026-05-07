@@ -1,17 +1,12 @@
 // Housing Provident Fund (HPF) Module Types
 
-// HPF Record VO
+// HPF Record VO - 匹配后端实际结构
 export interface HpfRecordVO {
-  id: number;
-  belong: string;
-  depositDate: string;
-  depositAmount: number;
-  companyAmount: number;
-  totalAmount: number;
+  id: string;
+  operationDate: string;
+  operationType: string;
+  amount: number;
   balance: number;
-  month: string;
-  createTime: string;
-  updateTime: string;
 }
 
 // HPF Statistics VO
@@ -34,24 +29,17 @@ export interface HpfMonthlyDetailVO {
   balance: number;
 }
 
-// Form DTO
+// Form DTO - 匹配后端实际结构
 export interface HpfRecordFormDTO {
-  id?: number;
-  belong: string;
-  depositDate: string;
-  depositAmount: number;
-  companyAmount: number;
-  totalAmount: number;
-  balance: number;
-  month: string;
+  id?: string;
+  operationDate: string;
+  operationType: string;
+  amount: number;
+  balance?: number;
 }
 
 // Query Parameters
 export interface HpfQueryParams {
-  belong?: string;
-  startDate?: string;
-  endDate?: string;
-  month?: string;
   page?: number;
   size?: number;
 }

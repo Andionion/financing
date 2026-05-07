@@ -1,51 +1,61 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 
+// 预加载常用页面，提高访问速度
+const Home = () => import('@/views/Home.vue');
+const FundIndex = () => import('@/views/fund/FundIndex.vue');
+const FundStatistics = () => import('@/views/fund/FundStatistics.vue');
+const FundDetail = () => import('@/views/fund/FundDetail.vue');
+const GoldTrade = () => import('@/views/gold/GoldTrade.vue');
+const GoldStatistics = () => import('@/views/gold/GoldStatistics.vue');
+const HpfRecords = () => import('@/views/hpf/HpfRecords.vue');
+const HpfStatistics = () => import('@/views/hpf/HpfStatistics.vue');
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/Home.vue'),
+    component: Home,
   },
   // Fund Routes
   {
     path: '/fund',
     name: 'FundIndex',
-    component: () => import('@/views/fund/FundIndex.vue'),
+    component: FundIndex,
   },
   {
     path: '/fund/tabulate/:belong',
     name: 'FundStatistics',
-    component: () => import('@/views/fund/FundStatistics.vue'),
+    component: FundStatistics,
     props: true,
   },
   {
     path: '/fund/:belong/:fundCode',
     name: 'FundDetail',
-    component: () => import('@/views/fund/FundDetail.vue'),
+    component: FundDetail,
     props: true,
   },
   // Gold Routes
   {
     path: '/gold',
     name: 'Gold',
-    component: () => import('@/views/gold/GoldTrade.vue'),
+    component: GoldTrade,
   },
   {
     path: '/gold/tabulate',
     name: 'GoldStatistics',
-    component: () => import('@/views/gold/GoldStatistics.vue'),
+    component: GoldStatistics,
   },
   // HPF Routes
   {
     path: '/hpf',
     name: 'Hpf',
-    component: () => import('@/views/hpf/HpfRecords.vue'),
+    component: HpfRecords,
   },
   {
     path: '/hpf/tabulate',
     name: 'HpfStatistics',
-    component: () => import('@/views/hpf/HpfStatistics.vue'),
+    component: HpfStatistics,
   },
 ];
 

@@ -1,12 +1,22 @@
 // Base API Response Types
 export interface BaseResponse<T> {
-  code: number;
-  message: string;
+  code: number | string;
+  msg?: string;
+  message?: string;
   data: T;
 }
 
 // Pagination
 export interface PageResult<T> {
+  records: T[];
+  total: number;
+  size: number;
+  current: number;
+  pages: number;
+}
+
+// MyBatis-Plus IPage (后端返回的分页格式)
+export interface IPage<T> {
   records: T[];
   total: number;
   size: number;

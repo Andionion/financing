@@ -27,17 +27,19 @@ api.interceptors.response.use(
   (response: AxiosResponse<BaseResponse<any>>) => {
     const res = response.data;
     
-    // If response code is not 200, show error message
-    if (res.code !== 200) {
-      ElMessage.error(res.message || '请求失败');
-      return Promise.reject(new Error(res.message || '请求失败'));
+    // 后端成功码为 "0" 或 0，兼容多种格式
+    const codeStr = String(res.code);
+    if (codeStr !== "0" && codeStr !== "200") {
+      const errorMsg = (res as any).msg || res.message || '请求失败';
+      ElMessage.error(errorMsg);
+      return Promise.reject(new Error(errorMsg));
     }
     
     return response;
   },
   (error) => {
     // Network error or other error
-    const message = error.response?.data?.message || error.message || '网络错误';
+    const message = (error.response?.data as any)?.msg || error.response?.data?.message || error.message || '网络错误';
     ElMessage.error(message);
     return Promise.reject(error);
   }

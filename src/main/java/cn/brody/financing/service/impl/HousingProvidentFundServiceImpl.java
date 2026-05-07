@@ -11,6 +11,9 @@ import cn.brody.financing.pojo.vo.HousingProvidentFundStatisticsVO;
 import cn.brody.financing.service.IHousingProvidentFundService;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,12 +133,24 @@ public class HousingProvidentFundServiceImpl implements IHousingProvidentFundSer
     }
 
     @Override
-    public List<HousingProvidentFundRecordVO> listAll() {
-        List<HousingProvidentFundEntity> providentFundEntities = housingProvidentFundDao.list();
-        if (CollectionUtil.isEmpty(providentFundEntities)) {
-            return new ArrayList<>();
-        }
-        return providentFundEntities.stream().map(HousingProvidentFundRecordVO::new).collect(Collectors.toList());
+    public IPage<HousingProvidentFundRecordVO> listAll(int page, int size) {
+        // 创建分页对象
+        Page<HousingProvidentFundEntity> pageParam = new Page<>(page, size);
+        
+        // 查询分页数据，按操作日期倒序
+        LambdaQueryWrapper<HousingProvidentFundEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(HousingProvidentFundEntity::getOperationDate);
+        
+        IPage<HousingProvidentFundEntity> entityPage = housingProvidentFundDao.page(pageParam, queryWrapper);
+        
+        // 转换为VO
+        Page<HousingProvidentFundRecordVO> voPage = new Page<>(page, size, entityPage.getTotal());
+        List<HousingProvidentFundRecordVO> voList = entityPage.getRecords().stream()
+                .map(HousingProvidentFundRecordVO::new)
+                .collect(Collectors.toList());
+        voPage.setRecords(voList);
+        
+        return voPage;
     }
 
     @Override
