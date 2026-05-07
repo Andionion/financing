@@ -15,4 +15,5 @@ target/
 frontend/node_modules/
 frontend/dist/
 frontend/auto-imports.d.ts
-
+.qoder
+.vscode
